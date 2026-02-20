@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>💀💀💀</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* PREMIUM DARK THEME */
+        :root { --bg-main: #0a0b0e; --bg-card: #14161c; --accent-red: #e50914; --accent-blue: #0088cc; --accent-yellow: #ffb400; --text-main: #ffffff; }
+        body { margin: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(20, 22, 28, 0.95); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #222; backdrop-filter: blur(10px); }
+        .logo { font-size: 18px; font-weight: 900; letter-spacing: 1px; color: white; cursor: pointer; user-select: none; }
+        .logo span { color: var(--accent-red); text-shadow: 0 0 10px var(--accent-red); }
+        .head-btns { display: flex; gap: 8px; }
+        .h-btn { padding: 6px 10px; border-radius: 50px; font-size: 10px; font-weight: 700; text-decoration: none; color: white; display: flex; align-items: center; gap: 5px; transition: 0.3s; }
+        .hb-tg { background: var(--accent-blue); } .hb-yt { background: var(--accent-red); }
+        .news-ticker-box { background: #e50914; color: white; font-size: 12px; font-weight: 800; letter-spacing: 0.5px; padding: 8px 0; overflow: hidden; white-space: nowrap; position: relative; border-bottom: 2px solid #b20710; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 90; }
+        .ticker-content { display: inline-block; white-space: nowrap; animation: scroll-left 20s linear infinite; padding-left: 100%; }
+        @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 5px; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
+        .player-box { width: 100%; max-width: 800px; background: var(--bg-card); border-radius: 12px; overflow: hidden; box-shadow: 0 10px 50px rgba(0,0,0,0.7); border: 1px solid #333; position: relative; margin-top: 5px; }
+        .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; aspect-ratio: 16/9; overflow: hidden; border-radius: 12px; }
+        video { width: 100%; height: 100%; display: block; object-fit: contain; }
+        #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; background: #000; }
+        #iframe-box iframe { width: 100%; height: 100%; border: none; }
+        .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(0, 0, 0, 0.6); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; gap: 8px; pointer-events: none; }
+        .live-dot { width: 8px; height: 8px; background: #e50914; border-radius: 50%; box-shadow: 0 0 10px #e50914; animation: blink 1.2s infinite ease-in-out; }
+        .controls-box { padding: 15px 10px; }
+        .prominent-fix-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; margin-bottom: 15px; background: linear-gradient(45deg, #ffb400, #ff8800); color: #000; font-weight: 900; font-size: 16px; border-radius: 12px; text-decoration: none; text-transform: uppercase; animation: glow 2s infinite; }
+        .vip-ad-box { display: flex; justify-content: center; margin-bottom: 10px; background: #000; padding: 5px; border-radius: 8px; border: 1px solid #333; }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+        .action-btn { padding: 12px; border-radius: 8px; color: white; font-weight: 700; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; text-transform: uppercase; }
+        .tg { background: var(--accent-blue); } .yt { background: var(--accent-red); }
+        .ad-wall { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 5px; padding: 10px; background: #0a0b0e; border-radius: 10px; border: 1px solid #333; }
+        .ad-slot { background: #111; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; min-height: 260px; border: 1px dashed #444; }
+        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid var(--accent-red); border-radius: 50%; animation: spin 1s linear infinite; display: none; z-index: 5; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes glow { 0% { box-shadow: 0 0 5px #ffb400; } 50% { box-shadow: 0 0 25px #ffb400; } 100% { box-shadow: 0 0 5px #ffb400; } }
+        #secret-menu { display: none; width: 100%; max-width: 800px; margin-top: 20px; background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #333; }
+        .secret-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+        .secret-card { background: #222; padding: 10px; text-align: center; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; border: 1px solid #333; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo" onclick="unlockSecret()">A FOR <span>APPLE</span></div>
+        <div class="head-btns">
+            <a href="https://t.me/MKSSports_3" class="h-btn hb-tg" target="_blank"><i class="fab fa-telegram-plane"></i> Join</a>
+            <a href="https://youtube.com/@mkssports3" class="h-btn hb-yt" target="_blank"><i class="fab fa-youtube"></i> Sub</a>
+        </div>
+    </div>
+
+    <div class="news-ticker-box">
+        <div class="ticker-content">🚀 WATCH LIVE MATCH HD FREE! 🏆 ACCURATE MATCH PREDICTIONS IN TELEGRAM! 🔴</div>
+    </div>
+
+    <div class="main-container">
+        <div class="player-box">
+            <div class="video-wrapper" id="videoWrapper">
+                <div class="live-overlay"><span class="live-dot"></span> LIVE <span class="view-count-box"><i class="fas fa-eye"></i> <span id="fake-viewers">312</span></span></div>
+                <video id="video" controls autoplay playsinline></video>
+                <div id="iframe-box"></div>
+                <div id="loader"></div>
+            </div>
+            
+            <div class="controls-box">
+                <a href="https://exterminatorfalter.com/xx36b9f9p?key=e694586701139358b6949cf0d2041fc4" target="_blank" class="prominent-fix-btn"><i class="fas fa-sync-alt"></i> ⚡ Fix Lag / Refresh Stream</a>
+                <div class="btn-grid">
+                    <a href="https://t.me/MKSSports_3" class="action-btn tg" target="_blank">Telegram</a>
+                    <a href="https://youtube.com/@mkssports3" class="action-btn yt" target="_blank">Subscribe</a>
+                </div>
+                <div class="vip-ad-box">
+                    <script type="text/javascript">atOptions = { 'key' : 'c54c7d6bd836d9fe66d2c49614f17d00', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };</script>
+                    <script type="text/javascript" src="https://exterminatorfalter.com/c54c7d6bd836d9fe66d2c49614f17d00/invoke.js"></script>
+                </div>
+                <div class="ad-wall">
+                    <div class="ad-slot">
+                        <script type="text/javascript">atOptions = { 'key' : 'c54c7d6bd836d9fe66d2c49614f17d00', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };</script>
+                        <script type="text/javascript" src="https://exterminatorfalter.com/c54c7d6bd836d9fe66d2c49614f17d00/invoke.js"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="secret-menu"><div id="secret-grid" class="secret-grid"></div></div>
+    </div>
+
+    <script>
+        const channels = [
+            { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
+            { id: "haterskigandmaro", name: "MKS Sports (Worker)", url: "https://mksplay.pages.dev/mkid?id=t20wc" },
+            { id: "jokerbrand", name: "MKS sports", url: "https://mksplay.pages.dev/mkid?id=t20wc" }
+        ];
+
+        let hls = null;
+        let activeCh = channels[0];
+        let clickCount = 0;
+
+        function init() {
+            if (!sessionStorage.getItem('adShown')) {
+                let adScript = document.createElement('script');
+                adScript.src = "https://exterminatorfalter.com/ff/e8/77/ffe877c5a9204d730c6d295f287d33e3.js";
+                document.body.appendChild(adScript);
+                sessionStorage.setItem('adShown', 'true');
+            }
+            playStream();
+            renderSecretMenu();
+        }
+
+        function unlockSecret() {
+            clickCount++;
+            if (clickCount === 5) {
+                clickCount = 0;
+                let password = prompt("Enter Admin:");
+                if (password === "manas") { document.getElementById('secret-menu').style.display = 'block'; }
+            }
+        }
+
+        function renderSecretMenu() {
+            const grid = document.getElementById('secret-grid');
+            grid.innerHTML = "";
+            channels.forEach(ch => {
+                const btn = document.createElement('div');
+                btn.className = 'secret-card';
+                btn.innerText = ch.name;
+                btn.onclick = () => { activeCh = ch; playStream(); document.getElementById('secret-menu').style.display = 'none'; };
+                grid.appendChild(btn);
+            });
+        }
+
+        function playStream() {
+            const video = document.getElementById('video');
+            const loader = document.getElementById('loader');
+            let url = activeCh.url;
+            loader.style.display = 'block';
+            if(hls) { hls.destroy(); hls = null; }
+            if (Hls.isSupported() && url.includes('.m3u8')) {
+                hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => { loader.style.display = 'none'; video.play(); });
+            } else {
+                video.src = url;
+                video.addEventListener('loadedmetadata', () => { loader.style.display = 'none'; video.play(); });
+            }
+        }
+
+        setInterval(() => {
+            let count = parseInt(document.getElementById('fake-viewers').innerText);
+            document.getElementById('fake-viewers').innerText = count + Math.floor(Math.random() * 5) - 2;
+        }, 5000);
+
+        init();
+    </script>
+</body>
+</html>
