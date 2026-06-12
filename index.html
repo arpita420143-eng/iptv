@@ -55,21 +55,15 @@
         
         video { width: 100%; height: 100%; object-fit: contain; transition: object-fit 0.3s ease, opacity 0.5s ease, filter 0.5s ease; z-index: 10; }
 
-        /* NEW: 3 DOUBLE TAP ZONES */
-        .dt-zone { position: absolute; top: 0; bottom: 0; z-index: 20; }
-        .dt-left { left: 0; width: 30%; }
-        .dt-center { left: 30%; width: 40%; cursor: pointer; } /* For flying emojis */
-        .dt-right { right: 0; width: 30%; }
-
-        /* FLYING EMOJIS (Stadium Reactions) */
-        .emoji-fly { position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); font-size: 40px; z-index: 100; animation: flyUp 1.5s ease-out forwards; pointer-events: none; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); }
+        /* FIXED FLYING EMOJIS (Stadium Reactions) */
+        .emoji-fly { position: absolute; bottom: 15%; left: 50%; font-size: 35px; z-index: 1000; animation: flyUp 1.5s ease-out forwards; pointer-events: none; text-shadow: 0 2px 10px rgba(0,0,0,0.5); transform: translateX(-50%); }
         @keyframes flyUp { 
-            0% { bottom: 10%; opacity: 1; transform: translateX(-50%) scale(1); } 
-            100% { bottom: 70%; opacity: 0; transform: translateX(calc(-50% + (random(40) - 20) * 1px)) scale(1.8); } 
+            0% { bottom: 15%; opacity: 1; transform: translate(-50%, 0) scale(1); } 
+            100% { bottom: 75%; opacity: 0; transform: translate(calc(-50% + var(--drift)), -80px) scale(1.6); } 
         }
 
         /* POCKET MODE OVERLAY */
-        #pocket-overlay { position: absolute; inset: 0; background: #050505; z-index: 15; display: none; flex-direction: column; align-items: center; justify-content: center; color: var(--accent); }
+        #pocket-overlay { position: absolute; inset: 0; background: #050505; z-index: 15; display: none; flex-direction: column; align-items: center; justify-content: center; color: var(--accent); pointer-events: none;}
         #pocket-overlay i { font-size: 45px; animation: breathe 2s infinite alternate; filter: drop-shadow(0 0 15px var(--accent-glow)); }
         #pocket-overlay span { margin-top: 12px; font-size: 14px; font-weight: 600; letter-spacing: 1px; }
 
@@ -153,10 +147,10 @@
                     <div class="badge" style="color:#A0A5B5"><i class="fas fa-users" style="color:var(--accent)"></i> <span id="v-count">0</span></div>
                 </div>
                 
-                <div class="dt-zone dt-left" ondblclick="seekVideo(-10)"></div>
-                <div class="dt-zone dt-center" ondblclick="shootEmoji()"></div>
-                <div class="dt-zone dt-right" ondblclick="seekVideo(10)"></div>
-                
+                <button class="custom-settings-btn" style="right: 12px; top: 50%; transform: translateY(-50%); background: rgba(255, 51, 102, 0.2); border-color: #ff3366;" onclick="shootEmoji()" title="Send Reaction">
+                    <i class="fas fa-heart" style="color: #ff3366;"></i>
+                </button>
+
                 <div id="pocket-overlay">
                     <i class="fas fa-headphones-alt"></i>
                     <span>Audio Mode Active</span>
@@ -234,21 +228,23 @@
         document.getElementById('v-count').innerText = views; 
     }, 5000);
 
-    // 👇 HAPTIC ENGINE FEEDBACK WAPPER
+    // 👇 HAPTIC VIBRATION
     function triggerHaptic(ms = 30) {
         if (navigator.vibrate) navigator.vibrate(ms);
     }
 
-    // 👇 NEW: INSTA-STYLE FLOATING EMOJIS (Double tap center)
+    // 👇 INSTA-STYLE EMOJIS (FIXED)
     function shootEmoji() {
-        triggerHaptic([30, 50, 30]); // Heartbeat vibration
+        triggerHaptic([30, 50]);
         const emojis = ['⚽', '🔥', '🏆', '❤️', '🤩', '🇮🇳'];
         const em = emojis[Math.floor(Math.random() * emojis.length)];
         const el = document.createElement('div');
         el.className = 'emoji-fly';
         el.innerText = em;
-        // Randomize spawn position slightly left/right
-        el.style.left = (40 + Math.random() * 20) + '%';
+        // Generate random drift value between -40px and +40px
+        const drift = Math.floor(Math.random() * 80) - 40;
+        el.style.setProperty('--drift', drift + 'px');
+        
         document.getElementById('player-container').appendChild(el);
         setTimeout(() => el.remove(), 1500);
     }
@@ -264,7 +260,7 @@
         document.querySelector("#fit-btn i").className = "fas " + fitIcons[fitIdx];
     }
 
-    // 👇 NEW: EYE-CARE (NIGHT MODE FILTER)
+    // 👇 EYE-CARE (NIGHT MODE FILTER)
     function toggleEyeCare() {
         triggerHaptic(40);
         const vid = document.getElementById("video");
@@ -272,9 +268,9 @@
         
         vid.classList.toggle("eye-care-on");
         if(vid.classList.contains("eye-care-on")) {
-            btn.style.color = "#ffcc00"; // Glow yellow
+            btn.style.color = "#ffcc00"; 
             btn.style.borderColor = "#ffcc00";
-            vid.style.filter = "sepia(0.55) contrast(0.95) brightness(0.9)";
+            vid.style.filter = "sepia(0.5) contrast(0.95) brightness(0.9)";
         } else {
             btn.style.color = "#FFF";
             btn.style.borderColor = "rgba(255,255,255,0.2)";
@@ -292,7 +288,7 @@
         } catch (error) { console.error("PiP Error: ", error); }
     }
 
-    // 👇 Pocket Mode (Audio Only / Screen Blanker)
+    // 👇 Pocket Mode
     function togglePocketMode() {
         triggerHaptic(40);
         const overlay = document.getElementById("pocket-overlay");
@@ -301,7 +297,7 @@
         
         if (overlay.style.display === "none" || overlay.style.display === "") {
             overlay.style.display = "flex";
-            vid.style.opacity = "0.01"; // Hides video visually but keeps audio playing
+            vid.style.opacity = "0.01"; 
             btn.style.color = "var(--accent)";
             btn.style.borderColor = "var(--accent)";
         } else {
@@ -312,7 +308,7 @@
         }
     }
 
-    // 👇 Anti-Sleep (Screen Wakelock API) - Runs silently
+    // 👇 Anti-Sleep Wakelock
     let wakeLock = null;
     async function requestWakeLock() {
         try { wakeLock = await navigator.wakeLock.request('screen'); } 
@@ -388,7 +384,7 @@
     }
 
     window.seekVideo = function(seconds) {
-        triggerHaptic([30, 40]); // Double vibration feel for seeking
+        triggerHaptic([30, 40]); 
         const vid = document.getElementById("video");
         if (vid) { vid.currentTime = vid.currentTime + seconds; }
     }
