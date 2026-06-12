@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MKS Sports - Premium Live</title>
+    <title>MKS Sports - Premium FIFA Live</title>
     
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
     <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.16.2/dist/shaka-player.ui.min.js"></script>
@@ -53,15 +53,25 @@
         .video-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.8), 0 0 20px rgba(0, 242, 254, 0.1); position: relative; backdrop-filter: blur(10px); }
         .shaka-video-container { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         
-        /* Video Base Styles */
-        video { width: 100%; height: 100%; object-fit: contain; transition: object-fit 0.3s ease, transform 0.5s ease; }
+        video { width: 100%; height: 100%; object-fit: contain; transition: object-fit 0.3s ease, opacity 0.5s ease, filter 0.5s ease; z-index: 10; }
 
-        /* Cinematic Zoom Animation */
-        .zoom-breathe { animation: slowZoom 15s ease-in-out infinite alternate; }
-        @keyframes slowZoom {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.06); } 
+        /* NEW: 3 DOUBLE TAP ZONES */
+        .dt-zone { position: absolute; top: 0; bottom: 0; z-index: 20; }
+        .dt-left { left: 0; width: 30%; }
+        .dt-center { left: 30%; width: 40%; cursor: pointer; } /* For flying emojis */
+        .dt-right { right: 0; width: 30%; }
+
+        /* FLYING EMOJIS (Stadium Reactions) */
+        .emoji-fly { position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); font-size: 40px; z-index: 100; animation: flyUp 1.5s ease-out forwards; pointer-events: none; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); }
+        @keyframes flyUp { 
+            0% { bottom: 10%; opacity: 1; transform: translateX(-50%) scale(1); } 
+            100% { bottom: 70%; opacity: 0; transform: translateX(calc(-50% + (random(40) - 20) * 1px)) scale(1.8); } 
         }
+
+        /* POCKET MODE OVERLAY */
+        #pocket-overlay { position: absolute; inset: 0; background: #050505; z-index: 15; display: none; flex-direction: column; align-items: center; justify-content: center; color: var(--accent); }
+        #pocket-overlay i { font-size: 45px; animation: breathe 2s infinite alternate; filter: drop-shadow(0 0 15px var(--accent-glow)); }
+        #pocket-overlay span { margin-top: 12px; font-size: 14px; font-weight: 600; letter-spacing: 1px; }
 
         /* TOP BADGES */
         .top-badges { position: absolute; top: 12px; left: 12px; z-index: 25; display: flex; gap: 8px; pointer-events: none; }
@@ -70,7 +80,7 @@
         .live-dot { width: 6px; height: 6px; background: #FF3B30; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1.5s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
-        /* SETTINGS & ZOOM BUTTONS */
+        /* SETTINGS & ACTION BUTTONS ON PLAYER */
         .custom-settings-btn { position: absolute; top: 12px; z-index: 50; background: rgba(0,0,0,0.6); color: #FFF; border: 1px solid rgba(255,255,255,0.2); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); transition: 0.3s; }
         .custom-settings-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); transform: scale(1.1); }
         
@@ -92,22 +102,24 @@
         .btn-refresh-premium { flex: 1.2; background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000; border: none; border-radius: 8px; padding: 13px; font-weight: 800; font-size: 14px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4); transform: scale(1.02); font-family: 'Poppins', sans-serif; }
         .btn-refresh-premium:hover { box-shadow: 0 6px 20px rgba(0, 242, 254, 0.6); transform: scale(1.06); }
 
-        /* TELEGRAM BUTTON (Shining) */
+        /* TELEGRAM BUTTON */
         .btn-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         .btn-tele { padding: 14px; border-radius: 50px; font-weight: 700; text-decoration: none; text-align: center; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 8px; color: #FFF; background: linear-gradient(135deg, #0088cc, #005580); box-shadow: 0 8px 20px rgba(0, 136, 204, 0.4); position: relative; overflow: hidden; transition: transform 0.3s; letter-spacing: 0.5px;}
         .btn-tele:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 25px rgba(0, 136, 204, 0.6); }
         .btn-tele::after { content: ''; position: absolute; top: -50%; left: -60%; width: 30%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%); transform: rotate(45deg); animation: shine 3s infinite linear; }
         @keyframes shine { 0% { left: -60%; } 20% { left: 140%; } 100% { left: 140%; } }
 
-        /* CHANNEL GRID */
+        /* SERVER CARDS */
         .section-title { font-size: 13px; color: var(--text-muted); font-weight: 700; text-align: center; margin: 25px 0 12px; letter-spacing: 1.5px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px;}
         .ch-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .ch-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.05); padding: 16px 10px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        .ch-card i { font-size: 24px; color: var(--text-muted); transition: 0.3s; }
-        .ch-card span { font-size: 13px; font-weight: 600; color: var(--text-muted); transition: 0.3s; }
+        .ch-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.05); padding: 14px 10px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; }
+        .ch-card i { font-size: 22px; color: var(--text-muted); transition: 0.3s; }
+        .ch-card span { font-size: 13px; font-weight: 600; color: var(--text-main); }
+        .server-tag { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text-muted); text-transform: uppercase; }
         .ch-card:hover { background: rgba(255, 255, 255, 0.06); }
         .ch-card.active { border-color: var(--accent); background: rgba(0, 242, 254, 0.08); box-shadow: 0 5px 15px var(--accent-glow); transform: translateY(-2px); }
-        .ch-card.active i, .ch-card.active span { color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
+        .ch-card.active i { color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
+        .ch-card.active .server-tag { background: var(--accent); color: #000; }
 
         /* LOADER & FOOTER */
         #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 45px; height: 45px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; z-index: 30; }
@@ -141,11 +153,28 @@
                     <div class="badge" style="color:#A0A5B5"><i class="fas fa-users" style="color:var(--accent)"></i> <span id="v-count">0</span></div>
                 </div>
                 
-                <button id="zoom-btn" class="custom-settings-btn" style="right: 100px;" onclick="toggleZoom()">
-                    <i class="fas fa-magic"></i>
+                <div class="dt-zone dt-left" ondblclick="seekVideo(-10)"></div>
+                <div class="dt-zone dt-center" ondblclick="shootEmoji()"></div>
+                <div class="dt-zone dt-right" ondblclick="seekVideo(10)"></div>
+                
+                <div id="pocket-overlay">
+                    <i class="fas fa-headphones-alt"></i>
+                    <span>Audio Mode Active</span>
+                </div>
+
+                <button id="pocket-btn" class="custom-settings-btn" style="right: 188px;" onclick="togglePocketMode()" title="Audio Only">
+                    <i class="fas fa-headphones"></i>
+                </button>
+
+                <button id="eyecare-btn" class="custom-settings-btn" style="right: 144px;" onclick="toggleEyeCare()" title="Eye Care Filter">
+                    <i class="fas fa-moon"></i>
+                </button>
+
+                <button id="pip-btn" class="custom-settings-btn" style="right: 100px;" onclick="togglePiP()" title="Background Play">
+                    <i class="fas fa-window-restore"></i>
                 </button>
                 
-                <button id="fit-btn" class="custom-settings-btn" style="right: 56px;" onclick="toggleFitMode()">
+                <button id="fit-btn" class="custom-settings-btn" style="right: 56px;" onclick="toggleFitMode()" title="Screen Size">
                     <i class="fas fa-expand"></i>
                 </button>
                 
@@ -205,84 +234,126 @@
         document.getElementById('v-count').innerText = views; 
     }, 5000);
 
-    // 👇 Crop & Fit Feature (MX Player Style)
+    // 👇 HAPTIC ENGINE FEEDBACK WAPPER
+    function triggerHaptic(ms = 30) {
+        if (navigator.vibrate) navigator.vibrate(ms);
+    }
+
+    // 👇 NEW: INSTA-STYLE FLOATING EMOJIS (Double tap center)
+    function shootEmoji() {
+        triggerHaptic([30, 50, 30]); // Heartbeat vibration
+        const emojis = ['⚽', '🔥', '🏆', '❤️', '🤩', '🇮🇳'];
+        const em = emojis[Math.floor(Math.random() * emojis.length)];
+        const el = document.createElement('div');
+        el.className = 'emoji-fly';
+        el.innerText = em;
+        // Randomize spawn position slightly left/right
+        el.style.left = (40 + Math.random() * 20) + '%';
+        document.getElementById('player-container').appendChild(el);
+        setTimeout(() => el.remove(), 1500);
+    }
+
+    // 👇 Fit Mode
     const fitModes = ['contain', 'cover', 'fill'];
     const fitIcons = ['fa-expand', 'fa-crop-alt', 'fa-arrows-alt-h'];
     let fitIdx = 0;
-
     function toggleFitMode() {
+        triggerHaptic(40);
         fitIdx = (fitIdx + 1) % fitModes.length;
-        const vid = document.getElementById("video");
-        vid.style.objectFit = fitModes[fitIdx];
+        document.getElementById("video").style.objectFit = fitModes[fitIdx];
         document.querySelector("#fit-btn i").className = "fas " + fitIcons[fitIdx];
     }
 
-    // 👇 Zoom Cinematic Breathing Feature (Magic Button)
-    function toggleZoom() {
+    // 👇 NEW: EYE-CARE (NIGHT MODE FILTER)
+    function toggleEyeCare() {
+        triggerHaptic(40);
         const vid = document.getElementById("video");
-        const btn = document.getElementById("zoom-btn");
+        const btn = document.getElementById("eyecare-btn");
         
-        vid.classList.toggle("zoom-breathe");
+        vid.classList.toggle("eye-care-on");
+        if(vid.classList.contains("eye-care-on")) {
+            btn.style.color = "#ffcc00"; // Glow yellow
+            btn.style.borderColor = "#ffcc00";
+            vid.style.filter = "sepia(0.55) contrast(0.95) brightness(0.9)";
+        } else {
+            btn.style.color = "#FFF";
+            btn.style.borderColor = "rgba(255,255,255,0.2)";
+            vid.style.filter = "none";
+        }
+    }
+
+    // 👇 Picture-in-Picture
+    async function togglePiP() {
+        triggerHaptic(40);
+        const video = document.getElementById("video");
+        try {
+            if (document.pictureInPictureElement) await document.exitPictureInPicture();
+            else if (document.pictureInPictureEnabled) await video.requestPictureInPicture();
+        } catch (error) { console.error("PiP Error: ", error); }
+    }
+
+    // 👇 Pocket Mode (Audio Only / Screen Blanker)
+    function togglePocketMode() {
+        triggerHaptic(40);
+        const overlay = document.getElementById("pocket-overlay");
+        const vid = document.getElementById("video");
+        const btn = document.getElementById("pocket-btn");
         
-        if (vid.classList.contains("zoom-breathe")) {
+        if (overlay.style.display === "none" || overlay.style.display === "") {
+            overlay.style.display = "flex";
+            vid.style.opacity = "0.01"; // Hides video visually but keeps audio playing
             btn.style.color = "var(--accent)";
             btn.style.borderColor = "var(--accent)";
         } else {
+            overlay.style.display = "none";
+            vid.style.opacity = "1";
             btn.style.color = "#FFF";
             btn.style.borderColor = "rgba(255,255,255,0.2)";
         }
     }
 
-    // 👇 CHHE (6) LINKS
+    // 👇 Anti-Sleep (Screen Wakelock API) - Runs silently
+    let wakeLock = null;
+    async function requestWakeLock() {
+        try { wakeLock = await navigator.wakeLock.request('screen'); } 
+        catch (err) { console.log('Wakelock error:', err); }
+    }
+    document.addEventListener('visibilitychange', () => {
+        if (wakeLock !== null && document.visibilityState === 'visible') requestWakeLock();
+    });
+
+    // 👇 CHANNELS LIST
     const CHANNELS = {
         mks1: { 
-            name: "MKS Server 1", 
-            icon: "fas fa-satellite-dish", 
-            url: "https://a151aivottlinear-a.akamaihd.net/OTTB/sin-nitro/live/dash/enc/m7duvnk2bu/out/v1/d1ad69118b5647309b1eb7213affdb3d/cenc.mpd", 
-            kid: "4bbcff3289d457b4dd5dbdd21221de9a", 
-            key: "c4906b9a9f8dda3c0725bddb8c497733" 
+            name: "MKS Server 1", tag: "Hindi (Ultra HD)", icon: "fas fa-satellite-dish", 
+            url: "https://a151aivottlinear-a.akamaihd.net/OTTB/sin-nitro/live/dash/enc/m7duvnk2bu/out/v1/d1ad69118b5647309b1eb7213affdb3d/cenc.mpd", kid: "4bbcff3289d457b4dd5dbdd21221de9a", key: "c4906b9a9f8dda3c0725bddb8c497733" 
         },
         mks2: { 
-            name: "MKS Server 2", 
-            icon: "fas fa-broadcast-tower", 
-            url: "https://live-oneapp-prd-news.akamaized.net/Content/CMAF_OL2-CTR-4s-v2/Live/channel(kvea)/master.mpd", 
-            kid: "ce7ab3022e753307997f58afe001bac4", 
-            key: "72d631a66e635c60829a0fe7705516c1" 
+            name: "MKS Server 2", tag: "English (1080p)", icon: "fas fa-broadcast-tower", 
+            url: "https://live-oneapp-prd-news.akamaized.net/Content/CMAF_OL2-CTR-4s-v2/Live/channel(kvea)/master.mpd", kid: "ce7ab3022e753307997f58afe001bac4", key: "72d631a66e635c60829a0fe7705516c1" 
         },
         mks3: {
-            name: "MKS Server 3",
-            icon: "fas fa-tv",
-            url: "https://qp-pldt-live-bpk-ucd-prod.akamaized.net/bpk-tv/ch299/default/index.mpd",
-            kid: "549ab7cd35a64bb6bb479ecead04d69d",
-            key: "829799ed534d11fcadeb4b192467e050"
+            name: "MKS Server 3", tag: "Main Feed", icon: "fas fa-tv",
+            url: "https://qp-pldt-live-bpk-ucd-prod.akamaized.net/bpk-tv/ch299/default/index.mpd", kid: "549ab7cd35a64bb6bb479ecead04d69d", key: "829799ed534d11fcadeb4b192467e050"
         },
         mks4: {
-            name: "MKS Server 4",
-            icon: "fas fa-play-circle",
-            url: "https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-m6/cmaf_cenc00/dash-short-hd.mpd",
-            kid: "433ffba670963e70857859a9dff4be04",
-            key: "51ede3a821229fe81e71282c8eff80e3"
+            name: "MKS Server 4", tag: "Data Saver", icon: "fas fa-play-circle",
+            url: "https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-m6/cmaf_cenc00/dash-short-hd.mpd", kid: "433ffba670963e70857859a9dff4be04", key: "51ede3a821229fe81e71282c8eff80e3"
         },
         mks5: {
-            name: "MKS Server 5",
-            icon: "fas fa-bolt",
-            url: "https://live-oneapp-prd-news.akamaized.net/Content/CMAF_OL2-CTR-4s-v2/Live/channel(kvea)/master.mpd",
-            kid: "ce7ab3022e753307997f58afe001bac4",
-            key: "72d631a66e635c60829a0fe7705516c1"
+            name: "MKS Server 5", tag: "Multi-Cam", icon: "fas fa-bolt",
+            url: "https://live-oneapp-prd-news.akamaized.net/Content/CMAF_OL2-CTR-4s-v2/Live/channel(kvea)/master.mpd", kid: "ce7ab3022e753307997f58afe001bac4", key: "72d631a66e635c60829a0fe7705516c1"
         },
         mks6: {
-            name: "MKS Server 6",
-            icon: "fas fa-fire",
-            url: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/h9urpo3cwb/out/v1/fde190f369484bc6b6117cc16cd82a9f/cenc.mpd",
-            kid: "c4088f5f265f9de50cffd80bf89308b7",
-            key: "2c4d2239d96d532b4ec2050653611003"
+            name: "MKS Server 6", tag: "Backup Link", icon: "fas fa-fire",
+            url: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/h9urpo3cwb/out/v1/fde190f369484bc6b6117cc16cd82a9f/cenc.mpd", kid: "c4088f5f265f9de50cffd80bf89308b7", key: "2c4d2239d96d532b4ec2050653611003"
         }
     };
 
     let player, ui;
 
-    function openQualityMenu() { document.getElementById('quality-overlay').classList.add('active'); }
-    function closeQualityMenu() { document.getElementById('quality-overlay').classList.remove('active'); }
+    function openQualityMenu() { triggerHaptic(); document.getElementById('quality-overlay').classList.add('active'); }
+    function closeQualityMenu() { triggerHaptic(); document.getElementById('quality-overlay').classList.remove('active'); }
 
     function updateQualityUI() {
         const list = document.getElementById('quality-list');
@@ -306,6 +377,7 @@
     }
 
     function setQuality(val, clickedBtn) {
+        triggerHaptic();
         document.querySelectorAll('.q-item').forEach(b => b.classList.remove('active'));
         clickedBtn.classList.add('active');
         if (player) {
@@ -316,12 +388,14 @@
     }
 
     window.seekVideo = function(seconds) {
+        triggerHaptic([30, 40]); // Double vibration feel for seeking
         const vid = document.getElementById("video");
         if (vid) { vid.currentTime = vid.currentTime + seconds; }
     }
 
-    /* Multi-Channel Player Initialization Logic */
+    /* Multi-Channel Player Initialization */
     async function initPlayer(id) {
+        triggerHaptic(50);
         const config = CHANNELS[id];
         const video = document.getElementById("video"), container = document.getElementById("player-container"), loader = document.getElementById("loader");
         loader.style.display = "block";
@@ -340,7 +414,6 @@
             streaming: { lowLatencyMode: false, bufferingGoal: 15 }
         });
 
-        // Bypass Engine
         player.getNetworkingEngine().clearAllRequestFilters();
         player.getNetworkingEngine().registerRequestFilter((type, request) => {
             request.headers["Referer"] = "https://www.jiotv.com/";
@@ -352,21 +425,21 @@
             loader.style.display = "none"; 
             video.play(); video.muted = false; 
             updateQualityUI();
+            requestWakeLock(); // Start Anti-Sleep
         } catch (e) { 
             console.error("Stream Load Error: ", e); 
             loader.style.display = "none";
         }
     }
 
-    // Grid Initialization on load
     window.onload = () => {
         const grid = document.getElementById("ch-grid");
-        const startId = "mks1"; // Server 1 is default
+        const startId = "mks1";
 
         Object.keys(CHANNELS).forEach(key => {
             const card = document.createElement("div");
             card.className = `ch-card ${key === startId ? 'active' : ''}`;
-            card.innerHTML = `<i class="${CHANNELS[key].icon}"></i><span>${CHANNELS[key].name}</span>`;
+            card.innerHTML = `<i class="${CHANNELS[key].icon}"></i><span>${CHANNELS[key].name}</span><div class="server-tag">${CHANNELS[key].tag}</div>`;
             card.onclick = () => {
                 initPlayer(key);
                 document.querySelectorAll('.ch-card').forEach(c => c.classList.remove('active'));
