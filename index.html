@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClearKey DRM Player</title>
-    <!-- Shaka Player Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
+    <title>Pro Live Stream Player</title>
+    
+    <!-- Shaka Player with built-in UI -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/controls.min.css">
+
     <style>
-        /* Premium Dark Theme */
+        /* Premium Dark Background */
         body {
             background-color: #000000;
             margin: 0;
@@ -16,28 +19,68 @@
             align-items: center;
             height: 100vh;
             color: white;
-            font-family: sans-serif;
+            font-family: Arial, sans-serif;
         }
         .player-container {
+            position: relative;
             width: 100%;
-            max-width: 800px;
+            max-width: 850px;
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
-            border-radius: 10px;
+            border-radius: 8px;
             overflow: hidden;
             background: #111;
         }
-        video {
-            width: 100%;
-            height: auto;
-            display: block;
+        
+        /* Aspect Ratio Dropdown Styling */
+        .aspect-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #333;
         }
+        .aspect-controls select {
+            background: transparent;
+            color: white;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .aspect-controls select option {
+            background: #222;
+            color: white;
+        }
+
+        /* Screen Fit Modes */
+        .fit { object-fit: contain !important; }
+        .stretch { object-fit: fill !important; }
+        .crop { object-fit: cover !important; }
     </style>
 </head>
 <body>
 
     <div class="player-container">
-        <!-- Video Player Element -->
-        <video id="video" controls autoplay muted></video>
+        
+        <!-- Screen Ratio Control -->
+        <div class="aspect-controls">
+            <select id="aspectRatio" onchange="changeAspect(this.value)">
+                <option value="fit">Normal</option>
+                <option value="stretch">Stretch</option>
+                <option value="crop">Crop (Zoom)</option>
+            </select>
+        </div>
+
+        <!-- Shaka UI Container -->
+        <div data-shaka-player-container style="width: 100%; height: 100%;">
+            <!-- Removed standard 'controls' attribute so Shaka UI takes over -->
+            <video data-shaka-player id="video" class="fit" autoplay muted style="width:100%; height:100%;"></video>
+        </div>
+
     </div>
 
     <script>
@@ -45,42 +88,60 @@
         const manifestUri = 'https://a57live-pv-ta-amazon.akamaized.net/iad-nitro/live/clients/dash/enc/ldgnvordfu/out/v1/430b37000b9148379747ac5cfb2ada46/cenc.mpd';
 
         async function initPlayer() {
-            // Install built-in polyfills to patch browser incompatibilities.
-            shaka.polyfill.installAll();
+            const video = document.getElementById('video');
+            const videoContainer = document.querySelector('[data-shaka-player-container]');
+            
+            const player = new shaka.Player(video);
+            
+            // Shaka Player UI Setup
+            const ui = new shaka.ui.Overlay(player, videoContainer, video);
+            
+            // Yahan hum decide kar rahe hain player mein kya-kya dikhana hai
+            // 'time_and_duration' nikaal diya hai taaki wo ajeeb number na dikhe
+            const config = {
+                controlPanelElements: [
+                    'play_pause',
+                    'mute',
+                    'volume',
+                    'spacer',    // Space maintain karne ke liye
+                    'quality',   // Quality change karne ka button
+                    'fullscreen'
+                ]
+            };
+            ui.configure(config);
 
-            // Check if browser supports Shaka Player
-            if (shaka.Player.isBrowserSupported()) {
-                const video = document.getElementById('video');
-                const player = new shaka.Player(video);
-
-                // Yahan aapka KID aur KEY configure kiya gaya hai
-                player.configure({
-                    drm: {
-                        clearKeys: {
-                            // Format: 'KID': 'KEY'
-                            '3aa6f9df41c299f659aaee15d0067900': '0434703fb407fb12980f51944271a1f8'
-                        }
+            // DRM (KID:KEY) Setup
+            player.configure({
+                drm: {
+                    clearKeys: {
+                        '3aa6f9df41c299f659aaee15d0067900': '0434703fb407fb12980f51944271a1f8'
                     }
-                });
-
-                // Error handling
-                player.addEventListener('error', function(event) {
-                    console.error('Error code', event.detail.code, 'object', event.detail);
-                });
-
-                try {
-                    // Load the DRM stream
-                    await player.load(manifestUri);
-                    console.log('Video loaded successfully!');
-                } catch (e) {
-                    console.error('Error loading video:', e);
                 }
-            } else {
-                console.error('Browser not supported!');
+            });
+
+            // Error listener
+            player.addEventListener('error', onPlayerError);
+
+            try {
+                await player.load(manifestUri);
+                console.log('Video loaded and ready!');
+            } catch (e) {
+                console.error('Video load fail:', e);
             }
         }
 
-        document.addEventListener('DOMContentLoaded', initPlayer);
+        function onPlayerError(event) {
+            console.error('Error code', event.detail.code, 'object', event.detail);
+        }
+
+        // Yeh function Aspect Ratio (Stretch, Crop, Normal) ko handle karega
+        function changeAspect(mode) {
+            const video = document.getElementById('video');
+            video.className = mode; 
+        }
+
+        // Jab Shaka UI load ho jaye tab player start karo
+        document.addEventListener('shaka-ui-loaded', initPlayer);
     </script>
 
 </body>
