@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Stream Player</title>
-    <!-- HLS.js Library -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <title>ClearKey DRM Player</title>
+    <!-- Shaka Player Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
     <style>
-        /* Premium Dark Theme for Streaming */
+        /* Premium Dark Theme */
         body {
             background-color: #000000;
             margin: 0;
@@ -15,6 +15,8 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            color: white;
+            font-family: sans-serif;
         }
         .player-container {
             width: 100%;
@@ -35,31 +37,50 @@
 
     <div class="player-container">
         <!-- Video Player Element -->
-        <video id="live-video" controls autoplay muted></video>
+        <video id="video" controls autoplay muted></video>
     </div>
 
     <script>
-        // Aapka pura Akamai Token wala M3U8 link
-        var streamUrl = "https://sonydaimenew.akamaized.net/hls/live/2105079/cricodi1506/ENG/master.m3u8?hdnea=exp=1781538436~acl=/*~id=82345712319781574074851400866986~hmac=d48afe4724596d1f706baab6c69320a6df4b92e2cdc825a0353dc04097d0def6";
-        
-        var video = document.getElementById('live-video');
+        // Aapka MPD URL
+        const manifestUri = 'https://a57live-pv-ta-amazon.akamaized.net/iad-nitro/live/clients/dash/enc/ldgnvordfu/out/v1/430b37000b9148379747ac5cfb2ada46/cenc.mpd';
 
-        // Check if browser supports HLS.js
-        if (Hls.isSupported()) {
-            var hls = new Hls();
-            hls.loadSource(streamUrl);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                video.play();
-            });
+        async function initPlayer() {
+            // Install built-in polyfills to patch browser incompatibilities.
+            shaka.polyfill.installAll();
+
+            // Check if browser supports Shaka Player
+            if (shaka.Player.isBrowserSupported()) {
+                const video = document.getElementById('video');
+                const player = new shaka.Player(video);
+
+                // Yahan aapka KID aur KEY configure kiya gaya hai
+                player.configure({
+                    drm: {
+                        clearKeys: {
+                            // Format: 'KID': 'KEY'
+                            '3aa6f9df41c299f659aaee15d0067900': '0434703fb407fb12980f51944271a1f8'
+                        }
+                    }
+                });
+
+                // Error handling
+                player.addEventListener('error', function(event) {
+                    console.error('Error code', event.detail.code, 'object', event.detail);
+                });
+
+                try {
+                    // Load the DRM stream
+                    await player.load(manifestUri);
+                    console.log('Video loaded successfully!');
+                } catch (e) {
+                    console.error('Error loading video:', e);
+                }
+            } else {
+                console.error('Browser not supported!');
+            }
         }
-        // Safari natively supports HLS, so we fallback to direct source
-        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = streamUrl;
-            video.addEventListener('loadedmetadata', function() {
-                video.play();
-            });
-        }
+
+        document.addEventListener('DOMContentLoaded', initPlayer);
     </script>
 
 </body>
