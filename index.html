@@ -2,448 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MKS Sports - Premium FIFA Live</title>
-    
-    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
-    <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.16.2/dist/shaka-player.ui.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@4.16.2/dist/controls.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Stream Player</title>
+    <!-- HLS.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        /* --- ULTRA SLEEK PREMIUM DARK THEME --- */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-        
-        :root { 
-            --bg-main: #06060c; 
-            --glass-bg: rgba(15, 15, 25, 0.65); 
-            --glass-border: rgba(0, 242, 254, 0.15);
-            --accent: #00f2fe; 
-            --accent-glow: rgba(0, 242, 254, 0.4);
-            --text-main: #FFFFFF;
-            --text-muted: #A0A5B5;
+        /* Premium Dark Theme for Streaming */
+        body {
+            background-color: #000000;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-        
-        body { margin: 0; background: var(--bg-main); background-image: radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.1) 0%, transparent 50%); color: var(--text-main); font-family: 'Poppins', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
-        
-        /* MKS Premium Splash Screen */
-        .mks-splash { position: fixed; inset: 0; background: #050505; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.8s ease; overflow: hidden; }
-        .mks-splash.hidden { opacity: 0; pointer-events: none; }
-        .mks-splash-glow { position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); animation: breathe 3s infinite alternate; }
-        @keyframes breathe { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.2); opacity: 1; } }
-        .mks-anim-box { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; }
-        .mks-letters { display: flex; align-items: center; font-size: 75px; font-weight: 900; font-style: italic; letter-spacing: 2px; z-index: 2; margin-bottom: -5px; }
-        .letter { opacity: 0; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.8)); }
-        .letter.m { color: #F8FAFC; animation: appear 0.4s ease-out 0.3s forwards; }
-        .letter.k { color: #F8FAFC; animation: appear 0.4s ease-out 0.8s forwards; }
-        .letter.s { color: var(--accent); animation: slideInS 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1.3s forwards; }
-        .sports-word { font-size: 20px; font-weight: 800; letter-spacing: 16px; margin-right: -16px; color: #FFFFFF; background: linear-gradient(90deg, #FFFFFF, #94A3B8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; opacity: 0; transform: translateY(-60px); z-index: 1; animation: dropSports 0.5s cubic-bezier(0.4, 0, 0.2, 1) 1.8s forwards; }
-        @keyframes appear { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
-        @keyframes slideInS { 0% { opacity: 0; transform: translateX(80px) skewX(-15deg); } 100% { opacity: 1; transform: translateX(0) skewX(0); } }
-        @keyframes dropSports { 0% { opacity: 0; transform: translateY(-60px); } 100% { opacity: 1; transform: translateY(0); } }
-
-        /* HEADER */
-        .header { background: rgba(6, 6, 12, 0.85); padding: 15px 20px; display: flex; justify-content: center; align-items: center; border-bottom: 2px solid var(--accent); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 5px 20px rgba(0, 242, 254, 0.15); }
-        .logo-text { font-size: 22px; font-weight: 800; letter-spacing: 1.5px; background: linear-gradient(90deg, #FFF, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; display: flex; align-items: center; gap: 8px;}
-        .logo-text i { color: var(--accent); -webkit-text-fill-color: initial; text-shadow: 0 0 10px var(--accent-glow); }
-        
-        .main-container { padding: 15px; width: 100%; max-width: 850px; margin: 0 auto; box-sizing: border-box; }
-        
-        /* PLAYER CARD */
-        .video-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.8), 0 0 20px rgba(0, 242, 254, 0.1); position: relative; backdrop-filter: blur(10px); }
-        .shaka-video-container { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        
-        /* Video Base Styles (z-index REMOVED for correct touch events) */
-        video { width: 100%; height: 100%; object-fit: contain; transition: object-fit 0.3s ease, opacity 0.5s ease, filter 0.5s ease; }
-
-        /* FLYING EMOJIS */
-        .emoji-fly { position: absolute; bottom: 15%; left: 50%; font-size: 35px; z-index: 1000; animation: flyUp 1.5s ease-out forwards; pointer-events: none; text-shadow: 0 2px 10px rgba(0,0,0,0.5); transform: translateX(-50%); }
-        @keyframes flyUp { 
-            0% { bottom: 15%; opacity: 1; transform: translate(-50%, 0) scale(1); } 
-            100% { bottom: 75%; opacity: 0; transform: translate(calc(-50% + var(--drift)), -80px) scale(1.6); } 
+        .player-container {
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+            background: #111;
         }
-
-        /* POCKET MODE OVERLAY */
-        #pocket-overlay { position: absolute; inset: 0; background: #050505; z-index: 15; display: none; flex-direction: column; align-items: center; justify-content: center; color: var(--accent); pointer-events: none;}
-        #pocket-overlay i { font-size: 45px; animation: breathe 2s infinite alternate; filter: drop-shadow(0 0 15px var(--accent-glow)); }
-        #pocket-overlay span { margin-top: 12px; font-size: 14px; font-weight: 600; letter-spacing: 1px; }
-
-        /* TOP BADGES */
-        .top-badges { position: absolute; top: 12px; left: 12px; z-index: 25; display: flex; gap: 8px; pointer-events: none; }
-        .badge { background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
-        .live { color: #FF3B30; border-color: rgba(255, 59, 48, 0.3); background: rgba(255, 59, 48, 0.1); }
-        .live-dot { width: 6px; height: 6px; background: #FF3B30; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
-
-        /* SETTINGS & ACTION BUTTONS ON PLAYER (z-index increased to 99) */
-        .custom-settings-btn { position: absolute; top: 12px; z-index: 99; background: rgba(0,0,0,0.6); color: #FFF; border: 1px solid rgba(255,255,255,0.2); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); transition: 0.3s; }
-        .custom-settings-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); transform: scale(1.1); }
-        
-        .quality-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(5px); opacity: 0; transition: opacity 0.3s; }
-        .quality-overlay.active { display: flex; opacity: 1; }
-        .q-box { background: var(--bg-main); border: 1px solid var(--accent); border-radius: 12px; width: 220px; max-height: 90%; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 242, 254, 0.2); }
-        .q-header { background: rgba(0, 242, 254, 0.1); padding: 12px; font-size: 13px; font-weight: 600; text-align: center; border-bottom: 1px solid var(--glass-border); position: relative; color: var(--accent); }
-        .q-close { position: absolute; right: 12px; top: 12px; cursor: pointer; color: var(--text-main); }
-        #quality-list { flex-grow: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
-        .q-item { padding: 12px; font-size: 13px; font-weight: 500; text-align: center; color: var(--text-main); cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.03); transition: 0.2s; }
-        .q-item:hover, .q-item.active { background: rgba(0, 242, 254, 0.15); color: var(--accent); }
-
-        /* CONTROLS BOX */
-        .controls-box { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
-        .action-row { display: flex; gap: 10px; align-items: center; justify-content: center; }
-        .btn-sleek { flex: 1; background: rgba(255, 255, 255, 0.05); color: var(--text-main); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; font-weight: 500; font-size: 13px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.3s; font-family: 'Poppins', sans-serif;}
-        .btn-sleek:hover { background: rgba(255, 255, 255, 0.1); transform: scale(0.98); }
-        
-        .btn-refresh-premium { flex: 1.2; background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000; border: none; border-radius: 8px; padding: 13px; font-weight: 800; font-size: 14px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4); transform: scale(1.02); font-family: 'Poppins', sans-serif; }
-        .btn-refresh-premium:hover { box-shadow: 0 6px 20px rgba(0, 242, 254, 0.6); transform: scale(1.06); }
-
-        /* TELEGRAM BUTTON */
-        .btn-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-        .btn-tele { padding: 14px; border-radius: 50px; font-weight: 700; text-decoration: none; text-align: center; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 8px; color: #FFF; background: linear-gradient(135deg, #0088cc, #005580); box-shadow: 0 8px 20px rgba(0, 136, 204, 0.4); position: relative; overflow: hidden; transition: transform 0.3s; letter-spacing: 0.5px;}
-        .btn-tele:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 25px rgba(0, 136, 204, 0.6); }
-        .btn-tele::after { content: ''; position: absolute; top: -50%; left: -60%; width: 30%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%); transform: rotate(45deg); animation: shine 3s infinite linear; }
-        @keyframes shine { 0% { left: -60%; } 20% { left: 140%; } 100% { left: 140%; } }
-
-        /* SERVER CARDS */
-        .section-title { font-size: 13px; color: var(--text-muted); font-weight: 700; text-align: center; margin: 25px 0 12px; letter-spacing: 1.5px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px;}
-        .ch-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .ch-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.05); padding: 14px 10px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; }
-        .ch-card i { font-size: 22px; color: var(--text-muted); transition: 0.3s; }
-        .ch-card span { font-size: 13px; font-weight: 600; color: var(--text-main); }
-        .server-tag { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text-muted); text-transform: uppercase; }
-        .ch-card:hover { background: rgba(255, 255, 255, 0.06); }
-        .ch-card.active { border-color: var(--accent); background: rgba(0, 242, 254, 0.08); box-shadow: 0 5px 15px var(--accent-glow); transform: translateY(-2px); }
-        .ch-card.active i { color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
-        .ch-card.active .server-tag { background: var(--accent); color: #000; }
-
-        /* LOADER & FOOTER */
-        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 45px; height: 45px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; z-index: 30; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        .glowing-footer { margin-top: 30px; padding: 18px; text-align: center; color: var(--text-muted); font-size: 11px; font-weight: 400; background: var(--glass-bg); border-radius: 12px; border: 1px solid var(--glass-border); line-height: 1.6; }
-        .glowing-footer strong { color: var(--text-main); font-weight: 600; display: block; margin-bottom: 4px; font-size: 12px; }
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
     </style>
 </head>
-<body oncontextmenu="return false;" oncopy="return false" oncut="return false" onpaste="return false" onselectstart="return false;">
-    
-    <div class="mks-splash" id="splash-screen">
-        <div class="mks-splash-glow"></div>
-        <div class="mks-anim-box">
-            <div class="mks-letters"><span class="letter m">M</span><span class="letter k">K</span><span class="letter s">S</span></div>
-            <div class="sports-word">SPORTS</div>
-        </div>
+<body>
+
+    <div class="player-container">
+        <!-- Video Player Element -->
+        <video id="live-video" controls autoplay muted></video>
     </div>
 
-    <div class="header">
-        <div class="logo-text"><i class="fas fa-bolt"></i> MKS Sports</div>
-    </div>
-    
-    <div class="main-container">
-        <div class="video-card">
-            <div class="shaka-video-container" id="player-container">
-                <div class="top-badges">
-                    <div class="badge live"><span class="live-dot"></span>LIVE</div>
-                    <div class="badge" style="color:#A0A5B5"><i class="fas fa-users" style="color:var(--accent)"></i> <span id="v-count">0</span></div>
-                </div>
-                
-                <button class="custom-settings-btn" style="right: 12px; top: 50%; transform: translateY(-50%); background: rgba(255, 51, 102, 0.2); border-color: #ff3366;" onclick="shootEmoji()" title="Send Reaction">
-                    <i class="fas fa-heart" style="color: #ff3366;"></i>
-                </button>
-
-                <div id="pocket-overlay">
-                    <i class="fas fa-headphones-alt"></i>
-                    <span>Audio Mode Active</span>
-                </div>
-
-                <button id="pocket-btn" class="custom-settings-btn" style="right: 188px;" onclick="togglePocketMode()" title="Audio Only">
-                    <i class="fas fa-headphones"></i>
-                </button>
-
-                <button id="eyecare-btn" class="custom-settings-btn" style="right: 144px;" onclick="toggleEyeCare()" title="Eye Care Filter">
-                    <i class="fas fa-moon"></i>
-                </button>
-
-                <button id="pip-btn" class="custom-settings-btn" style="right: 100px;" onclick="togglePiP()" title="Background Play">
-                    <i class="fas fa-window-restore"></i>
-                </button>
-                
-                <button id="fit-btn" class="custom-settings-btn" style="right: 56px;" onclick="toggleFitMode()" title="Screen Size">
-                    <i class="fas fa-expand"></i>
-                </button>
-                
-                <button id="settings-btn" class="custom-settings-btn" style="right: 12px;" onclick="openQualityMenu()">
-                    <i class="fas fa-cog"></i>
-                </button>
-                
-                <div id="quality-overlay" class="quality-overlay">
-                    <div class="q-box">
-                        <div class="q-header">Video Quality<i class="fas fa-times q-close" onclick="closeQualityMenu()"></i></div>
-                        <div id="quality-list"></div>
-                    </div>
-                </div>
-                
-                <video id="video" autoplay muted playsinline></video>
-                <div id="loader"></div>
-            </div>
-            
-            <div class="controls-box">
-                <div class="action-row">
-                    <button class="btn-sleek" onclick="seekVideo(-10)"><i class="fas fa-undo"></i> 10s</button>
-                    <button class="btn-refresh-premium" onclick="location.reload()"><i class="fas fa-sync-alt"></i> REFRESH</button>
-                    <button class="btn-sleek" onclick="seekVideo(10)">10s <i class="fas fa-redo"></i></button>
-                </div>
-
-                <div class="btn-grid">
-                    <a href="https://t.me/MKSsports_3" class="btn-tele" target="_blank"><i class="fab fa-telegram-plane"></i> JOIN TELEGRAM</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-title"><i class="fas fa-server"></i> Premium Servers</div>
-        <div class="ch-grid" id="ch-grid"></div>
-
-        <div class="glowing-footer">
-            <strong><i class="fas fa-shield-alt" style="color: var(--accent); margin-right: 5px;"></i> Legal Disclaimer</strong>
-            We do not own, host, or broadcast any of the streams provided here. All content is dynamically fetched from public web sources.
-        </div>
-    </div>
-        <script>
-    // Splash Screen
-    document.addEventListener("DOMContentLoaded", () => {
-        setTimeout(() => {
-            const splash = document.getElementById('splash-screen');
-            splash.classList.add('hidden');
-            setTimeout(() => splash.remove(), 800);
-        }, 3000);
-    });
-
-    // Realistic Fake Viewers
-    let views = Math.floor(Math.random() * 40) + 250; 
-    document.getElementById('v-count').innerText = views;
-    setInterval(() => { 
-        views += Math.floor(Math.random() * 5) - 2; 
-        if (views < 200) views += 10; 
-        if (views > 500) views -= 15; 
-        document.getElementById('v-count').innerText = views; 
-    }, 5000);
-
-    // 👇 HAPTIC VIBRATION
-    function triggerHaptic(ms = 30) {
-        if (navigator.vibrate) navigator.vibrate(ms);
-    }
-
-    // 👇 INSTA-STYLE EMOJIS (Works on clicking the Heart Button)
-    function shootEmoji() {
-        triggerHaptic([30, 50]);
-        const emojis = ['⚽', '🔥', '🏆', '❤️', '🤩', '🇮🇳'];
-        const em = emojis[Math.floor(Math.random() * emojis.length)];
-        const el = document.createElement('div');
-        el.className = 'emoji-fly';
-        el.innerText = em;
-        // Generate random drift value between -40px and +40px
-        const drift = Math.floor(Math.random() * 80) - 40;
-        el.style.setProperty('--drift', drift + 'px');
+    <script>
+        // Aapka pura Akamai Token wala M3U8 link
+        var streamUrl = "https://sonydaimenew.akamaized.net/hls/live/2105079/cricodi1506/ENG/master.m3u8?hdnea=exp=1781538436~acl=/*~id=82345712319781574074851400866986~hmac=d48afe4724596d1f706baab6c69320a6df4b92e2cdc825a0353dc04097d0def6";
         
-        document.getElementById('player-container').appendChild(el);
-        setTimeout(() => el.remove(), 1500);
-    }
+        var video = document.getElementById('live-video');
 
-    // 👇 Fit Mode
-    const fitModes = ['contain', 'cover', 'fill'];
-    const fitIcons = ['fa-expand', 'fa-crop-alt', 'fa-arrows-alt-h'];
-    let fitIdx = 0;
-    function toggleFitMode() {
-        triggerHaptic(40);
-        fitIdx = (fitIdx + 1) % fitModes.length;
-        document.getElementById("video").style.objectFit = fitModes[fitIdx];
-        document.querySelector("#fit-btn i").className = "fas " + fitIcons[fitIdx];
-    }
-
-    // 👇 EYE-CARE (NIGHT MODE FILTER)
-    function toggleEyeCare() {
-        triggerHaptic(40);
-        const vid = document.getElementById("video");
-        const btn = document.getElementById("eyecare-btn");
-        
-        vid.classList.toggle("eye-care-on");
-        if(vid.classList.contains("eye-care-on")) {
-            btn.style.color = "#ffcc00"; 
-            btn.style.borderColor = "#ffcc00";
-            vid.style.filter = "sepia(0.5) contrast(0.95) brightness(0.9)";
-        } else {
-            btn.style.color = "#FFF";
-            btn.style.borderColor = "rgba(255,255,255,0.2)";
-            vid.style.filter = "none";
-        }
-    }
-
-    // 👇 Picture-in-Picture
-    async function togglePiP() {
-        triggerHaptic(40);
-        const video = document.getElementById("video");
-        try {
-            if (document.pictureInPictureElement) await document.exitPictureInPicture();
-            else if (document.pictureInPictureEnabled) await video.requestPictureInPicture();
-        } catch (error) { console.error("PiP Error: ", error); }
-    }
-
-    // 👇 Pocket Mode
-    function togglePocketMode() {
-        triggerHaptic(40);
-        const overlay = document.getElementById("pocket-overlay");
-        const vid = document.getElementById("video");
-        const btn = document.getElementById("pocket-btn");
-        
-        if (overlay.style.display === "none" || overlay.style.display === "") {
-            overlay.style.display = "flex";
-            vid.style.opacity = "0.01"; 
-            btn.style.color = "var(--accent)";
-            btn.style.borderColor = "var(--accent)";
-        } else {
-            overlay.style.display = "none";
-            vid.style.opacity = "1";
-            btn.style.color = "#FFF";
-            btn.style.borderColor = "rgba(255,255,255,0.2)";
-        }
-    }
-
-    // 👇 Anti-Sleep Wakelock
-    let wakeLock = null;
-    async function requestWakeLock() {
-        try { wakeLock = await navigator.wakeLock.request('screen'); } 
-        catch (err) { console.log('Wakelock error:', err); }
-    }
-    document.addEventListener('visibilitychange', () => {
-        if (wakeLock !== null && document.visibilityState === 'visible') requestWakeLock();
-    });
-
-    // 👇 CHANNELS LIST
-    const CHANNELS = {
-        mks1: { 
-            name: "MKS Server 1", tag: "Hindi (Ultra HD)", icon: "fas fa-satellite-dish", 
-            url: "https://a151aivottlinear-a.akamaihd.net/OTTB/sin-nitro/live/dash/enc/m7duvnk2bu/out/v1/d1ad69118b5647309b1eb7213affdb3d/cenc.mpd", kid: "4bbcff3289d457b4dd5dbdd21221de9a", key: "c4906b9a9f8dda3c0725bddb8c497733" 
-        },
-        mks2: { 
-            name: "MKS Server 2", tag: "English (1080p)", icon: "fas fa-broadcast-tower", 
-            url: "https://live-oneapp-prd-news.akamaized.net/Content/CMAF_OL2-CTR-4s-v2/Live/channel(kvea)/master.mpd", kid: "ce7ab3022e753307997f58afe001bac4", key: "72d631a66e635c60829a0fe7705516c1" 
-        },
-        mks3: {
-            name: "MKS Server 3", tag: "Main Feed", icon: "fas fa-tv",
-            url: "https://qp-pldt-live-bpk-ucd-prod.akamaized.net/bpk-tv/ch299/default/index.mpd", kid: "549ab7cd35a64bb6bb479ecead04d69d", key: "829799ed534d11fcadeb4b192467e050"
-        },
-        mks4: {
-            name: "MKS Server 4", tag: "Data Saver", icon: "fas fa-play-circle",
-            url: "https://origin-m6web.live.6cloud.fr/out/v1/6play/6play-m6/cmaf_cenc00/dash-short-hd.mpd", kid: "433ffba670963e70857859a9dff4be04", key: "51ede3a821229fe81e71282c8eff80e3"
-        },
-        mks5: {
-            name: "MKS Server 5", tag: "Multi-Cam", icon: "fas fa-bolt",
-            url: "https://live-oneapp-prd-news.akamaized.net/Content/CMAF_OL2-CTR-4s-v2/Live/channel(kvea)/master.mpd", kid: "ce7ab3022e753307997f58afe001bac4", key: "72d631a66e635c60829a0fe7705516c1"
-        },
-        mks6: {
-            name: "MKS Server 6", tag: "Backup Link", icon: "fas fa-fire",
-            url: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/h9urpo3cwb/out/v1/fde190f369484bc6b6117cc16cd82a9f/cenc.mpd", kid: "c4088f5f265f9de50cffd80bf89308b7", key: "2c4d2239d96d532b4ec2050653611003"
-        }
-    };
-
-    let player, ui;
-
-    function openQualityMenu() { triggerHaptic(); document.getElementById('quality-overlay').classList.add('active'); }
-    function closeQualityMenu() { triggerHaptic(); document.getElementById('quality-overlay').classList.remove('active'); }
-
-    function updateQualityUI() {
-        const list = document.getElementById('quality-list');
-        list.innerHTML = "";
-        let autoBtn = document.createElement('div');
-        autoBtn.className = 'q-item active'; autoBtn.innerText = 'Auto (Recommended)';
-        autoBtn.onclick = () => setQuality('auto', autoBtn);
-        list.appendChild(autoBtn);
-
-        if (player) {
-            const variantTracks = player.getVariantTracks();
-            let uniqueHeights = [...new Set(variantTracks.map(t => t.height))].filter(Boolean).sort((a,b) => b - a);
-            
-            uniqueHeights.forEach(height => {
-                let btn = document.createElement('div');
-                btn.className = 'q-item'; btn.innerText = height + 'p';
-                btn.onclick = () => setQuality(height, btn);
-                list.appendChild(btn);
+        // Check if browser supports HLS.js
+        if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(streamUrl);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play();
             });
         }
-    }
-
-    function setQuality(val, clickedBtn) {
-        triggerHaptic();
-        document.querySelectorAll('.q-item').forEach(b => b.classList.remove('active'));
-        clickedBtn.classList.add('active');
-        if (player) {
-            if (val === 'auto') { player.configure({ abr: { enabled: true } }); } 
-            else { player.configure({ abr: { enabled: false } }); const trackToSelect = player.getVariantTracks().find(t => t.height === val); if (trackToSelect) player.selectVariantTrack(trackToSelect, true); }
+        // Safari natively supports HLS, so we fallback to direct source
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = streamUrl;
+            video.addEventListener('loadedmetadata', function() {
+                video.play();
+            });
         }
-        closeQualityMenu();
-    }
-
-    window.seekVideo = function(seconds) {
-        triggerHaptic([30, 40]); 
-        const vid = document.getElementById("video");
-        if (vid) { vid.currentTime = vid.currentTime + seconds; }
-    }
-
-    /* Multi-Channel Player Initialization */
-    async function initPlayer(id) {
-        triggerHaptic(50);
-        const config = CHANNELS[id];
-        const video = document.getElementById("video"), container = document.getElementById("player-container"), loader = document.getElementById("loader");
-        loader.style.display = "block";
-        
-        if (player) { await player.destroy(); player = null; }
-
-        shaka.polyfill.installAll();
-        player = new shaka.Player();
-        await player.attach(video);
-        
-        if (!ui) ui = new shaka.ui.Overlay(player, container, video);
-        ui.configure({ controlPanelElements: ["play_pause", "time_and_duration", "spacer", "mute", "fullscreen"] });
-        
-        player.configure({
-            drm: { clearKeys: { [config.kid]: config.key } },
-            streaming: { lowLatencyMode: false, bufferingGoal: 15 }
-        });
-
-        player.getNetworkingEngine().clearAllRequestFilters();
-        player.getNetworkingEngine().registerRequestFilter((type, request) => {
-            request.headers["Referer"] = "https://www.jiotv.com/";
-            request.headers["User-Agent"] = "plaYtv/7.1.5";
-        });
-
-        try { 
-            await player.load(config.url); 
-            loader.style.display = "none"; 
-            video.play(); video.muted = false; 
-            updateQualityUI();
-            requestWakeLock(); // Start Anti-Sleep
-        } catch (e) { 
-            console.error("Stream Load Error: ", e); 
-            loader.style.display = "none";
-        }
-    }
-
-    window.onload = () => {
-        const grid = document.getElementById("ch-grid");
-        const startId = "mks1";
-
-        Object.keys(CHANNELS).forEach(key => {
-            const card = document.createElement("div");
-            card.className = `ch-card ${key === startId ? 'active' : ''}`;
-            card.innerHTML = `<i class="${CHANNELS[key].icon}"></i><span>${CHANNELS[key].name}</span><div class="server-tag">${CHANNELS[key].tag}</div>`;
-            card.onclick = () => {
-                initPlayer(key);
-                document.querySelectorAll('.ch-card').forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
-            };
-            grid.appendChild(card);
-        });
-        initPlayer(startId);
-    };
     </script>
+
 </body>
 </html>
