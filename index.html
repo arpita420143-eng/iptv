@@ -3,90 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Stream Player</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.1/shaka-player.compiled.js"></script>
-    <style>
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-family: Arial, sans-serif;
-            margin-top: 50px;
-        }
-        .player-container {
-            width: 90%;
-            max-width: 800px;
-            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        video {
-            width: 100%;
-            display: block;
-        }
-    </style>
+    <title>MKS Sports - Live Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.ui.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/controls.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h2>My Live Stream</h2>
-    <div class="player-container">
-        <video id="video" controls autoplay></video>
+    <header>
+        <h1>MKS<span>SPORTS</span></h1>
+        
+        <div class="header-right">
+            <div class="live-stats">
+                <div class="viewers"><span class="dot"></span> <span id="viewer-count">1.2M</span> Live</div>
+                <div style="font-size:12px; font-weight:bold; color:var(--text-muted);">CAN vs BIH</div>
+            </div>
+            
+            <a href="https://youtube.com/@mkssports3?si=Wn-yS-fGVqZsSPqt" target="_blank" class="yt-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21.582 6.186a2.665 2.665 0 0 0-1.874-1.884C18.053 3.86 12 3.86 12 3.86s-6.053 0-7.708.442a2.665 2.665 0 0 0-1.874 1.884C2 7.852 2 12 2 12s0 4.148.418 5.814a2.665 2.665 0 0 0 1.874 1.884c1.655.442 7.708.442 7.708.442s6.053 0 7.708-.442a2.665 2.665 0 0 0 1.874-1.884C22 16.148 22 12 22 12s0-4.148-.418-5.814zM9.99 15.474V8.526L15.918 12l-5.928 3.474z"/>
+                </svg>
+                Subscribe
+            </a>
+
+            <a href="https://t.me/MKSsports_3" target="_blank" class="tg-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21.5 2L2.5 9.5L9.5 12.5L12 21L15.5 15.5L21.5 2Z" fill="currentColor"/>
+                </svg>
+                Join Telegram
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="player-section">
+            <div class="player-wrapper">
+                <div id="video-container" data-shaka-player-container>
+                    <div class="watermark">MKS SPORTS EXCLUSIVE</div>
+                    <video id="video" data-shaka-player autoplay></video>
+                </div>
+            </div>
+        </div>
+
+        <div class="playlist-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search Channels..." onkeyup="filterChannels()">
+            </div>
+            
+            <div class="channel-list" id="playlist">
+                </div>
+
+            <div class="disclaimer">
+                <strong>Disclaimer:</strong> MKS Sports is a linking site and does not host any media. All streams are embedded from publicly available third-party sources. We strictly respect copyright laws.
+            </div>
+        </div>
     </div>
 
-    <script>
-        // Aapka video URL (mene double link ko single mein theek kar diya hai)
-        const manifestUri = 'https://abkyrm4aaaaaaaamfyfksth3wr44v.ta.bia-cf.live.pv-cdn.net/pdx-nitro/live/clients/dash/enc/mxfalds7lk/out/v1/4898ebe40b8e48d6aba9c028dd60b875/cenc.mpd';
-
-        async function initApp() {
-            // Install built-in polyfills to patch browser incompatibilities.
-            shaka.polyfill.installAll();
-
-            // Check to see if the browser supports the basic APIs Shaka needs.
-            if (shaka.Player.isBrowserSupported()) {
-                initPlayer();
-            } else {
-                console.error('Browser not supported!');
-            }
-        }
-
-        async function initPlayer() {
-            const video = document.getElementById('video');
-            const player = new shaka.Player(video);
-
-            // Listen for error events.
-            player.addEventListener('error', onErrorEvent);
-
-            // Configure ClearKey DRM yahan set kiya gaya hai
-            player.configure({
-                drm: {
-                    clearKeys: {
-                        // 'KID' : 'KEY'
-                        'a70339c23a79302093a0845eb7521865': '3dc10e5ebb573d3a4f41e925412ab2c5'
-                    }
-                }
-            });
-
-            try {
-                // Load the manifest
-                await player.load(manifestUri);
-                console.log('Video load ho gaya hai!');
-            } catch (e) {
-                onError(e);
-            }
-        }
-
-        function onErrorEvent(event) {
-            onError(event.detail);
-        }
-
-        function onError(error) {
-            console.error('Error code', error.code, 'object', error);
-            alert("Video play karne mein error aayi hai. Check console for details.");
-        }
-
-        document.addEventListener('DOMContentLoaded', initApp);
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
