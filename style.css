@@ -1,3 +1,4 @@
+/* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,900;1,900&family=Poppins:wght@400;600;700&display=swap');
 
 * {
@@ -99,7 +100,7 @@ body {
     background: #000;
     margin-bottom: 25px;
     border: 2px solid #ff3300;
-    animation: fireGlow 2s infinite alternate; /* Jalta hua effect yahan hai */
+    animation: fireGlow 2s infinite alternate; 
 }
 
 .mks-player-wrapper {
@@ -206,7 +207,6 @@ body {
 
 .server-btn i { font-size: 22px; }
 
-/* Active Server Box */
 .server-btn.active-fire {
     background: rgba(255, 85, 0, 0.1);
     border-color: #ff5500;
@@ -214,3 +214,27 @@ body {
     box-shadow: inset 0 0 10px rgba(255, 85, 0, 0.3);
 }
 .server-btn.active-fire i { color: #ffcc00; animation: textFire 2s infinite alternate; }
+
+/* ================= DISCLAIMER BOX ================= */
+.disclaimer-section {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    padding: 15px;
+    background-color: #0d0d0d;
+    border-left: 3px solid #ff3300;
+    border-radius: 6px;
+    font-size: 11px;
+    color: #666666;
+    text-align: justify;
+    line-height: 1.6;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+.disclaimer-section strong {
+    color: #ff5500;
+    font-size: 12px;
+    display: block;
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
+}
