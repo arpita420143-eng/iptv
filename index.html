@@ -3,61 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKS Sports - Live Premium</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.ui.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/controls.css">
-    <link rel="stylesheet" href="style.css">
+    <title>MKS Sports - Live Streaming</title>
+    <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
 
-    <header>
-        <h1>MKS<span>SPORTS</span></h1>
+    <!-- Glowing Title -->
+    <div class="live-title">
+        🔴 Live Match
+    </div>
+
+    <!-- Video Grid -->
+    <div class="video-grid">
         
-        <div class="header-right">
-            <div class="live-stats">
-                <div class="viewers"><span class="dot"></span> <span id="viewer-count">1.2M</span> Live</div>
-                <div style="font-size:12px; font-weight:bold; color:var(--text-muted);">CAN vs BIH</div>
-            </div>
-            
-            <a href="https://youtube.com/@mkssports3?si=Wn-yS-fGVqZsSPqt" target="_blank" class="yt-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M21.582 6.186a2.665 2.665 0 0 0-1.874-1.884C18.053 3.86 12 3.86 12 3.86s-6.053 0-7.708.442a2.665 2.665 0 0 0-1.874 1.884C2 7.852 2 12 2 12s0 4.148.418 5.814a2.665 2.665 0 0 0 1.874 1.884c1.655.442 7.708.442 7.708.442s6.053 0 7.708-.442a2.665 2.665 0 0 0 1.874-1.884C22 16.148 22 12 22 12s0-4.148-.418-5.814zM9.99 15.474V8.526L15.918 12l-5.928 3.474z"/>
-                </svg>
-                Subscribe
-            </a>
-
-            <a href="https://t.me/MKSsports_3" target="_blank" class="tg-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M21.5 2L2.5 9.5L9.5 12.5L12 21L15.5 15.5L21.5 2Z" fill="currentColor"/>
-                </svg>
-                Join Telegram
-            </a>
-        </div>
-    </header>
-
-    <div class="container">
-        <div class="player-section">
-            <div class="player-wrapper">
-                <div id="video-container" data-shaka-player-container>
-                    <div class="watermark">MKS SPORTS EXCLUSIVE</div>
-                    <video id="video" data-shaka-player autoplay></video>
+        <!-- Player 1: Third Party Server -->
+        <div class="player-box">
+            <h3 class="server-title">Server 1 (Live Stream)</h3>
+            <div class="player-container">
+                <div class="mks-player-wrapper">
+                    <iframe 
+                        src="https://ex.roooom.online/?alba-player=home1&serv=0" 
+                        allowfullscreen="true" 
+                        frameborder="0" 
+                        scrolling="no"
+                        oncontextmenu="return false;">
+                    </iframe>
                 </div>
             </div>
         </div>
 
-        <div class="playlist-section">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search Channels..." onkeyup="filterChannels()">
-            </div>
-            
-            <div class="channel-list" id="playlist">
+        <!-- Player 2: YouTube Server -->
+        <div class="player-box">
+            <h3 class="server-title">Server 2 (Backup Stream)</h3>
+            <div class="player-container">
+                <div class="mks-player-wrapper">
+                    <iframe 
+                        src="https://www.youtube.com/embed/XJoMu50BsxM" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen="true" 
+                        frameborder="0" 
+                        oncontextmenu="return false;">
+                    </iframe>
                 </div>
-
-            <div class="disclaimer">
-                <strong>Disclaimer:</strong> MKS Sports is a linking site and does not host any media. All streams are embedded from publicly available third-party sources. We strictly respect copyright laws.
             </div>
         </div>
+
+        <!-- 👇 NAYA SERVER ADD KARNE KE LIYE YAHAN PASTE KARO 👇 -->
+        <!-- Future mein Server 3 ya 4 add karna ho toh is line ke theek niche paste karna -->
+        
+        
+
+        <!-- 👆 NAYA SERVER YAHAN TAK AAYEGA 👆 -->
+
     </div>
 
     <script src="script.js"></script>
