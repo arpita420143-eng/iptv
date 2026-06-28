@@ -3,57 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKS Sports - Live Streaming</title>
+    <title>MKS Sports - Live Match</title>
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
 
-    <!-- Glowing Title -->
-    <div class="live-title">
-        🔴 Live Match
+    <!-- FIERY SPLASH SCREEN -->
+    <div id="splash-screen">
+        <div class="logo-container">
+            <div class="fire-icon"><i class="fa-solid fa-fire-flame-curved"></i></div>
+            <h1 class="logo-text">MK<span class="fire-text">S</span></h1>
+            <p class="logo-subtext">S P O R T S</p>
+        </div>
     </div>
 
-    <!-- Video Grid -->
-    <div class="video-grid">
+    <!-- MAIN APP CONTENT -->
+    <div id="main-content" style="display: none;">
         
-        <!-- Player 1: Third Party Server -->
-        <div class="player-box">
-            <h3 class="server-title">Server 1 (Live Stream)</h3>
-            <div class="player-container">
-                <div class="mks-player-wrapper">
-                    <iframe 
-                        src="https://ex.roooom.online/?alba-player=home1&serv=0" 
-                        allowfullscreen="true" 
-                        frameborder="0" 
-                        scrolling="no"
-                        oncontextmenu="return false;">
-                    </iframe>
-                </div>
+        <!-- Glowing Header -->
+        <header class="app-header">
+            <h2>MKS <span class="fire-text">PREMIUM</span></h2>
+        </header>
+
+        <!-- Jalta Hua Player Box -->
+        <div class="player-container">
+            <div class="mks-player-wrapper">
+                <iframe 
+                    id="main-player"
+                    src="https://ex.roooom.online/?alba-player=home1&serv=0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen="true" 
+                    frameborder="0" 
+                    scrolling="no"
+                    oncontextmenu="return false;">
+                </iframe>
             </div>
         </div>
 
-        <!-- Player 2: YouTube Server -->
-        <div class="player-box">
-            <h3 class="server-title">Server 2 (Backup Stream)</h3>
-            <div class="player-container">
-                <div class="mks-player-wrapper">
-                    <iframe 
-                        src="https://www.youtube.com/embed/XJoMu50BsxM" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen="true" 
-                        frameborder="0" 
-                        oncontextmenu="return false;">
-                    </iframe>
-                </div>
-            </div>
+        <!-- Action Buttons Grid -->
+        <div class="action-buttons">
+            <button class="btn btn-dark"><i class="fa-solid fa-backward"></i> -15s</button>
+            <button class="btn btn-fire" onclick="refreshPlayer()"><i class="fa-solid fa-rotate"></i> REFRESH</button>
+            <button class="btn btn-dark">+15s <i class="fa-solid fa-forward"></i></button>
+
+            <button class="btn btn-fire-outline"><i class="fa-solid fa-volume-xmark"></i> MUTE</button>
+            <button class="btn btn-dark"><i class="fa-solid fa-leaf"></i> SAVER</button>
+            <button class="btn btn-fire glowing-btn"><i class="fa-solid fa-tower-broadcast"></i> LIVE</button>
+
+            <!-- Social Links -->
+            <a href="https://t.me/MKSsports_3" target="_blank" class="btn btn-blue span-2"><i class="fa-brands fa-telegram"></i> TELEGRAM</a>
+            <a href="https://youtube.com/@mkssports3" target="_blank" class="btn btn-red span-2"><i class="fa-brands fa-youtube"></i> YOUTUBE</a>
+
+            <button class="btn btn-green span-full" onclick="shareSite()"><i class="fa-brands fa-whatsapp"></i> SHARE WITH FRIENDS</button>
         </div>
 
-        <!-- 👇 NAYA SERVER ADD KARNE KE LIYE YAHAN PASTE KARO 👇 -->
-        <!-- Future mein Server 3 ya 4 add karna ho toh is line ke theek niche paste karna -->
-        
-        
+        <!-- Premium Servers Section -->
+        <div class="servers-section">
+            <h3 class="section-title"><i class="fa-solid fa-fire"></i> HOT SERVERS</h3>
+            <div class="server-grid">
+                
+                <button class="server-btn active-fire" onclick="changeServer('https://ex.roooom.online/?alba-player=home1&serv=0', this)">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>Main Stream</span>
+                </button>
+                
+                <button class="server-btn" onclick="changeServer('https://www.youtube.com/embed/XJoMu50BsxM', this)">
+                    <i class="fa-brands fa-youtube"></i>
+                    <span>Backup (YT)</span>
+                </button>
 
-        <!-- 👆 NAYA SERVER YAHAN TAK AAYEGA 👆 -->
+                <button class="server-btn" onclick="changeServer('NAYA_LINK_YAHAN', this)">
+                    <i class="fa-solid fa-rocket"></i>
+                    <span>VIP Server 1</span>
+                </button>
+                
+                <button class="server-btn" onclick="changeServer('NAYA_LINK_YAHAN', this)">
+                    <i class="fa-solid fa-star"></i>
+                    <span>HD Server 2</span>
+                </button>
+            </div>
+        </div>
 
     </div>
 
