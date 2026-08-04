@@ -1,102 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKS Sports - Live Match</title>
-    
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- CSS File Link -->
-    <link rel="stylesheet" href="style.css"> 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MKS sports Live Streaming</title>
+
+<!-- Tailwind & FontAwesome -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Aapki Custom CSS File -->
+<link rel="stylesheet" href="style.css">
 </head>
-<body>
 
-    <!-- FIERY SPLASH SCREEN -->
-    <div id="splash-screen">
-        <div class="logo-container">
-            <div class="fire-icon"><i class="fa-solid fa-fire-flame-curved"></i></div>
-            <h1 class="logo-text">MK<span class="fire-text">S</span></h1>
-            <p class="logo-subtext">S P O R T S</p>
-        </div>
-    </div>
+<body class="text-white p-4">
 
-    <!-- MAIN APP CONTENT -->
-    <div id="main-content" style="display: none;">
-        
-        <!-- Glowing Header -->
-        <header class="app-header">
-            <h2>MKS <span class="fire-text">PREMIUM</span></h2>
-        </header>
+<h1 class="text-center text-2xl font-bold mb-6">MKS sports</h1>
 
-        <!-- Jalta Hua Player Box -->
-        <div class="player-container">
-            <div class="mks-player-wrapper">
-                <iframe 
-                    id="main-player"
-                    src="https://allrounder2.dillzycreations.workers.dev/cricket/willow" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen="true" 
-                    frameborder="0" 
-                    scrolling="no"
-                    oncontextmenu="return false;">
-                </iframe>
-            </div>
-        </div>
+<div id="matches" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
 
-        <!-- Action Buttons Grid -->
-        <div class="action-buttons">
-            <button class="btn btn-dark"><i class="fa-solid fa-backward"></i> -15s</button>
-            <button class="btn btn-fire" onclick="refreshPlayer()"><i class="fa-solid fa-rotate"></i> REFRESH</button>
-            <button class="btn btn-dark">+15s <i class="fa-solid fa-forward"></i></button>
+<!-- Aapki Custom JS File -->
+<script src="script.js"></script>
 
-            <button class="btn btn-fire-outline"><i class="fa-solid fa-volume-xmark"></i> MUTE</button>
-            <button class="btn btn-dark"><i class="fa-solid fa-leaf"></i> SAVER</button>
-            <button class="btn btn-fire glowing-btn"><i class="fa-solid fa-tower-broadcast"></i> LIVE</button>
-
-            <!-- Social Links -->
-            <a href="https://t.me/MKSsports_3" target="_blank" class="btn btn-blue span-2"><i class="fa-brands fa-telegram"></i> TELEGRAM</a>
-            <a href="https://youtube.com/@mkssports3" target="_blank" class="btn btn-red span-2"><i class="fa-brands fa-youtube"></i> YOUTUBE</a>
-
-            <button class="btn btn-green span-full" onclick="shareSite()"><i class="fa-brands fa-whatsapp"></i> SHARE WITH FRIENDS</button>
-        </div>
-
-        <!-- Premium Servers Section -->
-        <div class="servers-section">
-            <h3 class="section-title"><i class="fa-solid fa-fire"></i> HOT SERVERS</h3>
-            <div class="server-grid">
-                
-                <button class="server-btn active-fire" onclick="changeServer('https://allrounder2.dillzycreations.workers.dev/cricket/willow', this)">
-                    <i class="fa-solid fa-bolt"></i>
-                    <span>Main Stream</span>
-                </button>
-                
-                <button class="server-btn" onclick="changeServer('https://youtube.com/embed/ruf6Skg9ZnM', this)">
-                    <i class="fa-brands fa-youtube"></i>
-                    <span>Backup (YT)</span>
-                </button>
-
-                <button class="server-btn" onclick="changeServer('https://pullsgp.yyzb456.top/live/stream-746673_lhd.m3u8', this)">
-                    <i class="fa-solid fa-rocket"></i>
-                    <span>VIP Server 1</span>
-                </button>
-                
-                <button class="server-btn" onclick="changeServer('https://pullsgp.yyzb456.top/live/stream-746673_lhd.m3u8', this)">
-                    <i class="fa-solid fa-star"></i>
-                    <span>HD Server 2</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- ================= DISCLAIMER SECTION ================= -->
-        <div class="disclaimer-section">
-            <p><strong><i class="fa-solid fa-triangle-exclamation"></i> DMCA / COPYRIGHT DISCLAIMER:</strong> MKS Sports does not host any live streams, videos, or media files on its own servers. All content is provided by non-affiliated third parties and embedded from external sources. We do not hold responsibility for the legality of the content. For any copyright infringement issues, please contact the appropriate media file owners or host servers directly.</p>
-        </div>
-
-    </div>
-
-    <!-- JS File Link -->
-    <script src="script.js"></script>
 </body>
 </html>
