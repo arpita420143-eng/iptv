@@ -1,48 +1,99 @@
-// --- 1. Splash Screen Logic ---
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        const splash = document.getElementById('splash-screen');
-        const mainContent = document.getElementById('main-content');
-        
-        splash.style.opacity = '0';
-        
-        setTimeout(() => {
-            splash.style.display = 'none';
-            mainContent.style.display = 'block';
-        }, 500); 
-    }, 2500);
-});
+// Telegram Alert Popup
+window.onload = function() {
+  setTimeout(() => {
+    if (confirm("Join Our Telegram Channel MKS sports for Live Updates!")) {
+      window.open("https://t.me/MKSsports_3", '_blank');
+    }
+  }, 1000); // Website load hone ke 1 second baad popup aayega
+};
 
-// --- 2. Change Server Functionality ---
-function changeServer(newUrl, btnElement) {
-    const player = document.getElementById('main-player');
-    player.src = newUrl;
+// JSON aur Player Links
+const DATA_URL = "https://raw.githubusercontent.com/doctor-8trange/zyphx8/refs/heads/main/data/fancode.json"; 
+const PLAY_BASE = "player.html?url="; // Yeh aapke player.html par bhejeka
 
-    const allBtns = document.querySelectorAll('.server-btn');
-    allBtns.forEach(btn => btn.classList.remove('active-fire'));
-    btnElement.classList.add('active-fire');
+const container = document.getElementById("matches");
+
+function makeBtn(label, url) {
+  const a = document.createElement("a");
+  a.href = PLAY_BASE + encodeURIComponent(url);
+  a.className = "px-4 py-2 rounded-lg text-sm flex items-center justify-center shadow-md transition-all bg-red-600 hover:bg-red-700 text-white";
+  a.innerHTML = `<i class="fas fa-play mr-2"></i>${label}`;
+  return a;
 }
 
-// --- 3. Refresh Player ---
-function refreshPlayer() {
-    const player = document.getElementById('main-player');
-    player.src = player.src;
-}
+fetch(DATA_URL)
+  .then(r => r.json())
+  .then(data => {
+    let matches = data.matches || [];
 
-// --- 4. Share Site ---
-function shareSite() {
-    const siteUrl = window.location.href;
-    const shareText = "🔥 Watch Live Matches strictly on MKS Sports Premium OTT! Join now: " + siteUrl;
-    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`);
-}
+    /* SORT: STREAMING FIRST */
+    matches.sort((a, b) => {
+      const aLive = (a.streamingStatus || "").toUpperCase() === "STARTED";
+      const bLive = (b.streamingStatus || "").toUpperCase() === "STARTED";
+      return (bLive ? 1 : 0) - (aLive ? 1 : 0);
+    });
 
-// --- 5. Anti-Theft Security Activated ---
-document.addEventListener('contextmenu', (e) => e.preventDefault());
+    matches.forEach(match => {
+      const isLive = (match.streamingStatus || "").toUpperCase() === "STARTED";
+      
+      const imgSrc = match.image || match.image_cdn?.APP || match.image_cdn?.BG_IMAGE || "https://www.fancode.com/skillup-uploads/cms-media/Cricket_Fallback_Old_match-card.jpg";
+      
+      const t1 = match.team?.[0];
+      const t2 = match.team?.[1];
+      const teamLine = t1 && t2 ? `${t1.name} vs ${t2.name}` : match.title;
 
-document.addEventListener('keydown', (e) => {
-    if (e.keyCode === 123) return false; // F12
-    if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) return false;
-    if (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83)) return false; // Ctrl+U, Ctrl+S
-});
+      const card = document.createElement("div");
+      card.className = `rounded-2xl overflow-hidden shadow-xl border border-gray-800 match-card ${isLive ? "ring-2 ring-red-600" : ""}`;
 
-document.addEventListener('dragstart', (e) => e.preventDefault());
+      card.innerHTML = `
+        <div class="relative">
+          <img src="${imgSrc}" class="w-full h-52 object-cover object-top">
+          ${isLive ? `<span class="absolute top-3 left-3 bg-red-600 px-3 py-1 rounded-full text-xs live-badge">LIVE</span>` : ""}
+        </div>
+      `;
+
+      const body = document.createElement("div");
+      body.className = "p-4";
+      body.innerHTML = `
+        <h2 class="text-lg font-semibold">${teamLine}</h2>
+        <p class="text-gray-400 text-sm">${match.tournament || ""}</p>
+        <p class="text-gray-500 text-xs">${match.startTime || ""}</p>
+        <p class="text-gray-500 text-xs">${match.language || ""}</p>
+      `;
+
+      const btnWrap = document.createElement("div");
+      btnWrap.className = "grid grid-cols-2 gap-2 mt-3 hidden";
+
+      if (isLive && match.auto_streams?.length) {
+        const master = match.auto_streams[0].auto;
+        const lines = master.split("\n");
+        for (let i = 0; i < lines.length; i++) {
+          if (lines[i].includes("RESOLUTION")) {
+            const res = lines[i].match(/RESOLUTION=\d+x(\d+)/);
+            const quality = res ? res[1] + "p" : "Auto";
+            const url = lines[i + 1];
+            btnWrap.appendChild(makeBtn(quality, url));
+          }
+        }
+      }
+
+      if (isLive) {
+        const toggleBtn = document.createElement("button");
+        toggleBtn.className = "w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 py-2 rounded-lg mt-3";
+        toggleBtn.innerHTML = `<i class="fas fa-tv mr-2"></i>Watch Now`;
+        toggleBtn.onclick = () => {
+          btnWrap.classList.toggle("hidden");
+        };
+        body.appendChild(toggleBtn);
+        body.appendChild(btnWrap);
+      } else {
+        const noStream = document.createElement("div");
+        noStream.className = "w-full bg-gray-800 text-gray-400 py-2 rounded-lg mt-3 text-center";
+        noStream.innerHTML = `<i class="fas fa-clock mr-2"></i>Upcoming`;
+        body.appendChild(noStream);
+      }
+
+      card.appendChild(body);
+      container.appendChild(card);
+    });
+  });
