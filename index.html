@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKS sports - Video Player</title>
+    <title>MKS sports - Pro Video Player</title>
     <style>
-        /* Reset margins & set a dark cinematic background */
         body {
             margin: 0;
             padding: 0;
@@ -15,44 +14,79 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
+            position: relative; /* Button ko sahi jagah rakhne ke liye */
         }
 
-        /* Responsive video player styling */
         video {
             width: 100%;
             max-width: 100vw;
             height: 100vh;
-            /* 'contain' ensures the video doesn't stretch or crop on weird TV aspect ratios */
-            object-fit: contain; 
+            object-fit: contain;
             outline: none;
-            box-shadow: 0px 0px 20px rgba(0,0,0,0.8);
         }
 
-        /* Custom styling for controls (optional, modern browsers handle this well natively) */
-        video::-webkit-media-controls-panel {
-            background: rgba(0, 0, 0, 0.7);
+        /* Custom Speed Button Style */
+        .speed-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            border: 2px solid #fff;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10; /* Video ke upar dikhne ke liye */
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Hover karne par color change */
+        .speed-btn:hover {
+            background: #fff;
+            color: #000;
         }
     </style>
 </head>
 <body>
 
-    <!-- Video Tag with controls, autoplay, and direct Dropbox link -->
-    <video id="mainPlayer" controls autoplay playsinline preload="auto">
+    <!-- controlsList="nodownload" se download button hat jayega -->
+    <video id="mainPlayer" controls controlsList="nodownload" autoplay playsinline preload="auto">
         <source src="https://www.dropbox.com/scl/fi/rrrcccofgwdjdiv3606j1/Hanuman.Ansh.2026.720p.HDTC.Hindi.Clean.x264-HDHub4u.Ms.mkv?rlkey=up4bpgufl2zjgnkejpozolelo&st=abtn4k31&raw=1" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
+    <!-- Custom Speed Control Button -->
+    <button class="speed-btn" id="speedToggle">1x Speed</button>
+
     <script>
-        // Optional JS: Ensure volume is set properly and handles autoplay restrictions
         document.addEventListener("DOMContentLoaded", function() {
             var player = document.getElementById("mainPlayer");
+            var speedToggleBtn = document.getElementById("speedToggle");
+            
             player.volume = 1.0;
             
-            // Catch play promise to handle browser autoplay policies
+            // Speed change logic (1x -> 1.25x -> 1.5x -> 2x)
+            var speeds = [1, 1.25, 1.5, 2];
+            var currentSpeedIndex = 0;
+
+            speedToggleBtn.addEventListener("click", function() {
+                currentSpeedIndex++;
+                if (currentSpeedIndex >= speeds.length) {
+                    currentSpeedIndex = 0; // cycle wapas 1x par
+                }
+                var newSpeed = speeds[currentSpeedIndex];
+                player.playbackRate = newSpeed;
+                speedToggleBtn.innerText = newSpeed + "x Speed";
+            });
+            
+            // Autoplay handle
             var playPromise = player.play();
             if (playPromise !== undefined) {
                 playPromise.catch(function(error) {
-                    console.log("Autoplay was prevented by the browser. User must click play.");
+                    console.log("Autoplay blocked. User needs to tap play.");
                 });
             }
         });
