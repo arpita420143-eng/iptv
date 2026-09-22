@@ -14,7 +14,8 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            position: relative; /* Button ko sahi jagah rakhne ke liye */
+            position: relative;
+            font-family: Arial, sans-serif;
         }
 
         video {
@@ -25,61 +26,135 @@
             outline: none;
         }
 
-        /* Custom Speed Button Style */
-        .speed-btn {
+        /* MKS sports Logo Styling */
+        .brand-logo {
             position: absolute;
             top: 20px;
-            right: 20px;
+            left: 25px;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
+            z-index: 10;
+            pointer-events: none; /* Logo click ko block na kare */
+        }
+
+        /* Controls Container (Top Right) */
+        .controls-container {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        /* Button Common Style for TV & Laptop */
+        .custom-btn {
             background: rgba(0, 0, 0, 0.6);
             color: #fff;
             border: 2px solid #fff;
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-size: 14px;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            z-index: 10; /* Video ke upar dikhne ke liye */
             transition: all 0.3s ease;
             backdrop-filter: blur(5px);
+            outline: none;
         }
 
-        /* Hover karne par color change */
-        .speed-btn:hover {
+        /* Hover and Focus (TV Remote Highlight) */
+        .custom-btn:hover, .custom-btn:focus {
             background: #fff;
             color: #000;
+            box-shadow: 0px 0px 15px rgba(255,255,255,0.8);
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
 
-    <!-- controlsList="nodownload" se download button hat jayega -->
+    <!-- Top Left Logo -->
+    <div class="brand-logo">MKS sports</div>
+
+    <!-- Video Player -->
     <video id="mainPlayer" controls controlsList="nodownload" autoplay playsinline preload="auto">
         <source src="https://www.dropbox.com/scl/fi/rrrcccofgwdjdiv3606j1/Hanuman.Ansh.2026.720p.HDTC.Hindi.Clean.x264-HDHub4u.Ms.mkv?rlkey=up4bpgufl2zjgnkejpozolelo&st=abtn4k31&raw=1" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
-    <!-- Custom Speed Control Button -->
-    <button class="speed-btn" id="speedToggle">1x Speed</button>
+    <!-- Top Right Buttons -->
+    <div class="controls-container">
+        <button class="custom-btn" id="speedToggle">1x Speed</button>
+        <button class="custom-btn" id="fsToggle">Fullscreen</button>
+    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var player = document.getElementById("mainPlayer");
             var speedToggleBtn = document.getElementById("speedToggle");
+            var fsToggleBtn = document.getElementById("fsToggle");
             
             player.volume = 1.0;
             
-            // Speed change logic (1x -> 1.25x -> 1.5x -> 2x)
+            // Speed change logic
             var speeds = [1, 1.25, 1.5, 2];
             var currentSpeedIndex = 0;
 
             speedToggleBtn.addEventListener("click", function() {
                 currentSpeedIndex++;
                 if (currentSpeedIndex >= speeds.length) {
-                    currentSpeedIndex = 0; // cycle wapas 1x par
+                    currentSpeedIndex = 0;
                 }
                 var newSpeed = speeds[currentSpeedIndex];
                 player.playbackRate = newSpeed;
                 speedToggleBtn.innerText = newSpeed + "x Speed";
+            });
+
+            // Fullscreen Logic
+            fsToggleBtn.addEventListener("click", function() {
+                if (!document.fullscreenElement) {
+                    if (document.documentElement.requestFullscreen) {
+                        document.documentElement.requestFullscreen();
+                    } else if (document.documentElement.webkitRequestFullscreen) { /* Safari */
+                        document.documentElement.webkitRequestFullscreen();
+                    }
+                    fsToggleBtn.innerText = "Exit Full";
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) { /* Safari */
+                        document.webkitExitFullscreen();
+                    }
+                    fsToggleBtn.innerText = "Fullscreen";
+                }
+            });
+            
+            // TV Remote / Keyboard Navigation Support
+            document.addEventListener("keydown", function(e) {
+                // TV remotes usually send standard keyboard event codes
+                switch(e.key) {
+                    case "ArrowRight": // Remote Right
+                        player.currentTime += 10; // 10 second skip forward
+                        break;
+                    case "ArrowLeft": // Remote Left
+                        player.currentTime -= 10; // 10 second skip backward
+                        break;
+                    case "Enter": // Remote OK / Spacebar
+                    case " ":
+                        // Prevent page scroll on spacebar
+                        if(e.key === " ") e.preventDefault();
+                        
+                        if (player.paused) {
+                            player.play();
+                        } else {
+                            player.pause();
+                        }
+                        break;
+                }
             });
             
             // Autoplay handle
