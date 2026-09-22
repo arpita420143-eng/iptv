@@ -3,28 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKS WEB</title>
-    
+    <title>MKS sports - Video Player</title>
     <style>
-        /* Yeh thoda design hai taaki iframe poori screen cover kare */
-        body, html {
+        /* Reset margins & set a dark cinematic background */
+        body {
             margin: 0;
             padding: 0;
-            height: 100%;
-            overflow: hidden; /* Extra scrollbars ko hide karne ke liye */
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
         }
-        
-        .my-iframe {
+
+        /* Responsive video player styling */
+        video {
             width: 100%;
-            height: 100vh; /* Viewport ki 100% height lega */
-            border: none; /* Border hatane ke liye */
+            max-width: 100vw;
+            height: 100vh;
+            /* 'contain' ensures the video doesn't stretch or crop on weird TV aspect ratios */
+            object-fit: contain; 
+            outline: none;
+            box-shadow: 0px 0px 20px rgba(0,0,0,0.8);
+        }
+
+        /* Custom styling for controls (optional, modern browsers handle this well natively) */
+        video::-webkit-media-controls-panel {
+            background: rgba(0, 0, 0, 0.7);
         }
     </style>
 </head>
 <body>
 
-    <!-- Aapki website yahan embed ho rahi hai -->
-    <iframe class="my-iframe" src="https://tv4wab.wapka.site/index.html" allowfullscreen></iframe>
+    <!-- Video Tag with controls, autoplay, and direct Dropbox link -->
+    <video id="mainPlayer" controls autoplay playsinline preload="auto">
+        <source src="https://www.dropbox.com/scl/fi/rrrcccofgwdjdiv3606j1/Hanuman.Ansh.2026.720p.HDTC.Hindi.Clean.x264-HDHub4u.Ms.mkv?rlkey=up4bpgufl2zjgnkejpozolelo&st=abtn4k31&raw=1" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <script>
+        // Optional JS: Ensure volume is set properly and handles autoplay restrictions
+        document.addEventListener("DOMContentLoaded", function() {
+            var player = document.getElementById("mainPlayer");
+            player.volume = 1.0;
+            
+            // Catch play promise to handle browser autoplay policies
+            var playPromise = player.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(function(error) {
+                    console.log("Autoplay was prevented by the browser. User must click play.");
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>
