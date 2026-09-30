@@ -3,235 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKS sports - Premium Video Player</title>
+    <title>South Africa vs Australia - Multi-Quality Stream</title>
+    <!-- Clappr Player Script -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
+    <!-- Level Selector Plugin for Quality Switch -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/level-selector@latest/dist/level-selector.min.js"></script>
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-            position: relative;
+            background-color: #0f0f0f;
+            color: #ffffff;
             font-family: Arial, sans-serif;
-        }
-
-        video {
-            width: 100%;
-            height: 100%;
-            /* Default 'contain' rakha hai taaki video kate nahi */
-            object-fit: contain; 
-            outline: none;
-        }
-
-        /* Top Bar Overlay */
-        .top-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            padding: 20px 25px;
-            box-sizing: border-box;
-            z-index: 20;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
         }
-
-        /* Premium MKS sports Logo */
-        .brand-logo {
-            font-family: 'Arial Black', Impact, sans-serif;
-            font-size: 26px;
-            font-weight: 900;
-            font-style: italic;
-            text-transform: uppercase;
-            background: linear-gradient(90deg, #D4AF37, #FFF8DC, #D4AF37, #FFF8DC);
-            background-size: 200% auto;
-            color: #fff;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 3s linear infinite;
-            filter: drop-shadow(2px 4px 5px rgba(0,0,0,0.9));
-            pointer-events: none;
-            flex-shrink: 0;
+        #player-container {
+            width: 80%;
+            max-width: 900px;
+            height: 506px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+            border-radius: 8px;
+            overflow: hidden;
         }
-
-        @keyframes shine {
-            to {
-                background-position: 200% center;
-            }
-        }
-
-        /* Controls Container */
-        .controls-container {
-            display: flex;
-            gap: 12px;
-            flex-shrink: 0;
-            flex-wrap: wrap; /* Choti screen par wrap hone ke liye */
-            justify-content: flex-end;
-        }
-
-        /* Sleek Button Style */
-        .custom-btn {
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 6px;
-            padding: 8px 14px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(8px);
-            outline: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-
-        .custom-btn:hover, .custom-btn:focus {
-            background: rgba(255, 255, 255, 0.9);
-            color: #000;
-            border-color: #fff;
-            box-shadow: 0px 0px 15px rgba(255,255,255,0.6);
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 600px) {
-            .top-overlay {
-                padding: 15px 10px;
-            }
-            .brand-logo {
-                font-size: 18px;
-            }
-            .controls-container {
-                gap: 8px;
-            }
-            .custom-btn {
-                padding: 6px 10px;
-                font-size: 12px;
-            }
+        h2 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
         }
     </style>
 </head>
 <body>
 
-    <div class="top-overlay">
-        <div class="brand-logo">MKS sports</div>
-        <div class="controls-container">
-            <button class="custom-btn" id="speedToggle">1x Speed</button>
-            <button class="custom-btn" id="fitToggle">Fit Screen</button>
-            <button class="custom-btn" id="fsToggle">Fullscreen</button>
-        </div>
-    </div>
-
-    <!-- Video Player -->
-    <video id="mainPlayer" controls controlsList="nodownload" autoplay playsinline preload="auto">
-        <source src="https://www.dropbox.com/scl/fi/rrrcccofgwdjdiv3606j1/Hanuman.Ansh.2026.720p.HDTC.Hindi.Clean.x264-HDHub4u.Ms.mkv?rlkey=up4bpgufl2zjgnkejpozolelo&st=abtn4k31&raw=1" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+    <h2>South Africa vs Australia [All Qualities Stream]</h2>
+    <div id="player-container"></div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var player = document.getElementById("mainPlayer");
-            var speedToggleBtn = document.getElementById("speedToggle");
-            var fsToggleBtn = document.getElementById("fsToggle");
-            var fitToggleBtn = document.getElementById("fitToggle");
-            
-            player.volume = 1.0;
-            
-            // Speed change logic
-            var speeds = [1, 1.25, 1.5, 2];
-            var currentSpeedIndex = 0;
-
-            speedToggleBtn.addEventListener("click", function() {
-                currentSpeedIndex++;
-                if (currentSpeedIndex >= speeds.length) currentSpeedIndex = 0;
-                player.playbackRate = speeds[currentSpeedIndex];
-                speedToggleBtn.innerText = speeds[currentSpeedIndex] + "x Speed";
-            });
-
-            // Fit Screen Logic (Fills the black bars on 65 inch TVs)
-            fitToggleBtn.addEventListener("click", function() {
-                if (player.style.objectFit === "cover") {
-                    player.style.objectFit = "contain";
-                    fitToggleBtn.innerText = "Fit Screen";
-                } else {
-                    player.style.objectFit = "cover"; // Zoom & fill entire screen
-                    fitToggleBtn.innerText = "Normal Fit";
-                }
-            });
-
-            // Advanced Fullscreen Logic for Smart TVs
-            fsToggleBtn.addEventListener("click", function() {
-                var docElm = document.documentElement;
-                
-                if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-                    // Enter Fullscreen (Supports all TV/Browser formats)
-                    if (docElm.requestFullscreen) {
-                        docElm.requestFullscreen();
-                    } else if (docElm.webkitRequestFullscreen) {
-                        docElm.webkitRequestFullscreen();
-                    } else if (docElm.mozRequestFullScreen) {
-                        docElm.mozRequestFullScreen();
-                    } else if (docElm.msRequestFullscreen) {
-                        docElm.msRequestFullscreen();
-                    } else if (player.webkitEnterFullscreen) {
-                        player.webkitEnterFullscreen();
-                    }
-                    fsToggleBtn.innerText = "Exit Full";
-                } else {
-                    // Exit Fullscreen
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    } else if (document.webkitExitFullscreen) {
-                        document.webkitExitFullscreen();
-                    } else if (document.mozCancelFullScreen) {
-                        document.mozCancelFullScreen();
-                    } else if (document.msExitFullscreen) {
-                        document.msExitFullscreen();
-                    }
-                    fsToggleBtn.innerText = "Fullscreen";
-                }
-            });
-            
-            // Sync Fullscreen button text if user exits using TV Remote "Back" button
-            ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(function(eventType) {
-                document.addEventListener(eventType, function() {
-                    if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
-                        fsToggleBtn.innerText = "Fullscreen";
-                    }
-                });
-            });
-
-            // TV Remote Navigation 
-            document.addEventListener("keydown", function(e) {
-                switch(e.key) {
-                    case "ArrowRight":
-                        player.currentTime += 10;
-                        break;
-                    case "ArrowLeft":
-                        player.currentTime -= 10;
-                        break;
-                    case "Enter":
-                    case " ":
-                        if(e.key === " ") e.preventDefault();
-                        if (player.paused) player.play();
-                        else player.pause();
-                        break;
-                }
-            });
-            
-            var playPromise = player.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(function(error) {
-                    console.log("Autoplay blocked. User tap required.");
-                });
-            }
+        var player = new Clappr.Player({
+            source: 'https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/1080p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TYOU_Jp1JNHMLHux3GgNpdhWv2IXDod5UYxSqNUY4oMBJSpVa0T_cQZYl7aUx6rAYsQGKkA4eOB7DBoH',
+            plugins: [LevelSelector],
+            parentId: "#player-container",
+            autoPlay: true,
+            width: '100%',
+            height: '100%',
+            // Agar aapke paas master playlist ya adaptive stream hai toh level-selector auto detect kar leta hai, 
+            // warna aap alag-alag sources bhi set kar sakte hain.
         });
     </script>
-
 </body>
 </html>
