@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>South Africa vs Australia - Fixed Player</title>
-    <!-- HLS.js Library -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <title>South Africa vs Australia - Shaka Player</title>
+    <!-- Shaka Player Compiled Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
     <style>
         body {
             background-color: #121212;
@@ -61,10 +61,10 @@
 </head>
 <body>
 
-    <h2>South Africa vs Australia [Live Player]</h2>
+    <h2>South Africa vs Australia [Shaka Player]</h2>
     
     <div class="player-container">
-        <video id="video" controls autoplay></video>
+        <video id="videoPlayer" controls autoplay></video>
     </div>
 
     <div class="quality-buttons">
@@ -73,48 +73,54 @@
         <button onclick="changeQuality('https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/540p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TYOU_Jp1JNHMLHux3GgNpdhWv2IXDod5UYxSqNUY4oMBJSpVa0T_cQZYl7aUx6rAYsQGKkA4eOB7DBoH', this)">540p</button>
         <button onclick="changeQuality('https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/480p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TYOU_Jp1JNHMLHux3GgNpdhWv2IXDod5UYxSqNUY4oMBJSpVa0T_cQZYl7aUx6rAYsQGKkA4eOB7DBoH', this)">480p</button>
         <button onclick="changeQuality('https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/360p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TYOU_Jp1JNHMLHux3GgNpdhWv2IXDod5UYxSqNUY4oMBJSpVa0T_cQZYl7aUx6rAYsQGKkA4eOB7DBoH', this)">360p</button>
-        <button onclick="changeQuality('https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/240p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TabVD_cQZYl7aUx6rAYsQGKkA4eOB7DBoH', this)">240p</button>
+        <button onclick="changeQuality('https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/240p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TYOU_Jp1JNHMLHux3GgNpdhWv2IXDod5UYxSqNUY4oMBJSpVa0T_cQZYl7aUx6rAYsQGKkA4eOB7DBoH', this)">240p</button>
     </div>
 
     <script>
-        var video = document.getElementById('video');
-        var hls;
-        var defaultUrl = 'https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/1080p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TYOU_Jp1JNHMLHux3GgNpdhWv2IXDod5UYxSqNUY4oMBJSpVa0T_cQZYl7aUx6rAYsQGKkA4eOB7DBoH';
+        let player;
 
-        function playStream(url) {
-            // Agar pehle se koi stream chal rahi hai toh use destroy karein
-            if (hls) {
-                hls.destroy();
+        async function initApp() {
+            // Install polyfills
+            shaka.polyfill.installAll();
+
+            if (!shaka.Player.isBrowserSupported()) {
+                console.error('Browser not supported for Shaka Player!');
+                return;
             }
 
-            if (Hls.isSupported()) {
-                hls = new Hls();
-                hls.loadSource(url);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play().catch(e => console.log("Autoplay blocked:", e));
-                });
-                hls.on(Hls.Events.ERROR, function(event, data) {
-                    console.error("HLS Error:", data);
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = url;
-                video.addEventListener('loadedmetadata', function() {
-                    video.play();
-                });
+            const video = document.getElementById('videoPlayer');
+            player = new shaka.Player(video);
+
+            // Listen for error events
+            player.addEventListener('error', onError);
+
+            // Load default link (1080p)
+            try {
+                await player.load('https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/1080p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TYOU_Jp1JNHMLHux3GgNpdhWv2IXDod5UYxSqNUY4oMBJSpVa0T_cQZYl7aUx6rAYsQGKkA4eOB7DBoH');
+                console.log('Video loaded successfully!');
+            } catch (e) {
+                onError(e);
             }
         }
 
-        function changeQuality(url, button) {
-            var buttons = document.querySelectorAll('.quality-buttons button');
-            buttons.forEach(btn => btn.classList.remove('active'));
+        async function changeQuality(url, button) {
+            // Active button class change karein
+            document.querySelectorAll('.quality-buttons button').forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
 
-            playStream(url);
+            try {
+                await player.load(url);
+                console.log('Quality changed successfully!');
+            } catch (e) {
+                onError(e);
+            }
         }
 
-        // Initial Load
-        playStream(defaultUrl);
+        function onError(error) {
+            console.error('Error code', error.code, 'object', error);
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
