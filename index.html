@@ -4,25 +4,83 @@
   <meta charset="UTF-8">
   <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>MKS SPORTS VIP - Dynamic URL Player</title>
+  <title>MKS SPORTS VIP</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/shaka-player.ui.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
   
   <style type="text/css">
+      @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        src: url(https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Me5Q.ttf) format('truetype');
+      }
+
       html, body {
-        margin: 0; padding: 0; background-color: #0b0f19; width: 100%; height: 100%; overflow: hidden; font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #0b0f19;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: 'Roboto', system-ui, -apple-system, sans-serif;
       }
+
       .app-header {
-        position: absolute; top: 0; left: 0; width: 100%; height: 50px; background: rgba(11, 15, 25, 0.85);
-        display: flex; align-items: center; justify-content: space-between; padding: 0 15px; box-sizing: border-box; z-index: 1000;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1); color: #fff; font-weight: bold;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        background: rgba(11, 15, 25, 0.85);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 15px;
+        box-sizing: border-box;
+        z-index: 1000;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
+
+      .brand-logo {
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .live-badge {
+        background: #ef4444;
+        color: white;
+        font-size: 10px;
+        font-weight: bold;
+        padding: 3px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+      .error-container {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        width: 100%; height: 100%; background-color: #0b0f19; color: #ffffff; text-align: center;
+      }
+      .error-container h2 { font-size: 20px; margin: 10px 0; color: #ffffff; }
+
       .video-container {
-        position: absolute; top: 50px; left: 0; width: 100%; height: calc(100% - 110px); background-color: #000000;
+        position: absolute; top: 50px; left: 0; width: 100%;
+        height: calc(100% - 110px); background-color: #000000; overflow: hidden;
       }
+
       .shaka-video-container { position: absolute; width: 100%; height: 100%; }
       video { width: 100%; height: 100%; background-color: #000000; }
 
+      /* Quality Switcher Bar */
       .quality-bar {
         position: absolute; bottom: 0; left: 0; width: 100%; height: 60px;
         background: #0b0f19; display: flex; align-items: center; justify-content: center;
@@ -31,38 +89,119 @@
       }
       .quality-bar button {
         background: #1f293d; color: #fff; border: 1px solid rgba(255,255,255,0.2);
-        padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer;
+        padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer;
         white-space: nowrap; transition: 0.2s;
       }
       .quality-bar button.active, .quality-bar button:hover {
         background: #ef4444; border-color: #ef4444;
       }
-      .error-box {
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        width: 100%; height: 100%; color: #fff; text-align: center; font-size: 16px;
+
+      /* Shaka Player Custom Theme */
+      .youtube-theme { font-family: 'Roboto', sans-serif; }
+      .youtube-theme .shaka-bottom-controls { width: 100%; padding: 0; z-index: 1; display: flex; flex-direction: column; }
+      .youtube-theme .shaka-controls-button-panel { height: 60px; padding: 0 10px; }
+      .youtube-theme .shaka-played-range { background: #ef4444 !important; }
+      
+      /* TELEGRAM FLOATING BUTTON & POPUP */
+      .tg-floating-btn {
+        position: fixed; top: 65px; right: 15px;
+        background: linear-gradient(135deg, #2AABEE, #229ED9); color: white;
+        padding: 8px 15px; border-radius: 50px; font-size: 13px; font-weight: bold;
+        text-decoration: none; box-shadow: 0 4px 15px rgba(42, 171, 238, 0.5);
+        z-index: 9999; display: flex; align-items: center; gap: 6px;
+        animation: floatAnim 3s infinite ease-in-out;
+      }
+      .tg-floating-btn svg { width: 18px; height: 18px; fill: white; }
+
+      @keyframes floatAnim {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+        100% { transform: translateY(0px); }
+      }
+
+      .tg-popup-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
+        z-index: 10000; display: none; justify-content: center; align-items: center;
+      }
+
+      .tg-popup-box {
+        background: linear-gradient(145deg, #1a1f2e, #0b0f19);
+        border: 2px solid #d4af37; border-radius: 20px;
+        padding: 30px 20px; width: 85%; max-width: 350px; text-align: center;
+        box-shadow: 0 0 30px rgba(212, 175, 55, 0.3); position: relative;
+        animation: popUpAnim 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      @keyframes popUpAnim { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+      .tg-popup-close { position: absolute; top: 10px; right: 15px; color: #888; font-size: 24px; font-weight: bold; cursor: pointer; text-decoration: none; }
+      .tg-popup-close:hover { color: white; }
+      .tg-popup-title { color: #d4af37; font-size: 22px; font-weight: 900; margin: 10px 0; letter-spacing: 1px; }
+      .tg-popup-text { color: #e2e8f0; font-size: 14px; line-height: 1.5; margin-bottom: 25px; }
+      .tg-popup-btn {
+        background: linear-gradient(135deg, #2AABEE, #229ED9); color: white;
+        text-decoration: none; padding: 12px 25px; border-radius: 50px;
+        font-size: 16px; font-weight: bold; display: inline-flex; align-items: center;
+        gap: 10px; box-shadow: 0 4px 15px rgba(42, 171, 238, 0.4);
       }
   </style>
 </head>
 <body>
+  <!-- Floating Telegram Button -->
+  <a href="https://t.me/MKSsports_3" target="_blank" class="tg-floating-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.18-.08-.05-.19-.02-.27 0-.11.03-1.84 1.18-5.18 3.44-.49.34-.93.5-1.33.49-.44-.01-1.28-.25-1.91-.46-.77-.25-1.38-.38-1.32-.81.03-.22.34-.45.92-.69 3.61-1.57 6.02-2.61 7.23-3.11 3.44-1.42 4.15-1.67 4.62-1.68.1 0 .32.02.44.11.1.08.13.19.14.28 0 .04.01.16.01.27z"/></svg>
+    Join Telegram
+  </a>
 
-  <div class="app-header">
-    <div>🔥 MKS SPORTS VIP</div>
-    <div style="background: #ef4444; font-size: 10px; padding: 3px 8px; border-radius: 4px;">LIVE</div>
+  <!-- Premium Telegram Popup -->
+  <div class="tg-popup-overlay" id="tgPopup">
+    <div class="tg-popup-box">
+      <a href="#" class="tg-popup-close" onclick="closePopup(); return false;">&times;</a>
+      <div style="font-size: 40px;">🎁</div>
+      <div class="tg-popup-title">MKS VIP MEMBER</div>
+      <div class="tg-popup-text">
+        Bina rukawat HD live matches dekhne ke liye aur daily fresh links pane ke liye hamara <b>Telegram Channel</b> abhi join karein!
+      </div>
+      <a href="https://t.me/MKSsports_3" target="_blank" class="tg-popup-btn" onclick="closePopup()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.18-.08-.05-.19-.02-.27 0-.11.03-1.84 1.18-5.18 3.44-.49.34-.93.5-1.33.49-.44-.01-1.28-.25-1.91-.46-.77-.25-1.38-.38-1.32-.81.03-.22.34-.45.92-.69 3.61-1.57 6.02-2.61 7.23-3.11 3.44-1.42 4.15-1.67 4.62-1.68.1 0 .32.02.44.11.1.08.13.19.14.28 0 .04.01.16.01.27z"/></svg>
+        Join Channel Now
+      </a>
+    </div>
   </div>
 
-  <div class="video-container" id="playerWrapper">
-    <div class="shaka-video-container" data-shaka-player>
+  <div class="app-header" id="header-bar">
+    <div class="brand-logo">🔥 MKS SPORTS</div>
+    <div class="live-badge">LIVE</div>
+  </div>
+
+  <div id="error-box" class="error-container" style="display: none;">
+    <h2>Koi bhi valid quality link nahi mila URL mein!</h2>
+  </div>
+
+  <div class="video-container" id="player-box">
+    <div class="shaka-video-container youtube-theme" data-shaka-player>
       <video id="video" autoplay playsinline preload="auto"></video>
     </div>
   </div>
 
+  <!-- Dynamic Quality Switch Bar -->
   <div class="quality-bar" id="qualityBar"></div>
 
   <script>
+    window.onload = () => {
+      setTimeout(() => {
+        document.getElementById('tgPopup').style.display = 'flex';
+      }, 1500);
+    };
+
+    function closePopup() {
+      document.getElementById('tgPopup').style.display = 'none';
+    }
+
     let player = null;
     const video = document.getElementById('video');
 
-    // URL se saari qualities aur cookie extract karna
     function getUrlParams() {
       const params = new URLSearchParams(window.location.search);
       return {
@@ -90,7 +229,12 @@
         const ui = new shaka.ui.Overlay(player, container, video);
         
         ui.configure({
-          'seekBarColors': { base: 'rgba(255,255,255,.2)', buffered: 'rgba(255,255,255,.4)', played: '#ef4444' }
+          'seekBarColors': { base: 'rgba(255,255,255,.2)', buffered: 'rgba(255,255,255,.4)', played: '#ef4444' },
+          'controlPanelElements': [
+            'play_pause', 'mute', 'time_and_duration', 'restart', 
+            'spacer', 'quality', 'language', 'picture_in_picture', 
+            'fullscreen', 'overflow_menu'
+          ]
         });
 
         player.configure({
@@ -100,7 +244,7 @@
         player.getNetworkingEngine().registerRequestFilter((type, request) => {
           request.headers['Referer'] = 'https://www.fancode.com/';
           request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)';
-          
+
           if (cookie && (type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT)) {
             const baseUri = request.uris[0].split('?')[0];
             request.uris[0] = baseUri + '?' + cookie;
@@ -108,13 +252,34 @@
         });
 
         await player.load(url);
-        video.play().catch(e => console.log("Autoplay blocked:", e));
+        video.play().catch(e => showPlayButton(url, cookie));
+
       } catch (error) {
         console.error('Error loading stream:', error);
       }
     }
 
-    function setupQualityButtons(qualities, cookie) {
+    function showPlayButton(url, cookie) {
+      const existingBtn = document.getElementById('play-overlay-btn');
+      if (existingBtn) return;
+
+      const btn = document.createElement('div');
+      btn.id = 'play-overlay-btn';
+      btn.style.cssText = `
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background: rgba(239, 68, 68, 0.9); color: white; padding: 15px 30px;
+        border-radius: 30px; cursor: pointer; font-size: 18px; z-index: 2000;
+        font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      `;
+      btn.textContent = '▶ Tap to Play';
+      btn.onclick = function() {
+        video.muted = false;
+        video.play().then(() => btn.remove()).catch(e => console.log(e));
+      };
+      document.body.appendChild(btn);
+    }
+
+    function setupQualityButtons(qualities) {
       const bar = document.getElementById('qualityBar');
       bar.innerHTML = '';
       
@@ -144,9 +309,12 @@
       });
 
       if (firstAvailableUrl) {
+        document.getElementById('error-box').style.display = 'none';
+        document.getElementById('player-box').style.display = 'block';
         loadStream(firstAvailableUrl, qualities.cookie);
       } else {
-        document.getElementById('playerWrapper').innerHTML = '<div class="error-box">Koi bhi valid quality link nahi mila URL mein!</div>';
+        document.getElementById('error-box').style.display = 'flex';
+        document.getElementById('player-box').style.display = 'none';
       }
     }
 
