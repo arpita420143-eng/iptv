@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>South Africa vs Australia - Multi-Quality</title>
+    <title>South Africa vs Australia - Fixed Player</title>
     <!-- HLS.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
@@ -61,7 +61,7 @@
 </head>
 <body>
 
-    <h2>South Africa vs Australia [Multi-Quality Player]</h2>
+    <h2>South Africa vs Australia [Live Player]</h2>
     
     <div class="player-container">
         <video id="video" controls autoplay></video>
@@ -72,21 +72,30 @@
         <button onclick="changeQuality('https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/720p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TYOU_Jp1JNHMLHux3GgNpdhWv2IXDod5UYxSqNUY4oMBJSpVa0T_cQZYl7aUx6rAYsQGKkA4eOB7DBoH', this)">720p</button>
         <button onclick="changeQuality('https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/540p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TYOU_Jp1JNHMLHux3GgNpdhWv2IXDod5UYxSqNUY4oMBJSpVa0T_cQZYl7aUx6rAYsQGKkA4eOB7DBoH', this)">540p</button>
         <button onclick="changeQuality('https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/480p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TYOU_Jp1JNHMLHux3GgNpdhWv2IXDod5UYxSqNUY4oMBJSpVa0T_cQZYl7aUx6rAYsQGKkA4eOB7DBoH', this)">480p</button>
-        <button onclick="changeQuality('https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/360p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TYOU_Jp1JNHMLHux3GgNpdhWv2IXDawT_cQZYl7aUx6rAYsQGKkA4eOB7DBoH', this)">360p</button>
-        <button onclick="changeQuality('https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/240p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TYOU_Jp1JNHMLHux3GgNpdhWv2IXDod5UYxSqNUY4oMBJSpVa0T_cQZYl7aUx6rAYsQGKkA4eOB7DBoH', this)">240p</button>
+        <button onclick="changeQuality('https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/360p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TYOU_Jp1JNHMLHux3GgNpdhWv2IXDod5UYxSqNUY4oMBJSpVa0T_cQZYl7aUx6rAYsQGKkA4eOB7DBoH', this)">360p</button>
+        <button onclick="changeQuality('https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/240p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TabVD_cQZYl7aUx6rAYsQGKkA4eOB7DBoH', this)">240p</button>
     </div>
 
     <script>
         var video = document.getElementById('video');
+        var hls;
         var defaultUrl = 'https://in-mc-flive.fancode.com/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/1080p.m3u8?hdntl=Expires=1790852504~_GO=Generated~acl=/mumbai/4249780_english_hls_fe7666272366793_1ta-di_h264/*~Signature=ARxeIm8_Bej2TYOU_Jp1JNHMLHux3GgNpdhWv2IXDod5UYxSqNUY4oMBJSpVa0T_cQZYl7aUx6rAYsQGKkA4eOB7DBoH';
 
         function playStream(url) {
+            // Agar pehle se koi stream chal rahi hai toh use destroy karein
+            if (hls) {
+                hls.destroy();
+            }
+
             if (Hls.isSupported()) {
-                var hls = new Hls();
+                hls = new Hls();
                 hls.loadSource(url);
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play();
+                    video.play().catch(e => console.log("Autoplay blocked:", e));
+                });
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    console.error("HLS Error:", data);
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = url;
@@ -97,16 +106,14 @@
         }
 
         function changeQuality(url, button) {
-            // Active class shift karne ke liye
             var buttons = document.querySelectorAll('.quality-buttons button');
             buttons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
 
-            // Stream load karein
             playStream(url);
         }
 
-        // Pehli baar load karne par
+        // Initial Load
         playStream(defaultUrl);
     </script>
 </body>
