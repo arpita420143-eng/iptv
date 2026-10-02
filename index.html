@@ -87,6 +87,19 @@
             z-index: 10;
         }
 
+        /* Invisible Fullscreen Trigger Overlay */
+        /* Ye pure card par ek transparent parda laga dega, click karte hi JS active hoga */
+        .click-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0); 
+        }
+
         /* Iframe Styling */
         .video-card iframe {
             width: 100%;
@@ -108,7 +121,7 @@
             padding: 5px 12px;
             border-radius: 4px;
             letter-spacing: 1px;
-            z-index: 5;
+            z-index: 25; /* Overlay ke upar */
             display: flex;
             align-items: center;
             gap: 6px;
@@ -181,14 +194,16 @@
 
         <div class="video-grid">
             
-            <!-- Stream Card 1 (Title Updated) -->
+            <!-- Stream Card 1 -->
             <div class="video-card">
+                <!-- Ye div pure card ko clickable banata hai aur id 'video1' ko open karta hai -->
+                <div class="click-overlay" onclick="openAndPlay('video1')"></div>
                 <div class="live-badge">
                     <div class="live-dot"></div> LIVE
                 </div>
-                <!-- modestbranding=1 (hides youtube logo), rel=0 (hides related videos), iv_load_policy=3 (hides annotations) -->
-                <iframe 
-                    src="https://www.youtube.com/embed/SEehSGaEfGY?autoplay=1&mute=1&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0" 
+                <!-- enablejsapi=1 jaruri hai taaki JS se play/pause kiya ja sake -->
+                <iframe id="video1"
+                    src="https://www.youtube.com/embed/SEehSGaEfGY?enablejsapi=1&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0" 
                     title="Ayush Mhatre podcast with Akash Chopra" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                     allowfullscreen>
@@ -201,11 +216,12 @@
 
             <!-- Stream Card 2 -->
             <div class="video-card">
+                <div class="click-overlay" onclick="openAndPlay('video2')"></div>
                 <div class="live-badge">
                     <div class="live-dot"></div> LIVE
                 </div>
-                <iframe 
-                    src="https://www.youtube.com/embed/v6vTLS4MfCU?autoplay=1&mute=1&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0" 
+                <iframe id="video2"
+                    src="https://www.youtube.com/embed/v6vTLS4MfCU?enablejsapi=1&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0" 
                     title="Live Football Match" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                     allowfullscreen>
@@ -218,6 +234,25 @@
 
         </div>
     </div>
+
+    <!-- JavaScript For Automatic Fullscreen & Play -->
+    <script>
+        function openAndPlay(iframeId) {
+            var iframe = document.getElementById(iframeId);
+            
+            // 1. YouTube player ko Play hone ka command bhejna
+            iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+            
+            // 2. Iframe ko seedha Fullscreen Mode me daalna
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.webkitRequestFullscreen) { /* Safari / iOS */
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) { /* IE11 */
+                iframe.msRequestFullscreen();
+            }
+        }
+    </script>
 
 </body>
 </html>
