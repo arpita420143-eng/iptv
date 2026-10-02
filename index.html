@@ -14,7 +14,7 @@
         }
 
         body {
-            background-color: #0f1115; /* Deep OTT Dark Background */
+            background-color: #0f1115;
             color: #ffffff;
             overflow-x: hidden;
         }
@@ -24,10 +24,10 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(10, 25, 47, 0.85); /* Deep Blue from your image */
+            background: rgba(10, 25, 47, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-bottom: 3px solid #ff8c00; /* Orange Accent */
+            border-bottom: 3px solid #ff8c00;
             padding: 20px 0;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -62,7 +62,7 @@
             gap: 10px;
         }
 
-        /* Grid Layout like Netflix */
+        /* Grid Layout */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -80,7 +80,6 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Hover Glow Effect */
         .video-card:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 15px 35px rgba(255, 140, 0, 0.3), 0 0 15px rgba(10, 37, 71, 0.5);
@@ -102,7 +101,7 @@
             position: absolute;
             top: 15px;
             left: 15px;
-            background: #e50914; /* Netflix Red */
+            background: #e50914;
             color: white;
             font-size: 0.8rem;
             font-weight: bold;
@@ -182,13 +181,14 @@
 
         <div class="video-grid">
             
-            <!-- Stream Card 1 -->
+            <!-- Stream Card 1 (Updated Link with No Logo settings) -->
             <div class="video-card">
                 <div class="live-badge">
                     <div class="live-dot"></div> LIVE
                 </div>
+                <!-- modestbranding=1 (hides youtube logo), rel=0 (hides related videos), iv_load_policy=3 (hides annotations) -->
                 <iframe 
-                    src="https://www.youtube.com/embed/7KW7ZN5A9cs?autoplay=1&mute=1" 
+                    src="https://www.youtube.com/embed/SEehSGaEfGY?autoplay=1&mute=1&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0" 
                     title="MKS Sports Live 1" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                     allowfullscreen>
@@ -199,13 +199,13 @@
                 </div>
             </div>
 
-            <!-- Stream Card 2 -->
+            <!-- Stream Card 2 (Added No Logo settings yahan bhi) -->
             <div class="video-card">
                 <div class="live-badge">
                     <div class="live-dot"></div> LIVE
                 </div>
                 <iframe 
-                    src="https://www.youtube.com/embed/v6vTLS4MfCU?autoplay=1&mute=1" 
+                    src="https://www.youtube.com/embed/v6vTLS4MfCU?autoplay=1&mute=1&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0" 
                     title="MKS Sports Live 2" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                     allowfullscreen>
