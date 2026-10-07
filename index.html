@@ -3,254 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKS SPORTS | Premium Streaming</title>
+    <title>MKS SPORTS - Premium Live Stream</title>
+    
+    <!-- Google Fonts for Sci-Fi Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Plyr CSS (Premium Player UI) -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+
     <style>
-        /* Modern Reset & Base Setup */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+        /* SCI-FI THEME CSS */
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bc13fe;
+            --dark-bg: #050510;
         }
 
         body {
-            background-color: #0f1115;
-            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at center, #111425 0%, #020205 100%);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             overflow-x: hidden;
         }
 
-        /* Premium Glassmorphism Header */
-        .navbar {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(10, 25, 47, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 3px solid #ff8c00;
+        /* Sci-Fi Header */
+        header {
+            width: 100%;
             padding: 20px 0;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.5);
+            border-bottom: 2px solid var(--neon-blue);
+            box-shadow: 0 0 20px var(--neon-blue);
+            margin-bottom: 30px;
         }
 
-        .navbar h1 {
-            font-size: 3.5rem;
-            font-weight: 900;
-            letter-spacing: 4px;
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
             margin: 0;
-            background: linear-gradient(to right, #ffffff, #e0e0e0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0px 4px 15px rgba(255, 255, 255, 0.1);
+            font-size: 3rem;
+            letter-spacing: 5px;
+            color: #fff;
             text-transform: uppercase;
+            text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue), 0 0 40px var(--neon-purple);
+            animation: pulseGlow 2s infinite alternate;
         }
 
-        /* Main Content Container */
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
+        @keyframes pulseGlow {
+            0% { text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue); }
+            100% { text-shadow: 0 0 15px var(--neon-purple), 0 0 30px var(--neon-blue), 0 0 50px var(--neon-blue); }
         }
 
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 25px;
-            color: #a0aec0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Grid Layout */
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px;
-        }
-
-        /* Premium Video Card */
-        .video-card {
-            position: relative;
-            background: #1a1d24;
-            border-radius: 16px;
+        /* Player Container */
+        .player-container {
+            width: 90%;
+            max-width: 1000px;
+            border-radius: 15px;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .video-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(255, 140, 0, 0.3), 0 0 15px rgba(10, 37, 71, 0.5);
-            border-color: rgba(255, 140, 0, 0.5);
-            z-index: 10;
-        }
-
-        /* Invisible Fullscreen Trigger Overlay */
-        /* Ye pure card par ek transparent parda laga dega, click karte hi JS active hoga */
-        .click-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 20;
-            cursor: pointer;
-            background: rgba(0, 0, 0, 0); 
-        }
-
-        /* Iframe Styling */
-        .video-card iframe {
-            width: 100%;
-            aspect-ratio: 16/9;
-            border: none;
-            display: block;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.4), inset 0 0 20px rgba(188, 19, 254, 0.2);
             background: #000;
+            position: relative;
         }
 
-        /* Live Badge Animation */
-        .live-badge {
+        /* Customizing Plyr for Premium Look */
+        --plyr-color-main: var(--neon-blue);
+        --plyr-video-background: #000;
+        
+        /* Telegram Popup - Glassmorphism Sci-Fi */
+        .tg-popup-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(10px);
+        }
+
+        .tg-popup {
+            background: rgba(10, 15, 30, 0.7);
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 0 40px var(--neon-purple), inset 0 0 20px var(--neon-blue);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: scale(0.8);
+            animation: popIn 0.5s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            to { transform: scale(1); }
+        }
+
+        .tg-popup h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            margin-top: 0;
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .tg-popup p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .tg-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 50px;
+            box-shadow: 0 0 20px var(--neon-purple);
+            transition: all 0.3s ease;
+        }
+
+        .tg-btn:hover {
+            box-shadow: 0 0 40px var(--neon-blue);
+            transform: translateY(-3px);
+        }
+
+        .close-btn {
             position: absolute;
             top: 15px;
-            left: 15px;
-            background: #e50914;
+            right: 20px;
             color: white;
-            font-size: 0.8rem;
-            font-weight: bold;
-            padding: 5px 12px;
-            border-radius: 4px;
-            letter-spacing: 1px;
-            z-index: 25; /* Overlay ke upar */
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 2px 10px rgba(229, 9, 20, 0.5);
-            pointer-events: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
-        .live-dot {
-            width: 8px;
-            height: 8px;
-            background-color: white;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
+        .close-btn:hover {
+            color: red;
+            text-shadow: 0 0 10px red;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.5; }
-            100% { transform: scale(0.95); opacity: 1; }
-        }
-
-        /* Card Info Bar */
-        .card-info {
-            padding: 15px 20px;
-            background: linear-gradient(to top, #1a1d24, rgba(26, 29, 36, 0.9));
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .card-subtitle {
-            font-size: 0.85rem;
-            color: #8892b0;
-        }
-
-        /* Mobile Optimization */
+        /* Responsive */
         @media (max-width: 768px) {
-            .navbar h1 {
-                font-size: 2.2rem;
-                letter-spacing: 2px;
-            }
-            .video-grid {
-                gap: 25px;
-            }
-            .container {
-                margin: 20px auto;
-            }
+            header h1 { font-size: 2rem; }
+            .player-container { width: 95%; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Premium Header -->
-    <header class="navbar">
+    <header>
         <h1>MKS SPORTS</h1>
     </header>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div class="section-title">
-            <span style="color: #ff8c00;">▶</span> Live Events Now
-        </div>
+    <div class="player-container">
+        <!-- Video Element -->
+        <video id="player" controls crossorigin playsinline></video>
+    </div>
 
-        <div class="video-grid">
-            
-            <!-- Stream Card 1 -->
-            <div class="video-card">
-                <!-- Ye div pure card ko clickable banata hai aur id 'video1' ko open karta hai -->
-                <div class="click-overlay" onclick="openAndPlay('video1')"></div>
-                <div class="live-badge">
-                    <div class="live-dot"></div> LIVE
-                </div>
-                <!-- enablejsapi=1 jaruri hai taaki JS se play/pause kiya ja sake -->
-                <iframe id="video1"
-                    src="https://www.youtube.com/embed/SEehSGaEfGY?enablejsapi=1&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0" 
-                    title="Ayush Mhatre podcast with Akash Chopra" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowfullscreen>
-                </iframe>
-                <div class="card-info">
-                    <div class="card-title">Ayush Mhatre podcast with Akash Chopra</div>
-                    <div class="card-subtitle">MKS sports Exclusive Broadcasting</div>
-                </div>
-            </div>
-
-            <!-- Stream Card 2 -->
-            <div class="video-card">
-                <div class="click-overlay" onclick="openAndPlay('video2')"></div>
-                <div class="live-badge">
-                    <div class="live-dot"></div> LIVE
-                </div>
-                <iframe id="video2"
-                    src="https://www.youtube.com/embed/v6vTLS4MfCU?enablejsapi=1&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0" 
-                    title="Live Football Match" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowfullscreen>
-                </iframe>
-                <div class="card-info">
-                    <div class="card-title">Primera Federación - Live Match</div>
-                    <div class="card-subtitle">MKS sports Exclusive Broadcasting</div>
-                </div>
-            </div>
-
+    <!-- Premium Telegram Popup -->
+    <div class="tg-popup-overlay" id="popupOverlay">
+        <div class="tg-popup">
+            <span class="close-btn" onclick="closePopup()">✖</span>
+            <h2>PREMIUM ACCESS</h2>
+            <p>Join MKS Sports Official Telegram Channel for Premium Updates, Live Links & More!</p>
+            <a href="https://t.me/MKSsports_3" target="_blank" class="tg-btn">JOIN TELEGRAM NOW</a>
         </div>
     </div>
 
-    <!-- JavaScript For Automatic Fullscreen & Play -->
+    <!-- HLS.js (For streaming M3U8 files with quality support) -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+    <!-- Plyr JS -->
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+
     <script>
-        function openAndPlay(iframeId) {
-            var iframe = document.getElementById(iframeId);
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.querySelector('video');
+            const source = 'https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8';
             
-            // 1. YouTube player ko Play hone ka command bhejna
-            iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-            
-            // 2. Iframe ko seedha Fullscreen Mode me daalna
-            if (iframe.requestFullscreen) {
-                iframe.requestFullscreen();
-            } else if (iframe.webkitRequestFullscreen) { /* Safari / iOS */
-                iframe.webkitRequestFullscreen();
-            } else if (iframe.msRequestFullscreen) { /* IE11 */
-                iframe.msRequestFullscreen();
+            // Plyr Options (Controls, Speed, Quality)
+            const defaultOptions = {
+                controls: [
+                    'play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'
+                ],
+                settings: ['quality', 'speed'],
+                speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] }
+            };
+
+            // Initialize HLS
+            if (Hls.isSupported()) {
+                const hls = new Hls({
+                    // Tuning HLS for minimal buffering
+                    maxBufferLength: 30,
+                    maxMaxBufferLength: 600,
+                });
+                
+                hls.loadSource(source);
+
+                hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                    const availableQualities = hls.levels.map((l) => l.height);
+                    availableQualities.unshift(0); // 0 means Auto Quality
+
+                    defaultOptions.quality = {
+                        default: 0,
+                        options: availableQualities,
+                        forced: true,
+                        onChange: (e) => updateQuality(e),
+                    };
+
+                    // Initialize Plyr with HLS data
+                    new Plyr(video, defaultOptions);
+                });
+
+                hls.attachMedia(video);
+                window.hls = hls;
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // For Safari (Native HLS support)
+                video.src = source;
+                new Plyr(video, defaultOptions);
             }
+
+            // Function to change quality seamlessly
+            function updateQuality(newQuality) {
+                if (newQuality === 0) {
+                    window.hls.currentLevel = -1; // -1 triggers Auto Quality
+                } else {
+                    window.hls.levels.forEach((level, levelIndex) => {
+                        if (level.height === newQuality) {
+                            window.hls.currentLevel = levelIndex;
+                        }
+                    });
+                }
+            }
+
+            // Popup Logic - Shows after 5 seconds of page load
+            setTimeout(() => {
+                document.getElementById('popupOverlay').style.display = 'flex';
+            }, 5000);
+        });
+
+        function closePopup() {
+            document.getElementById('popupOverlay').style.display = 'none';
+            // Optional: Auto play video when popup is closed
+            // document.querySelector('video').play(); 
         }
     </script>
 
