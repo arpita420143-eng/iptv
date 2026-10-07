@@ -3,36 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKS SPORTS - ULTIMATE STREAM</title>
+    <title>MKS SPORTS - HOTSTAR KILLER</title>
 
     <!-- Sci-Fi & Premium Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <!-- Plyr CSS -->
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 
     <style>
         :root {
-            --brand-color: #00e5ff;
-            --brand-glow: rgba(0, 229, 255, 0.6);
-            --bg-color: #030407;
-            --surface-color: rgba(10, 12, 20, 0.7);
+            --cyan: #00f3ff;
+            --magenta: #ff0055;
+            --dark-bg: #050505;
+            --glass-bg: rgba(10, 10, 15, 0.6);
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
-            background-color: var(--bg-color);
+            background-color: var(--dark-bg);
             color: #fff;
             font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* --- 1. BOOT-UP SEQUENCE (NASA/HACKER FEEL) --- */
+        /* --- 1. HACKING BOOT SEQUENCE --- */
         #boot-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -41,255 +41,265 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
+            padding-left: 10%;
             font-family: 'Space Mono', monospace;
-            color: var(--brand-color);
-            transition: opacity 1s ease-out;
+            color: var(--cyan);
+            transition: opacity 0.8s ease-out;
         }
 
-        .boot-text {
-            font-size: 1.2rem;
-            text-align: left;
-            width: 80%; max-width: 600px;
-        }
+        .boot-text { font-size: 1.2rem; text-shadow: 0 0 5px var(--cyan); }
 
-        /* --- 2. CINEMATIC APP LAYOUT --- */
+        /* --- 2. PREMIUM APP LAYOUT --- */
         .app-container {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            height: 100vh;
             position: relative;
             z-index: 10;
-            opacity: 0; /* Hidden until boot finishes */
-            animation: fadeIn 2s forwards 3.5s;
+            opacity: 0;
+            animation: fadeIn 1s forwards 4s; /* Waits for boot sequence */
         }
 
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
+        @keyframes fadeIn { to { opacity: 1; } }
 
-        /* Glassmorphism Navbar */
-        nav {
+        /* Glassmorphism Header */
+        header {
             width: 100%;
-            height: 70px;
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 40px;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
             position: fixed;
-            top: 0; left: 0;
-            z-index: 100;
+            top: 0; z-index: 100;
         }
 
-        nav h1 {
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
             font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: 4px;
             margin: 0;
-            text-shadow: 0 0 15px var(--brand-glow);
+            background: linear-gradient(90deg, #fff, var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+            letter-spacing: 2px;
         }
 
-        .live-indicator {
+        .status-badge {
             display: flex;
             align-items: center;
+            background: rgba(255, 0, 85, 0.15);
+            border: 1px solid var(--magenta);
+            padding: 6px 15px;
+            border-radius: 30px;
             font-family: 'Space Mono', monospace;
             font-size: 0.9rem;
-            color: #ff0044;
-            background: rgba(255, 0, 68, 0.1);
-            padding: 5px 15px;
-            border-radius: 20px;
-            border: 1px solid #ff0044;
-        }
-        
-        .live-indicator span {
-            width: 10px; height: 10px;
-            background: #ff0044;
-            border-radius: 50%;
-            margin-right: 8px;
-            animation: pulse 1s infinite;
+            color: var(--magenta);
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
         }
 
-        /* --- 3. AMBIENT PLAYER SECTION --- */
-        .main-content {
+        .status-badge span {
+            width: 8px; height: 8px;
+            background: var(--magenta);
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* --- 3. THE HOTSTAR-KILLER PLAYER SECTION --- */
+        .player-section {
             flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding-top: 70px; /* Offset for navbar */
-            position: relative;
-        }
-
-        /* The glowing cinematic background behind player */
-        .ambient-glow {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 70%; height: 70%;
-            background: radial-gradient(ellipse, rgba(0, 229, 255, 0.15) 0%, transparent 60%);
-            filter: blur(80px);
-            z-index: 0;
-            animation: ambientPulse 4s infinite alternate;
-        }
-
-        @keyframes ambientPulse {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
-            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            margin-top: 70px; /* Header height */
+            padding: 20px;
+            background: radial-gradient(circle at center, #111 0%, var(--dark-bg) 100%);
         }
 
         .player-wrapper {
+            width: 100%;
+            max-width: 1200px; /* Cinematic size */
             position: relative;
-            width: 85%;
-            max-width: 1200px;
-            z-index: 10;
-            border-radius: 12px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05);
-            background: #000;
-            overflow: hidden;
+            border-radius: 16px;
+            /* Animated Cyber Border */
+            background: linear-gradient(45deg, var(--cyan), transparent, var(--magenta), transparent);
+            background-size: 400% 400%;
+            animation: gradientBorder 5s ease infinite;
+            padding: 2px; /* Border thickness */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 30px rgba(0, 243, 255, 0.1);
         }
 
-        /* --- 4. NASA HUD (HEADS UP DISPLAY) INSIDE PLAYER --- */
-        .hud-overlay {
+        @keyframes gradientBorder {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .video-container {
+            border-radius: 14px;
+            overflow: hidden;
+            background: #000;
+            position: relative;
+        }
+
+        /* --- 4. HUD (REFINED FOR PERFECT OVERLAP) --- */
+        .hud-layer {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; /* So it doesn't block video clicks */
+            pointer-events: none;
             z-index: 5;
-            padding: 20px;
+            padding: 15px;
             font-family: 'Space Mono', monospace;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 0.8rem;
-        }
-
-        .hud-top-left { position: absolute; top: 20px; left: 20px; }
-        .hud-top-right { position: absolute; top: 20px; right: 20px; text-align: right; }
-        .hud-crosshair {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100px; height: 100px;
-            border: 1px solid rgba(0, 229, 255, 0.1);
-            border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .hud-crosshair::before, .hud-crosshair::after {
-            content: ''; position: absolute; background: rgba(0, 229, 255, 0.1);
-        }
-        .hud-crosshair::before { width: 120px; height: 1px; }
-        .hud-crosshair::after { width: 1px; height: 120px; }
-
-        /* --- 5. NETFLIX STYLE PLYR OVERRIDES --- */
-        --plyr-color-main: var(--brand-color);
-        .plyr__controls {
-            background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.9)) !important;
-            padding: 40px 20px 20px 20px !important;
-            border-bottom-left-radius: 12px;
-            border-bottom-right-radius: 12px;
-        }
-        .plyr__control--overlaid {
-            background: rgba(0,0,0,0.5) !important;
-            border: 2px solid var(--brand-color) !important;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5) !important;
-            backdrop-filter: blur(5px);
-        }
-
-        /* --- 6. PREMIUM TELEGRAM WIDGET --- */
-        .tg-widget {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: rgba(10, 15, 25, 0.8);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(0, 229, 255, 0.1);
-            z-index: 1000;
-            width: 320px;
-            transform: translateX(400px);
-            animation: slideInTg 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 8s;
-        }
-
-        @keyframes slideInTg {
-            to { transform: translateX(0); }
-        }
-
-        .tg-widget h3 {
-            margin: 0 0 10px 0;
-            font-size: 1.1rem;
-            color: var(--brand-color);
+            color: rgba(0, 243, 255, 0.5); /* Subtle cyan text */
+            font-size: 0.75rem;
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
         }
-        
-        .tg-widget p { font-size: 0.9rem; color: #aaa; margin-bottom: 15px; }
-        
-        .tg-btn {
-            display: block;
-            text-align: center;
-            background: var(--brand-color);
-            color: #000;
-            text-decoration: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: 0.3s;
+
+        .hud-top {
+            display: flex;
+            justify-content: space-between;
+            text-shadow: 0 0 5px #000; /* Contrast against bright video */
         }
-        .tg-btn:hover { box-shadow: 0 0 15px var(--brand-color); }
-        .close-tg { cursor: pointer; color: #fff; }
+
+        .hud-center {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px; height: 150px;
+            border: 1px solid rgba(0, 243, 255, 0.15);
+            border-radius: 50%;
+        }
+
+        /* --- 5. ULTRA-PREMIUM PLYR CONTROLS --- */
+        --plyr-color-main: var(--cyan);
+        .plyr__controls {
+            /* Frosted glass background for controls! */
+            background: rgba(10, 15, 25, 0.4) !important;
+            backdrop-filter: blur(15px) !important;
+            -webkit-backdrop-filter: blur(15px) !important;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 15px !important;
+        }
+        
+        /* Netflix style red progress bar option (using cyan here for sci-fi theme) */
+        .plyr input[type=range]::-webkit-slider-thumb {
+            box-shadow: 0 0 10px var(--cyan) !important;
+        }
+
+        .plyr__control--overlaid {
+            background: rgba(0, 243, 255, 0.2) !important;
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--cyan) !important;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4) !important;
+        }
+
+        .plyr__menu__container {
+            background: rgba(10, 15, 25, 0.85) !important;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 243, 255, 0.2) !important;
+            border-radius: 12px !important;
+        }
+
+        /* --- 6. SLEEK TELEGRAM WIDGET --- */
+        .tg-banner {
+            position: fixed;
+            bottom: -100px; /* Hidden initially */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            background: rgba(10, 10, 20, 0.85);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--cyan);
+            border-radius: 12px;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.2);
+            transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .tg-banner.show { bottom: 30px; }
+
+        .tg-text h3 { margin: 0; color: var(--cyan); font-family: 'Orbitron', sans-serif; font-size: 1rem; }
+        .tg-text p { margin: 5px 0 0 0; font-size: 0.8rem; color: #ccc; }
+
+        .tg-btn {
+            background: linear-gradient(45deg, var(--cyan), #0088cc);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-family: 'Rajdhani', sans-serif;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+            white-space: nowrap;
+        }
 
         @media (max-width: 768px) {
-            .player-wrapper { width: 100%; border-radius: 0; }
-            .tg-widget { bottom: 10px; right: 10px; left: 10px; width: auto; }
-            nav h1 { font-size: 1.5rem; }
+            header { padding: 10px 15px; }
+            header h1 { font-size: 1.5rem; }
+            .player-section { padding: 0; margin-top: 60px; align-items: flex-start; }
+            .player-wrapper { border-radius: 0; padding: 0; border-top: 2px solid var(--cyan); border-bottom: 2px solid var(--cyan); animation: none; background: #000; }
+            .video-container { border-radius: 0; }
+            .tg-banner { flex-direction: column; text-align: center; gap: 10px; padding: 15px; }
+            .tg-banner.show { bottom: 10px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- BOOT-UP HACKER SCREEN -->
+    <!-- BOOT SEQUENCE -->
     <div id="boot-screen">
         <div class="boot-text" id="terminal"></div>
     </div>
 
+    <!-- MAIN APP -->
     <div class="app-container">
-        <!-- APP NAVBAR -->
-        <nav>
+        
+        <header>
             <h1>MKS SPORTS</h1>
-            <div class="live-indicator"><span></span> SAT-LINK: LIVE</div>
-        </nav>
+            <div class="status-badge"><span></span> LIVE STREAM</div>
+        </header>
 
-        <!-- MAIN PLAYER AREA -->
-        <div class="main-content">
-            <div class="ambient-glow"></div>
-            
+        <div class="player-section">
             <div class="player-wrapper">
-                <!-- NASA/ISRO STYLE HUD OVERLAY -->
-                <div class="hud-overlay">
-                    <div class="hud-top-left">
-                        SYS: MKS-ORBITAL-1<br>
-                        LAT: 28.6139° N | LON: 77.2090° E<br>
-                        BANDWIDTH: SECURE
+                <div class="video-container">
+                    
+                    <!-- HUD OVERLAY (Perfectly scaled) -->
+                    <div class="hud-layer">
+                        <div class="hud-top">
+                            <div>SYS: ORBITAL-V2<br>LAT: 28.61° N</div>
+                            <div style="text-align: right;">[REC]<br>PING: 12ms</div>
+                        </div>
+                        <div class="hud-center"></div>
                     </div>
-                    <div class="hud-top-right">
-                        [REC] <br>
-                        UPLINK: ACTIVE<br>
-                        PING: 12ms
-                    </div>
-                    <div class="hud-crosshair"></div>
-                </div>
 
-                <!-- THE VIDEO PLAYER -->
-                <video id="player" controls crossorigin playsinline></video>
+                    <!-- VIDEO PLAYER -->
+                    <video id="player" controls crossorigin playsinline></video>
+                </div>
             </div>
         </div>
 
-        <!-- TELEGRAM WIDGET -->
-        <div class="tg-widget" id="tgWidget">
-            <h3><span>PREMIUM ACCESS</span> <span class="close-tg" onclick="document.getElementById('tgWidget').style.display='none'">✖</span></h3>
-            <p>Join MKS Sports command center on Telegram for 4K streams and backup servers.</p>
-            <a href="https://t.me/MKSsports_3" target="_blank" class="tg-btn">CONNECT TO TELEGRAM</a>
+        <!-- TELEGRAM BANNER -->
+        <div class="tg-banner" id="tgBanner">
+            <div class="tg-text">
+                <h3>VIP ACCESS</h3>
+                <p>Join Telegram for 4K links & Backup Servers.</p>
+            </div>
+            <a href="https://t.me/MKSsports_3" target="_blank" class="tg-btn">JOIN NOW</a>
         </div>
+
     </div>
 
     <!-- Scripts -->
@@ -297,14 +307,13 @@
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
 
     <script>
-        // --- 1. BOOT-UP TERMINAL EFFECT ---
+        // --- 1. BOOT SEQUENCE SCRIPT ---
         const terminalText = [
-            "> INITIALIZING MKS SPORTS PROTOCOL...",
-            "> ESTABLISHING SECURE SATELLITE UPLINK...",
-            "> BYPASSING GEO-RESTRICTIONS...",
-            "> CONNECTING TO SERVER: OP-1...",
-            "> DECRYPTING VIDEO STREAM...",
-            "> LINK ESTABLISHED. WELCOME."
+            "> INIT MKS PROTOCOL...",
+            "> BYPASSING SECURE NODES...",
+            "> ESTABLISHING SAT-LINK...",
+            "> DECRYPTING STREAM...",
+            "> ACCESS GRANTED."
         ];
         
         let lineIndex = 0;
@@ -314,53 +323,36 @@
             if (lineIndex < terminalText.length) {
                 terminal.innerHTML += terminalText[lineIndex] + "<br>";
                 lineIndex++;
-                setTimeout(typeLine, 500); // Speed of typing
+                setTimeout(typeLine, 400); 
             } else {
                 setTimeout(() => {
                     document.getElementById('boot-screen').style.opacity = '0';
-                    setTimeout(() => document.getElementById('boot-screen').style.display = 'none', 1000);
+                    setTimeout(() => document.getElementById('boot-screen').style.display = 'none', 800);
                 }, 500);
             }
         }
-        
         window.onload = typeLine;
 
-        // --- 2. ADVANCED PLAYER SETUP ---
+        // --- 2. PLAYER SETUP ---
         document.addEventListener('DOMContentLoaded', () => {
             const video = document.querySelector('video');
             const source = 'https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8';
             
-            // Netflix style controls
             const playerConfig = {
                 controls: ['play-large', 'play', 'progress', 'current-time', 'live', 'mute', 'volume', 'settings', 'fullscreen'],
                 settings: ['quality', 'speed'],
                 speed: { selected: 1, options: [0.5, 1, 1.5, 2] }
             };
 
-            // HLS for zero buffering
             if (Hls.isSupported()) {
-                const hls = new Hls({
-                    maxBufferLength: 60, // Deep buffer
-                    maxMaxBufferLength: 1200,
-                    enableWorker: true
-                });
-                
+                const hls = new Hls({ maxBufferLength: 60, maxMaxBufferLength: 1200 });
                 hls.loadSource(source);
-
                 hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                    const availableQualities = hls.levels.map((l) => l.height);
-                    availableQualities.unshift(0); // 0 = Auto
-
-                    playerConfig.quality = {
-                        default: 0,
-                        options: availableQualities,
-                        forced: true,
-                        onChange: (e) => updateQuality(e),
-                    };
-
+                    const availableQualities = hls.levels.map(l => l.height);
+                    availableQualities.unshift(0); 
+                    playerConfig.quality = { default: 0, options: availableQualities, forced: true, onChange: (e) => updateQuality(e) };
                     new Plyr(video, playerConfig);
                 });
-
                 hls.attachMedia(video);
                 window.hls = hls;
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
@@ -369,16 +361,14 @@
             }
 
             function updateQuality(newQuality) {
-                if (newQuality === 0) {
-                    window.hls.currentLevel = -1; 
-                } else {
-                    window.hls.levels.forEach((level, levelIndex) => {
-                        if (level.height === newQuality) {
-                            window.hls.currentLevel = levelIndex;
-                        }
-                    });
-                }
+                if (newQuality === 0) window.hls.currentLevel = -1; 
+                else window.hls.levels.forEach((level, index) => { if (level.height === newQuality) window.hls.currentLevel = index; });
             }
+
+            // Show Telegram Banner after 8 seconds
+            setTimeout(() => {
+                document.getElementById('tgBanner').classList.add('show');
+            }, 8000);
         });
     </script>
 
