@@ -62,7 +62,7 @@
             box-shadow: 0 0 10px rgba(0, 92, 230, 0.4);
         }
 
-        /* --- 2. HERO PLAYER (M3U8) --- */
+        /* --- 2. HERO PLAYER --- */
         .hero-player { width: 100%; position: relative; background: #000; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
         .player-overlay-top { position: absolute; top: 0; left: 0; width: 100%; height: 70px; background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, transparent 100%); z-index: 10; pointer-events: none; }
         .live-tag-container { position: absolute; top: 14px; left: 16px; z-index: 11; display: flex; align-items: center; gap: 8px; }
@@ -208,8 +208,8 @@
             </div>
         </div>
         
-        <!-- M3U8 VIDEO PLAYER -->
-        <video id="player" controls crossorigin playsinline></video>
+        <!-- YOUTUBE PLAYER CONTAINER -->
+        <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="f_HuMeuZ10Y"></div>
     </div>
 
     <div class="content-area">
@@ -296,8 +296,7 @@
     </div>
 
     <div id="toast"></div>
-
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+    <!-- Plyr JS -->
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
         // --- LIVE VIEWER COUNT ---
@@ -346,24 +345,18 @@
             setTimeout(() => { showToast("⚠️ No supported devices found on this network."); }, 3500);
         }
 
-        // --- FAKE CHAT SYSTEM ---
-        const chatNames = ["Rahul D.", "CricLover99", "Vikram_Singh", "Thabo_SA", "John Smith","Rutu fans","gaikwad tuk tuk academy","jsk captain","vinod Reddy","Arjun", "Priya", "David_W", "MSDian_Forever","pagal munda","csk forever", "sourav dada", "brown munda💙", "polly_34", "chokli fans","vk18","mukesh mi","SA20_Fan", "Sneha", "Rohit45", "Aman Kumar", "ABD_Fanatic"];
+        // --- FAKE CHAT SYSTEM (60+ COMMENTS) ---
+        const chatNames = [
+            "Rahul D.", "CricLover99", "Vikram_Singh", "Thabo_SA", "John Smith", "Arjun", "Priya", 
+            "David_W", "MSDian_Forever", "SA20_Fan", "Sneha", "Rohit45", "Aman Kumar", "ABD_Fanatic",
+            "Jaco_Pretorius", "Imran_Khan", "Suresh_Raina_Fan", "MKS_Supporter", "Njabulo", "Chris_G",
+            "Amit_Sharma", "Prakash77", "Zulu_Warrior", "Kavya", "Deepak_Chahar_FC", "Sanjay", "Ravi_K"
+        ];
+        
         const chatMessages = [
             "Pollard ko JSK hi lega pakka! 🔥",
             "Trent Boult will break the bank today 🤑",
             "Faf du Plessis back to JSK 💛",
-            "jordan cox chahiye 💙",
-            
-            "moeen ali kon liya ?",
-
-            "topley needed koi ni lega only super kings 😂🤣",
-
-            "mi walo ko gleeson dedo",
-
-            "sunrisers ko bavuma dedo 😂",
-
-            "jsk walo jamie smith nahi liye to support karna chhod dunga 😠",
-
             "Imran Tahir at 47! Unbelievable fitness 🏃‍♂️",
             "Who is bidding for Shamar Joseph? That pace!",
             "Moeen Ali back to JSK?",
@@ -376,12 +369,52 @@
             "Shimron Hetmyer hitting sixes out of the park soon!",
             "Rassie van der Dussen home town hero!",
             "Anyone knows base price of Nabi?",
-           "pollard ko pick karo jsk walo usse better option nahi milega.",
-
-           "itna paisa leke kya ghar jaoge?",
-           "Overton chahiye esa na ho sourav ganguly le jaye 🫣😨",
-
-            "Waiting for Zak Crawley bid..."
+            "Waiting for Zak Crawley bid...",
+            "Allah Mohammad Ghazanfar is the mystery spinner everyone wants.",
+            "Gulbadin Naib's muscles 💪 SEC should buy him.",
+            "Nahid Rana ki pace 150+ hai bhai, MI Cape Town le lo.",
+            "Tom Abell solid middle order option.",
+            "Rehan Ahmed future star ⭐",
+            "Joe Clarke is a great wicketkeeper batter.",
+            "Jordan Cox reserve price 15L ZAR.",
+            "Liam Dawson spin bowling allrounder ki demand hogi.",
+            "Richard Gleeson at 39 still bowling rockets 🚀",
+            "Saqib Mahmood injury ke baad wapas aa raha hai.",
+            "Tymal Mills slow bouncers will work in SA.",
+            "Craig Overton tall bounce milega SA pitches par.",
+            "Matthew Potts good powerplay bowler.",
+            "Jamie Smith is in red hot form!",
+            "Olly Stone express pace 🔥",
+            "Paul Walter tall left arm option.",
+            "David Willey swing king with new ball.",
+            "Luke Wood left arm pacers always in demand.",
+            "Jan Frylinck from Namibia could be a steal.",
+            "Brandon McMullen Scotland's pride.",
+            "Temba Bavuma unsold jayega kya? 😅",
+            "Nandre Burger fast and furious ⚡",
+            "Zubayr Hamza classy player.",
+            "Wiaan Mulder local boy massive bid coming.",
+            "Dwaine Pretorius death bowling specialist.",
+            "Eshan Malinga sling action like Lasith!",
+            "Milan Rathnayake pace allrounder.",
+            "Andries Gous USA hero in World Cup.",
+            "Hassan Khan solid spin allrounder.",
+            "Roston Chase very handy off spin and batting.",
+            "Matthew Forde swings it both ways.",
+            "Keemo Paul good slower balls.",
+            "Blessing Muzarabani tall bounce from Zimbabwe.",
+            "MKS Bhai big fan of your stream! ❤️",
+            "Audio ekdum clear hai, thanks admin.",
+            "Pretoria Capitals kisko target kar rahe hain?",
+            "Sunrisers Eastern Cape will go for Madushanka.",
+            "Paarl Royals need a solid middle order batter.",
+            "Durban Super Giants looking strong.",
+            "MI Cape Town purse kitna bacha hai?",
+            "Bhai stream lag kyu nahi kar rahi, itni smooth! 🔥",
+            "Faf ka base price kitna hai guys?",
+            "Pollard vs Hetmyer for the biggest bid today!",
+            "Stream quality is better than official app 😂",
+            "MKS VIP server is the best!"
         ];
 
         const chatBox = document.getElementById('chatBox');
@@ -397,46 +430,29 @@
             chatBox.appendChild(msgDiv);
             chatBox.scrollTop = chatBox.scrollHeight; 
             
-            if (chatBox.children.length > 20) {
+            if (chatBox.children.length > 25) {
                 chatBox.removeChild(chatBox.firstChild);
             }
         }
 
+        // Initally add 4 messages quickly
         for(let i=0; i<4; i++) { setTimeout(addChatMessage, i * 500); }
-        setInterval(addChatMessage, Math.floor(Math.random() * 2000) + 1500);
+        // Generate new message at random intervals between 1.5s to 3s
+        setInterval(addChatMessage, Math.floor(Math.random() * 1500) + 1500);
 
 
-        // --- VIDEO PLAYER SETUP (M3U8) ---
+        // --- YOUTUBE PLAYER SETUP ---
         document.addEventListener('DOMContentLoaded', () => {
-            const video = document.querySelector('video');
-            const source = 'https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8';
-            
-            const playerConfig = {
+            const player = new Plyr('#player', {
                 controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
-                settings: ['quality', 'speed'],
-                speed: { selected: 1, options: [0.5, 1, 1.25, 1.5, 2] }
-            };
-
-            if (Hls.isSupported()) {
-                const hls = new Hls({ maxBufferLength: 30, maxMaxBufferLength: 600, enableWorker: true });
-                hls.loadSource(source);
-                hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                    const availableQualities = hls.levels.map(l => l.height);
-                    availableQualities.unshift(0); 
-                    playerConfig.quality = { default: 0, options: availableQualities, forced: true, onChange: (e) => updateQuality(e) };
-                    new Plyr(video, playerConfig);
-                });
-                hls.attachMedia(video);
-                window.hls = hls;
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = source;
-                new Plyr(video, playerConfig);
-            }
-
-            function updateQuality(newQuality) {
-                if (newQuality === 0) window.hls.currentLevel = -1; 
-                else window.hls.levels.forEach((level, index) => { if (level.height === newQuality) window.hls.currentLevel = index; });
-            }
+                youtube: { 
+                    noCookie: false, 
+                    rel: 0, 
+                    showinfo: 0, 
+                    iv_load_policy: 3, 
+                    modestbranding: 1 
+                }
+            });
         });
     </script>
 </body>
