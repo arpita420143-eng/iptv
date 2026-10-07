@@ -62,10 +62,10 @@
             box-shadow: 0 0 10px rgba(0, 92, 230, 0.4);
         }
 
-        /* --- 2. HERO PLAYER --- */
+        /* --- 2. HERO PLAYER (YOUTUBE WITH PLYR) --- */
         .hero-player { width: 100%; position: relative; background: #000; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
         .player-overlay-top { position: absolute; top: 0; left: 0; width: 100%; height: 70px; background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, transparent 100%); z-index: 10; pointer-events: none; }
-        .live-tag-container { position: absolute; top: 14px; left: 16px; z-index: 11; display: flex; align-items: center; gap: 8px; }
+        .live-tag-container { position: absolute; top: 14px; left: 16px; z-index: 11; display: flex; align-items: center; gap: 8px; pointer-events: none; }
         
         .live-badge { 
             background: linear-gradient(90deg, #ff0033, #cc0000); color: white; font-size: 0.7rem; font-weight: 800; 
@@ -76,6 +76,7 @@
         .view-count { background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.15); color: white; font-size: 0.75rem; font-weight: 600; padding: 4px 8px; border-radius: 4px; display: flex; align-items: center; gap: 5px; }
         @keyframes pulse-dot { to { opacity: 0.2; transform: scale(0.8); } }
         
+        /* Premium Plyr styling overrides */
         --plyr-color-main: var(--accent-blue);
         .plyr__controls { background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%) !important; padding: 25px 12px 8px !important; }
         .plyr__control--overlaid { background: rgba(0, 0, 0, 0.6) !important; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.3) !important; padding: 18px !important; }
@@ -208,8 +209,9 @@
             </div>
         </div>
         
-        <!-- YOUTUBE PLAYER CONTAINER -->
+        <!-- YOUTUBE EMBED WITH PLYR -->
         <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="f_HuMeuZ10Y"></div>
+
     </div>
 
     <div class="content-area">
@@ -219,7 +221,7 @@
         <div class="video-tags">
             <span class="tag">Auction</span>
             <span class="tag">Cricket</span>
-            <span class="tag">HD 1080p</span>
+            <span class="tag">HD 720p</span>
         </div>
         
         <div class="action-bar">
@@ -296,6 +298,7 @@
     </div>
 
     <div id="toast"></div>
+
     <!-- Plyr JS -->
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
@@ -435,22 +438,23 @@
             }
         }
 
-        // Initally add 4 messages quickly
         for(let i=0; i<4; i++) { setTimeout(addChatMessage, i * 500); }
-        // Generate new message at random intervals between 1.5s to 3s
         setInterval(addChatMessage, Math.floor(Math.random() * 1500) + 1500);
 
 
-        // --- YOUTUBE PLAYER SETUP ---
+        // --- YOUTUBE PLAYER SETUP (WITH PLYR & 720p DEFAULT) ---
         document.addEventListener('DOMContentLoaded', () => {
             const player = new Plyr('#player', {
                 controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
+                settings: ['quality', 'speed'],
+                quality: { default: 720, options: [1080, 720, 480, 360, 240] },
                 youtube: { 
                     noCookie: false, 
                     rel: 0, 
                     showinfo: 0, 
                     iv_load_policy: 3, 
-                    modestbranding: 1 
+                    modestbranding: 1,
+                    vq: 'hd720' // Forces YouTube embed to prioritize 720p
                 }
             });
         });
