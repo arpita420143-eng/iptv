@@ -3,310 +3,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKS SPORTS - SAT-LINK ACTIVE</title>
+    <title>MKS SPORTS - Ultra Premium Player</title>
     
-    <!-- Sci-Fi Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <!-- Modern Tech Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;900&family=Jura:wght@500;700&display=swap" rel="stylesheet">
     
     <!-- Plyr CSS -->
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 
     <style>
-        /* CORE SCI-FI VARIABLES */
         :root {
-            --cyan: #00f3ff;
-            --magenta: #ff00ea;
-            --dark-bg: #03040e;
+            --primary-accent: #00e5ff; /* Cyan/Teal - Premium Tech Vibe */
+            --secondary-accent: #111;
+            --bg-deep: #0a0b10;
+            --glass-bg: rgba(16, 18, 27, 0.6);
         }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--dark-bg);
-            color: var(--cyan);
-            font-family: 'Share Tech Mono', monospace;
+            background-color: var(--bg-deep);
+            /* Subtle radial gradient behind the player */
+            background-image: radial-gradient(circle at 50% 40%, rgba(0, 229, 255, 0.1) 0%, transparent 60%);
+            color: #fff;
+            font-family: 'Exo 2', sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-x: hidden;
+            justify-content: flex-start;
         }
 
-        /* 3D ANIMATED CYBER GRID BACKGROUND */
-        .cyber-grid {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: 
-                linear-gradient(transparent 65%, rgba(0, 243, 255, 0.4) 100%),
-                linear-gradient(rgba(0, 243, 255, 0.15) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 243, 255, 0.15) 1px, transparent 1px);
-            background-size: 100% 100%, 40px 40px, 40px 40px;
-            transform: perspective(600px) rotateX(60deg);
-            transform-origin: bottom;
-            animation: moveGrid 3s linear infinite;
-            z-index: -1;
-        }
-
-        @keyframes moveGrid {
-            0% { background-position: 0 0, 0 0, 0 0; }
-            100% { background-position: 0 0, 0 40px, 0 0; }
-        }
-
-        /* SCANLINE EFFECT OVER THE WHOLE PAGE */
-        .scanlines {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
-            background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 999;
-        }
-
-        /* HEADER - GLITCH TEXT EFFECT */
+        /* PREMIUM HEADER */
         header {
             width: 100%;
-            padding: 25px 0;
+            padding: 30px 0 10px 0;
             text-align: center;
-            position: relative;
+            z-index: 10;
         }
 
         header h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.5rem;
+            font-family: 'Jura', sans-serif;
+            font-weight: 900;
+            font-size: 2.8rem;
             margin: 0;
-            color: #fff;
-            text-transform: uppercase;
-            text-shadow: 0 0 5px var(--cyan), 0 0 10px var(--cyan), 0 0 20px var(--cyan);
+            letter-spacing: 8px;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
+            background: linear-gradient(90deg, #fff, var(--primary-accent), #fff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+        }
+
+        /* --- THE ULTIMATE PLAYER CONTAINER --- */
+        .player-showcase {
+            width: 95%;
+            max-width: 1100px; /* Big screen size */
+            margin-top: 20px;
             position: relative;
-            display: inline-block;
+            z-index: 10;
+            /* Premium Glassmorphism Container */
+            background: var(--glass-bg);
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 
+                0 20px 50px rgba(0,0,0,0.8), /* Deep drop shadow */
+                inset 0 1px 1px rgba(255,255,255,0.1), /* Top highlight */
+                0 0 0 1px rgba(0, 229, 255, 0.2); /* Subtle glow border */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
-        header h1::before, header h1::after {
-            content: 'MKS SPORTS';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.8;
-        }
-        header h1::before {
-            color: var(--cyan);
-            z-index: -1;
-            transform: translate(-2px, 2px);
-            animation: glitch 2s infinite;
-        }
-        header h1::after {
-            color: var(--magenta);
-            z-index: -2;
-            transform: translate(2px, -2px);
-            animation: glitch 3s infinite reverse;
-        }
-
-        @keyframes glitch {
-            0% { clip-path: inset(10% 0 30% 0); transform: translate(-2px, 2px); }
-            20% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
-            40% { clip-path: inset(40% 0 40% 0); transform: translate(-2px, 2px); }
-            60% { clip-path: inset(10% 0 60% 0); transform: translate(2px, 2px); }
-            80% { clip-path: inset(60% 0 10% 0); transform: translate(-2px, -2px); }
-            100% { clip-path: inset(30% 0 20% 0); transform: translate(2px, -2px); }
-        }
-
-        /* DATA BAR UNDER HEADER */
-        .data-bar {
-            background: rgba(0, 243, 255, 0.1);
-            border-top: 1px solid var(--cyan);
-            border-bottom: 1px solid var(--cyan);
-            padding: 5px 20px;
-            font-size: 0.9rem;
-            display: flex;
-            justify-content: space-between;
-            max-width: 1000px;
-            width: 90%;
-            margin-bottom: 30px;
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
-        }
-
-        .data-bar span { animation: blink 1.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-        /* SCI-FI PLAYER CONTAINER WITH CORNER BRACKETS */
-        .player-wrapper {
-            width: 90%;
-            max-width: 1000px;
-            position: relative;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(0, 243, 255, 0.3);
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
-        }
-
-        /* Tech Corner Brackets */
-        .player-wrapper::before, .player-wrapper::after,
-        .player-wrapper .corners::before, .player-wrapper .corners::after {
+        /* Glowing back-panel effect for the player */
+        .player-showcase::before {
             content: '';
             position: absolute;
-            width: 30px; height: 30px;
-            border-color: var(--cyan);
-            border-style: solid;
-            transition: 0.3s;
+            top: -5%; left: -5%; width: 110%; height: 110%;
+            background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            border-radius: 30px;
+            pointer-events: none;
         }
 
-        .player-wrapper::before { top: 0; left: 0; border-width: 3px 0 0 3px; }
-        .player-wrapper::after { top: 0; right: 0; border-width: 3px 3px 0 0; }
-        .player-wrapper .corners::before { bottom: 0; left: 0; border-width: 0 0 3px 3px; }
-        .player-wrapper .corners::after { bottom: 0; right: 0; border-width: 0 3px 3px 0; }
-
-        .player-wrapper:hover::before, .player-wrapper:hover::after,
-        .player-wrapper:hover .corners::before, .player-wrapper:hover .corners::after {
-            width: 50px; height: 50px;
-            border-color: var(--magenta);
-            box-shadow: 0 0 15px var(--magenta);
+        .video-wrapper {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.9);
+            position: relative;
         }
 
-        /* Customizing Plyr Player */
-        --plyr-color-main: var(--cyan);
-        --plyr-video-background: #000;
-        .plyr {
-            border-radius: 0 !important;
+        /* --- CUSTOMIZING PLYR CONTROLS --- */
+        /* Overriding default Plyr styles to look like Netflix/Hotstar but better */
+        
+        /* Change Main Color to Cyan */
+        --plyr-color-main: var(--primary-accent);
+        
+        /* Transparent Black Gradient for Controls */
+        .plyr__controls {
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%) !important;
+            padding-bottom: 20px !important;
+            padding-top: 40px !important;
         }
 
-        /* SYSTEM ALERT POPUP (HUD STYLE) */
-        .hud-popup-overlay {
+        /* Make Play/Pause Button a Circle like Netflix */
+        .plyr__control--overlaid {
+            background: rgba(0, 229, 255, 0.8) !important;
+            box-shadow: 0 0 20px var(--primary-accent) !important;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Progress bar styling */
+        .plyr input[type=range]::-webkit-slider-thumb {
+            box-shadow: 0 0 10px var(--primary-accent);
+        }
+
+        /* Menu styling (Settings/Quality) */
+        .plyr__menu__container {
+            background: rgba(10, 11, 16, 0.95) !important;
+            border: 1px solid rgba(0, 229, 255, 0.3) !important;
+            border-radius: 10px !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8) !important;
+        }
+        
+        .plyr__menu__container .plyr__control {
+            font-family: 'Exo 2', sans-serif !important;
+            color: #fff !important;
+        }
+        
+        .plyr__menu__container .plyr__control[aria-checked=true]::before {
+            background: var(--primary-accent) !important;
+        }
+
+        /* --- STREAM STATS (Minimalist) --- */
+        .stream-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding: 0 10px;
+            font-family: 'Jura', sans-serif;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .live-badge {
+            display: flex;
+            align-items: center;
+            color: #ff0055;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .live-badge::before {
+            content: '';
+            display: inline-block;
+            width: 8px; height: 8px;
+            background: #ff0055;
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 10px #ff0055;
+            animation: pulse-red 1.5s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 0, 85, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 85, 0); }
+        }
+
+        /* --- PREMIUM POPUP MODAL --- */
+        .premium-modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 10000;
+            z-index: 99999;
         }
 
-        .hud-popup {
-            background: rgba(5, 10, 20, 0.9);
-            border: 2px solid var(--magenta);
-            box-shadow: 0 0 30px rgba(255, 0, 234, 0.4), inset 0 0 20px rgba(0, 243, 255, 0.2);
+        .modal-content {
+            background: linear-gradient(145deg, #161823, #0d0f17);
+            border: 1px solid rgba(0, 229, 255, 0.4);
+            border-radius: 20px;
             padding: 40px;
+            max-width: 400px;
             text-align: center;
-            max-width: 450px;
-            width: 90%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(0, 229, 255, 0.1);
             position: relative;
-            clip-path: polygon(10% 0, 100% 0, 100% 85%, 90% 100%, 0 100%, 0 15%);
-            animation: hudActivate 0.4s ease-out;
+            transform: translateY(50px);
+            opacity: 0;
+            animation: slideUp 0.5s ease-out forwards;
         }
 
-        @keyframes hudActivate {
-            0% { transform: scaleY(0.01) scaleX(0); opacity: 0; }
-            50% { transform: scaleY(0.01) scaleX(1); opacity: 1; }
-            100% { transform: scaleY(1) scaleX(1); }
+        @keyframes slideUp {
+            to { transform: translateY(0); opacity: 1; }
         }
 
-        .hud-popup h2 {
-            font-family: 'Orbitron', sans-serif;
-            color: #fff;
+        .modal-content h2 {
+            font-family: 'Jura', sans-serif;
+            color: var(--primary-accent);
             margin-top: 0;
-            text-shadow: 0 0 10px var(--magenta);
             font-size: 1.8rem;
         }
 
-        .warning-text {
-            color: red;
-            font-weight: bold;
-            animation: blink 1s infinite;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .hud-popup p {
-            font-size: 1.1rem;
+        .modal-content p {
+            color: #aaa;
+            line-height: 1.6;
             margin-bottom: 30px;
-            color: #ccc;
-            line-height: 1.5;
         }
 
-        .btn-cyber {
-            display: inline-block;
-            background: transparent;
-            color: var(--cyan);
-            padding: 15px 35px;
-            font-size: 1.2rem;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
+        .btn-telegram {
+            background: linear-gradient(90deg, #0088cc, #00e5ff);
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
             text-decoration: none;
-            text-transform: uppercase;
-            border: 2px solid var(--cyan);
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4) inset, 0 0 15px rgba(0, 243, 255, 0.4);
+            display: inline-block;
+            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.4);
             transition: 0.3s;
-            position: relative;
-            overflow: hidden;
         }
 
-        .btn-cyber:hover {
-            background: var(--cyan);
-            color: #000;
-            box-shadow: 0 0 30px var(--cyan);
+        .btn-telegram:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 229, 255, 0.6);
         }
 
-        .close-btn {
+        .close-modal {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            color: var(--magenta);
+            top: 15px; right: 20px;
+            color: rgba(255,255,255,0.5);
             font-size: 1.5rem;
             cursor: pointer;
             transition: 0.3s;
-            font-family: sans-serif;
         }
 
-        .close-btn:hover {
-            color: #fff;
-            text-shadow: 0 0 10px #fff;
-        }
+        .close-modal:hover { color: #fff; }
 
-        /* Mobile tweaks */
         @media (max-width: 768px) {
-            header h1 { font-size: 2.2rem; }
-            .cyber-grid { background-size: 100% 100%, 25px 25px, 25px 25px; }
-            .hud-popup { padding: 30px 20px; }
+            header h1 { font-size: 2rem; }
+            .player-showcase { padding: 10px; width: 100%; border-radius: 0; border: none; }
+            .video-wrapper { border-radius: 0; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Overlay Effects -->
-    <div class="cyber-grid"></div>
-    <div class="scanlines"></div>
-
     <header>
         <h1>MKS SPORTS</h1>
     </header>
 
-    <!-- Sci-Fi Data Bar -->
-    <div class="data-bar">
-        <div>STATUS: <span style="color:#0f0;">ONLINE</span></div>
-        <div>UPLINK: <span>SECURE</span></div>
-        <div>SAT-ID: MKS-X9</div>
-    </div>
-
-    <!-- Player with Tech Brackets -->
-    <div class="player-wrapper">
-        <div class="corners"></div>
-        <video id="player" controls crossorigin playsinline></video>
-    </div>
-
-    <!-- HUD System Alert Popup -->
-    <div class="hud-popup-overlay" id="popupOverlay">
-        <div class="hud-popup">
-            <span class="close-btn" onclick="closePopup()">✖</span>
-            <span class="warning-text">[ SYSTEM ALERT ]</span>
-            <h2>PREMIUM UPLINK REQ.</h2>
-            <p>Accessing restricted satellite feed... Join the official MKS Sports Telegram command center for uninterrupted keys, live links & premium access!</p>
-            <a href="https://t.me/MKSsports_3" target="_blank" class="btn-cyber">CONNECT TO TELEGRAM</a>
+    <!-- The Star of the Show: Player Container -->
+    <div class="player-showcase">
+        <div class="video-wrapper">
+            <video id="player" controls crossorigin playsinline></video>
+        </div>
+        
+        <!-- Minimalist Stats under player -->
+        <div class="stream-stats">
+            <div class="live-badge">LIVE</div>
+            <div>RES: AUTO / HLS</div>
+            <div>SERVER: OP-1</div>
         </div>
     </div>
 
-    <!-- HLS.js & Plyr -->
+    <!-- Premium Modal Popup -->
+    <div class="premium-modal" id="tgModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">✖</span>
+            <h2>UNLOCK VIP ACCESS</h2>
+            <p>Join the official MKS Sports Telegram channel to get ad-free links, 4K streams, and instant server updates.</p>
+            <a href="https://t.me/MKSsports_3" target="_blank" class="btn-telegram">JOIN TELEGRAM</a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
 
@@ -315,46 +294,47 @@
             const video = document.querySelector('video');
             const source = 'https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8';
             
-            // Plyr Options (Full controls, Speed, Quality)
-            const defaultOptions = {
+            // Premium Plyr configuration
+            const playerConfig = {
                 controls: [
-                    'play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'
+                    'play-large', 'play', 'progress', 'current-time', 'live', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'
                 ],
                 settings: ['quality', 'speed'],
-                speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] }
+                speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
+                tooltips: { controls: true, seek: true } // Hover tooltips
             };
 
-            // Initialize HLS for seamless stream
+            // HLS Implementation for seamless quality switching
             if (Hls.isSupported()) {
                 const hls = new Hls({
-                    maxBufferLength: 30, // Buffering control
+                    maxBufferLength: 30,
                     maxMaxBufferLength: 600,
+                    enableWorker: true // Better performance
                 });
                 
                 hls.loadSource(source);
 
                 hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
                     const availableQualities = hls.levels.map((l) => l.height);
-                    availableQualities.unshift(0); // 0 = Auto Quality
+                    availableQualities.unshift(0); // Add Auto option
 
-                    defaultOptions.quality = {
+                    playerConfig.quality = {
                         default: 0,
                         options: availableQualities,
                         forced: true,
                         onChange: (e) => updateQuality(e),
                     };
 
-                    new Plyr(video, defaultOptions);
+                    new Plyr(video, playerConfig);
                 });
 
                 hls.attachMedia(video);
                 window.hls = hls;
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = source;
-                new Plyr(video, defaultOptions);
+                new Plyr(video, playerConfig);
             }
 
-            // Quality Control Logic
             function updateQuality(newQuality) {
                 if (newQuality === 0) {
                     window.hls.currentLevel = -1; 
@@ -367,14 +347,14 @@
                 }
             }
 
-            // Tech Popup appears after 4 seconds like a system intercept
+            // Show Popup after 6 seconds
             setTimeout(() => {
-                document.getElementById('popupOverlay').style.display = 'flex';
-            }, 4000);
+                document.getElementById('tgModal').style.display = 'flex';
+            }, 6000);
         });
 
-        function closePopup() {
-            document.getElementById('popupOverlay').style.display = 'none';
+        function closeModal() {
+            document.getElementById('tgModal').style.display = 'none';
         }
     </script>
 
