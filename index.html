@@ -3,285 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKS SPORTS - Ultra Premium Player</title>
-    
-    <!-- Modern Tech Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;900&family=Jura:wght@500;700&display=swap" rel="stylesheet">
+    <title>MKS SPORTS - ULTIMATE STREAM</title>
+
+    <!-- Sci-Fi & Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     
     <!-- Plyr CSS -->
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 
     <style>
         :root {
-            --primary-accent: #00e5ff; /* Cyan/Teal - Premium Tech Vibe */
-            --secondary-accent: #111;
-            --bg-deep: #0a0b10;
-            --glass-bg: rgba(16, 18, 27, 0.6);
+            --brand-color: #00e5ff;
+            --brand-glow: rgba(0, 229, 255, 0.6);
+            --bg-color: #030407;
+            --surface-color: rgba(10, 12, 20, 0.7);
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-deep);
-            /* Subtle radial gradient behind the player */
-            background-image: radial-gradient(circle at 50% 40%, rgba(0, 229, 255, 0.1) 0%, transparent 60%);
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: var(--bg-color);
             color: #fff;
-            font-family: 'Exo 2', sans-serif;
-            min-height: 100vh;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- 1. BOOT-UP SEQUENCE (NASA/HACKER FEEL) --- */
+        #boot-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 999999;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
-            justify-content: flex-start;
+            font-family: 'Space Mono', monospace;
+            color: var(--brand-color);
+            transition: opacity 1s ease-out;
         }
 
-        /* PREMIUM HEADER */
-        header {
+        .boot-text {
+            font-size: 1.2rem;
+            text-align: left;
+            width: 80%; max-width: 600px;
+        }
+
+        /* --- 2. CINEMATIC APP LAYOUT --- */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: relative;
+            z-index: 10;
+            opacity: 0; /* Hidden until boot finishes */
+            animation: fadeIn 2s forwards 3.5s;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Glassmorphism Navbar */
+        nav {
             width: 100%;
-            padding: 30px 0 10px 0;
-            text-align: center;
-            z-index: 10;
-        }
-
-        header h1 {
-            font-family: 'Jura', sans-serif;
-            font-weight: 900;
-            font-size: 2.8rem;
-            margin: 0;
-            letter-spacing: 8px;
-            color: transparent;
-            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
-            background: linear-gradient(90deg, #fff, var(--primary-accent), #fff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
-        }
-
-        /* --- THE ULTIMATE PLAYER CONTAINER --- */
-        .player-showcase {
-            width: 95%;
-            max-width: 1100px; /* Big screen size */
-            margin-top: 20px;
-            position: relative;
-            z-index: 10;
-            /* Premium Glassmorphism Container */
-            background: var(--glass-bg);
-            border-radius: 20px;
-            padding: 15px;
-            box-shadow: 
-                0 20px 50px rgba(0,0,0,0.8), /* Deep drop shadow */
-                inset 0 1px 1px rgba(255,255,255,0.1), /* Top highlight */
-                0 0 0 1px rgba(0, 229, 255, 0.2); /* Subtle glow border */
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-
-        /* Glowing back-panel effect for the player */
-        .player-showcase::before {
-            content: '';
-            position: absolute;
-            top: -5%; left: -5%; width: 110%; height: 110%;
-            background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, transparent 70%);
-            z-index: -1;
-            border-radius: 30px;
-            pointer-events: none;
-        }
-
-        .video-wrapper {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0,0,0,0.9);
-            position: relative;
-        }
-
-        /* --- CUSTOMIZING PLYR CONTROLS --- */
-        /* Overriding default Plyr styles to look like Netflix/Hotstar but better */
-        
-        /* Change Main Color to Cyan */
-        --plyr-color-main: var(--primary-accent);
-        
-        /* Transparent Black Gradient for Controls */
-        .plyr__controls {
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%) !important;
-            padding-bottom: 20px !important;
-            padding-top: 40px !important;
-        }
-
-        /* Make Play/Pause Button a Circle like Netflix */
-        .plyr__control--overlaid {
-            background: rgba(0, 229, 255, 0.8) !important;
-            box-shadow: 0 0 20px var(--primary-accent) !important;
-            backdrop-filter: blur(5px);
-        }
-
-        /* Progress bar styling */
-        .plyr input[type=range]::-webkit-slider-thumb {
-            box-shadow: 0 0 10px var(--primary-accent);
-        }
-
-        /* Menu styling (Settings/Quality) */
-        .plyr__menu__container {
-            background: rgba(10, 11, 16, 0.95) !important;
-            border: 1px solid rgba(0, 229, 255, 0.3) !important;
-            border-radius: 10px !important;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8) !important;
-        }
-        
-        .plyr__menu__container .plyr__control {
-            font-family: 'Exo 2', sans-serif !important;
-            color: #fff !important;
-        }
-        
-        .plyr__menu__container .plyr__control[aria-checked=true]::before {
-            background: var(--primary-accent) !important;
-        }
-
-        /* --- STREAM STATS (Minimalist) --- */
-        .stream-stats {
+            height: 70px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 15px;
-            padding: 0 10px;
-            font-family: 'Jura', sans-serif;
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.6);
+            padding: 0 40px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 100;
         }
-        
-        .live-badge {
+
+        nav h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin: 0;
+            text-shadow: 0 0 15px var(--brand-glow);
+        }
+
+        .live-indicator {
             display: flex;
             align-items: center;
-            color: #ff0055;
-            font-weight: bold;
-            letter-spacing: 2px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            color: #ff0044;
+            background: rgba(255, 0, 68, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid #ff0044;
         }
         
-        .live-badge::before {
-            content: '';
-            display: inline-block;
-            width: 8px; height: 8px;
-            background: #ff0055;
+        .live-indicator span {
+            width: 10px; height: 10px;
+            background: #ff0044;
             border-radius: 50%;
             margin-right: 8px;
-            box-shadow: 0 0 10px #ff0055;
-            animation: pulse-red 1.5s infinite;
+            animation: pulse 1s infinite;
         }
 
-        @keyframes pulse-red {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 0, 85, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 85, 0); }
-        }
-
-        /* --- PREMIUM POPUP MODAL --- */
-        .premium-modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            display: none;
+        /* --- 3. AMBIENT PLAYER SECTION --- */
+        .main-content {
+            flex: 1;
+            display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 99999;
-        }
-
-        .modal-content {
-            background: linear-gradient(145deg, #161823, #0d0f17);
-            border: 1px solid rgba(0, 229, 255, 0.4);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(0, 229, 255, 0.1);
+            padding-top: 70px; /* Offset for navbar */
             position: relative;
-            transform: translateY(50px);
-            opacity: 0;
-            animation: slideUp 0.5s ease-out forwards;
         }
 
-        @keyframes slideUp {
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .modal-content h2 {
-            font-family: 'Jura', sans-serif;
-            color: var(--primary-accent);
-            margin-top: 0;
-            font-size: 1.8rem;
-        }
-
-        .modal-content p {
-            color: #aaa;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-
-        .btn-telegram {
-            background: linear-gradient(90deg, #0088cc, #00e5ff);
-            color: #fff;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.1rem;
-            font-family: 'Exo 2', sans-serif;
-            font-weight: 700;
-            border-radius: 50px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.4);
-            transition: 0.3s;
-        }
-
-        .btn-telegram:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 229, 255, 0.6);
-        }
-
-        .close-modal {
+        /* The glowing cinematic background behind player */
+        .ambient-glow {
             position: absolute;
-            top: 15px; right: 20px;
-            color: rgba(255,255,255,0.5);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: 0.3s;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%; height: 70%;
+            background: radial-gradient(ellipse, rgba(0, 229, 255, 0.15) 0%, transparent 60%);
+            filter: blur(80px);
+            z-index: 0;
+            animation: ambientPulse 4s infinite alternate;
         }
 
-        .close-modal:hover { color: #fff; }
+        @keyframes ambientPulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+        }
+
+        .player-wrapper {
+            position: relative;
+            width: 85%;
+            max-width: 1200px;
+            z-index: 10;
+            border-radius: 12px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05);
+            background: #000;
+            overflow: hidden;
+        }
+
+        /* --- 4. NASA HUD (HEADS UP DISPLAY) INSIDE PLAYER --- */
+        .hud-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; /* So it doesn't block video clicks */
+            z-index: 5;
+            padding: 20px;
+            font-family: 'Space Mono', monospace;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+        }
+
+        .hud-top-left { position: absolute; top: 20px; left: 20px; }
+        .hud-top-right { position: absolute; top: 20px; right: 20px; text-align: right; }
+        .hud-crosshair {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px; height: 100px;
+            border: 1px solid rgba(0, 229, 255, 0.1);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .hud-crosshair::before, .hud-crosshair::after {
+            content: ''; position: absolute; background: rgba(0, 229, 255, 0.1);
+        }
+        .hud-crosshair::before { width: 120px; height: 1px; }
+        .hud-crosshair::after { width: 1px; height: 120px; }
+
+        /* --- 5. NETFLIX STYLE PLYR OVERRIDES --- */
+        --plyr-color-main: var(--brand-color);
+        .plyr__controls {
+            background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.9)) !important;
+            padding: 40px 20px 20px 20px !important;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+        .plyr__control--overlaid {
+            background: rgba(0,0,0,0.5) !important;
+            border: 2px solid var(--brand-color) !important;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5) !important;
+            backdrop-filter: blur(5px);
+        }
+
+        /* --- 6. PREMIUM TELEGRAM WIDGET --- */
+        .tg-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(10, 15, 25, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(0, 229, 255, 0.1);
+            z-index: 1000;
+            width: 320px;
+            transform: translateX(400px);
+            animation: slideInTg 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 8s;
+        }
+
+        @keyframes slideInTg {
+            to { transform: translateX(0); }
+        }
+
+        .tg-widget h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+            color: var(--brand-color);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .tg-widget p { font-size: 0.9rem; color: #aaa; margin-bottom: 15px; }
+        
+        .tg-btn {
+            display: block;
+            text-align: center;
+            background: var(--brand-color);
+            color: #000;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .tg-btn:hover { box-shadow: 0 0 15px var(--brand-color); }
+        .close-tg { cursor: pointer; color: #fff; }
 
         @media (max-width: 768px) {
-            header h1 { font-size: 2rem; }
-            .player-showcase { padding: 10px; width: 100%; border-radius: 0; border: none; }
-            .video-wrapper { border-radius: 0; }
+            .player-wrapper { width: 100%; border-radius: 0; }
+            .tg-widget { bottom: 10px; right: 10px; left: 10px; width: auto; }
+            nav h1 { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>MKS SPORTS</h1>
-    </header>
-
-    <!-- The Star of the Show: Player Container -->
-    <div class="player-showcase">
-        <div class="video-wrapper">
-            <video id="player" controls crossorigin playsinline></video>
-        </div>
-        
-        <!-- Minimalist Stats under player -->
-        <div class="stream-stats">
-            <div class="live-badge">LIVE</div>
-            <div>RES: AUTO / HLS</div>
-            <div>SERVER: OP-1</div>
-        </div>
+    <!-- BOOT-UP HACKER SCREEN -->
+    <div id="boot-screen">
+        <div class="boot-text" id="terminal"></div>
     </div>
 
-    <!-- Premium Modal Popup -->
-    <div class="premium-modal" id="tgModal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">✖</span>
-            <h2>UNLOCK VIP ACCESS</h2>
-            <p>Join the official MKS Sports Telegram channel to get ad-free links, 4K streams, and instant server updates.</p>
-            <a href="https://t.me/MKSsports_3" target="_blank" class="btn-telegram">JOIN TELEGRAM</a>
+    <div class="app-container">
+        <!-- APP NAVBAR -->
+        <nav>
+            <h1>MKS SPORTS</h1>
+            <div class="live-indicator"><span></span> SAT-LINK: LIVE</div>
+        </nav>
+
+        <!-- MAIN PLAYER AREA -->
+        <div class="main-content">
+            <div class="ambient-glow"></div>
+            
+            <div class="player-wrapper">
+                <!-- NASA/ISRO STYLE HUD OVERLAY -->
+                <div class="hud-overlay">
+                    <div class="hud-top-left">
+                        SYS: MKS-ORBITAL-1<br>
+                        LAT: 28.6139° N | LON: 77.2090° E<br>
+                        BANDWIDTH: SECURE
+                    </div>
+                    <div class="hud-top-right">
+                        [REC] <br>
+                        UPLINK: ACTIVE<br>
+                        PING: 12ms
+                    </div>
+                    <div class="hud-crosshair"></div>
+                </div>
+
+                <!-- THE VIDEO PLAYER -->
+                <video id="player" controls crossorigin playsinline></video>
+            </div>
+        </div>
+
+        <!-- TELEGRAM WIDGET -->
+        <div class="tg-widget" id="tgWidget">
+            <h3><span>PREMIUM ACCESS</span> <span class="close-tg" onclick="document.getElementById('tgWidget').style.display='none'">✖</span></h3>
+            <p>Join MKS Sports command center on Telegram for 4K streams and backup servers.</p>
+            <a href="https://t.me/MKSsports_3" target="_blank" class="tg-btn">CONNECT TO TELEGRAM</a>
         </div>
     </div>
 
@@ -290,33 +297,59 @@
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
 
     <script>
+        // --- 1. BOOT-UP TERMINAL EFFECT ---
+        const terminalText = [
+            "> INITIALIZING MKS SPORTS PROTOCOL...",
+            "> ESTABLISHING SECURE SATELLITE UPLINK...",
+            "> BYPASSING GEO-RESTRICTIONS...",
+            "> CONNECTING TO SERVER: OP-1...",
+            "> DECRYPTING VIDEO STREAM...",
+            "> LINK ESTABLISHED. WELCOME."
+        ];
+        
+        let lineIndex = 0;
+        const terminal = document.getElementById('terminal');
+
+        function typeLine() {
+            if (lineIndex < terminalText.length) {
+                terminal.innerHTML += terminalText[lineIndex] + "<br>";
+                lineIndex++;
+                setTimeout(typeLine, 500); // Speed of typing
+            } else {
+                setTimeout(() => {
+                    document.getElementById('boot-screen').style.opacity = '0';
+                    setTimeout(() => document.getElementById('boot-screen').style.display = 'none', 1000);
+                }, 500);
+            }
+        }
+        
+        window.onload = typeLine;
+
+        // --- 2. ADVANCED PLAYER SETUP ---
         document.addEventListener('DOMContentLoaded', () => {
             const video = document.querySelector('video');
             const source = 'https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8';
             
-            // Premium Plyr configuration
+            // Netflix style controls
             const playerConfig = {
-                controls: [
-                    'play-large', 'play', 'progress', 'current-time', 'live', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'
-                ],
+                controls: ['play-large', 'play', 'progress', 'current-time', 'live', 'mute', 'volume', 'settings', 'fullscreen'],
                 settings: ['quality', 'speed'],
-                speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
-                tooltips: { controls: true, seek: true } // Hover tooltips
+                speed: { selected: 1, options: [0.5, 1, 1.5, 2] }
             };
 
-            // HLS Implementation for seamless quality switching
+            // HLS for zero buffering
             if (Hls.isSupported()) {
                 const hls = new Hls({
-                    maxBufferLength: 30,
-                    maxMaxBufferLength: 600,
-                    enableWorker: true // Better performance
+                    maxBufferLength: 60, // Deep buffer
+                    maxMaxBufferLength: 1200,
+                    enableWorker: true
                 });
                 
                 hls.loadSource(source);
 
-                hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
                     const availableQualities = hls.levels.map((l) => l.height);
-                    availableQualities.unshift(0); // Add Auto option
+                    availableQualities.unshift(0); // 0 = Auto
 
                     playerConfig.quality = {
                         default: 0,
@@ -346,16 +379,7 @@
                     });
                 }
             }
-
-            // Show Popup after 6 seconds
-            setTimeout(() => {
-                document.getElementById('tgModal').style.display = 'flex';
-            }, 6000);
         });
-
-        function closeModal() {
-            document.getElementById('tgModal').style.display = 'none';
-        }
     </script>
 
 </body>
