@@ -16,7 +16,7 @@
             --bg-base: #08090c; 
             --bg-surface: #13151c;
             --accent-blue: #005ce6;
-            --accent-gold: linear-gradient(135deg, #d4af37 0%, #aa7c11 100%); /* Premium Gold */
+            --accent-gold: linear-gradient(135deg, #d4af37 0%, #aa7c11 100%);
             --text-main: #ffffff;
             --text-dim: #9ba3b5;
         }
@@ -67,7 +67,6 @@
         .player-overlay-top { position: absolute; top: 0; left: 0; width: 100%; height: 70px; background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, transparent 100%); z-index: 10; pointer-events: none; }
         .live-tag-container { position: absolute; top: 14px; left: 16px; z-index: 11; display: flex; align-items: center; gap: 8px; }
         
-        /* Updated Auction Live Badge */
         .live-badge { 
             background: linear-gradient(90deg, #ff0033, #cc0000); color: white; font-size: 0.7rem; font-weight: 800; 
             padding: 4px 8px; border-radius: 4px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 5px; 
@@ -77,7 +76,6 @@
         .view-count { background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.15); color: white; font-size: 0.75rem; font-weight: 600; padding: 4px 8px; border-radius: 4px; display: flex; align-items: center; gap: 5px; }
         @keyframes pulse-dot { to { opacity: 0.2; transform: scale(0.8); } }
         
-        /* Plyr Customizations */
         --plyr-color-main: var(--accent-blue);
         .plyr__controls { background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%) !important; padding: 25px 12px 8px !important; }
         .plyr__control--overlaid { background: rgba(0, 0, 0, 0.6) !important; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.3) !important; padding: 18px !important; }
@@ -86,12 +84,11 @@
         .content-area { padding: 18px 16px; max-width: 1000px; margin: 0 auto; }
         
         .video-title { font-size: 1.35rem; font-weight: 800; line-height: 1.3; margin-bottom: 8px; color: #fff; }
-        .title-highlight { color: #d4af37; /* Gold text for SA20 */ }
+        .title-highlight { color: #d4af37; }
         
         .video-tags { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
         .tag { background: rgba(255,255,255,0.08); font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; color: #ccc; font-weight: 600; letter-spacing: 0.3px; border: 1px solid rgba(255,255,255,0.05); }
 
-        /* Action Bar */
         .action-bar { display: flex; justify-content: space-between; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 18px; }
         .action-btn { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-dim); font-size: 0.75rem; font-weight: 600; border: none; background: none; transition: 0.2s; cursor: pointer; flex: 1;}
         .action-btn:hover, .action-btn.active { color: var(--text-main); }
@@ -118,24 +115,26 @@
         
         .channel-card {
             min-width: 150px; border-radius: 10px; overflow: hidden; position: relative;
-            background: #181b24; border: 1px solid rgba(255,255,255,0.05);
+            background: #181b24; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;
+            transition: transform 0.2s;
         }
+        .channel-card:active { transform: scale(0.95); }
         .channel-thumb {
             height: 85px; width: 100%; background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             display: flex; justify-content: center; align-items: center; position: relative;
         }
-        /* Fake Play button on thumbnails */
         .channel-thumb::after {
-            content: '▶'; position: absolute; color: rgba(255,255,255,0.8); font-size: 1.5rem;
-            background: rgba(0,0,0,0.4); width: 35px; height: 35px; display: flex; justify-content: center; align-items: center; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);
+            content: '▶'; position: absolute; color: rgba(255,255,255,0.9); font-size: 1.2rem;
+            background: rgba(0,0,0,0.5); width: 35px; height: 35px; display: flex; justify-content: center; align-items: center; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(2px);
         }
         .channel-thumb.c1 { background: linear-gradient(135deg, #141E30, #243B55); }
-        .channel-thumb.c2 { background: linear-gradient(135deg, #4b134f, #c94b4b); }
+        .channel-thumb.csk { background: linear-gradient(135deg, #f1c40f, #d35400); } /* Yellow/Orange for CSK */
         .channel-info { padding: 10px; }
         .channel-name { font-size: 0.8rem; font-weight: 700; color: #fff; margin-bottom: 3px; }
         .channel-cat { font-size: 0.7rem; color: var(--text-dim); }
 
-        /* --- RESTRICTED ALERT (Premium Toast) --- */
+        /* --- RESTRICTED ALERT TOAST --- */
         #toast { 
             position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); 
             background: rgba(20, 22, 30, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
@@ -144,12 +143,11 @@
             z-index: 9999; box-shadow: 0 10px 40px rgba(0,0,0,0.8); display: flex; align-items: center; gap: 8px; white-space: nowrap;
         }
         #toast.show { bottom: 30px; }
-        #toast.error-toast { border-color: rgba(255, 51, 51, 0.5); }
+        #toast.error-toast { border-color: rgba(255, 187, 51, 0.6); } /* VIP Warning Color */
     </style>
 </head>
 <body>
 
-    <!-- 1. APP HEADER WITH OWNER LOCKS -->
     <header class="app-header">
         <div class="header-left">
             <div class="menu-icon" onclick="showOwnerAlert()">
@@ -165,7 +163,6 @@
         </div>
     </header>
 
-    <!-- 2. HERO PLAYER -->
     <div class="hero-player">
         <div class="player-overlay-top"></div>
         <div class="live-tag-container">
@@ -178,10 +175,8 @@
         <video id="player" controls crossorigin playsinline></video>
     </div>
 
-    <!-- 3. MAIN CONTENT AREA -->
     <div class="content-area">
         
-        <!-- UPDATED SA20 AUCTION TITLE -->
         <h1 class="video-title">SA20 Live Auction: <span class="title-highlight">Official Stream HQ</span></h1>
         
         <div class="video-tags">
@@ -190,7 +185,6 @@
             <span class="tag">HD 1080p</span>
         </div>
         
-        <!-- Action Buttons -->
         <div class="action-bar">
             <button class="action-btn" onclick="toggleWatchlist(this)">
                 <svg viewBox="0 0 24 24"><path d="M14 10H2v2h12v-2zm0-4H2v2h12V6zm4 8v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM2 16h8v-2H2v2z"/></svg>
@@ -210,7 +204,6 @@
             </button>
         </div>
 
-        <!-- Telegram Banner -->
         <a href="https://t.me/MKSsports_3" target="_blank" class="vip-card">
             <div class="vip-content">
                 <div class="vip-left">
@@ -224,27 +217,30 @@
             </div>
         </a>
 
-        <!-- 5. CRICKET SPECIFIC CHANNELS -->
+        <!-- 5. TRENDING EVENTS (Clickable with VIP Alert) -->
         <h2 class="section-title">Trending Events</h2>
         <div class="slider-container">
-            <div class="channel-card">
+            <div class="channel-card" onclick="showVipAlert()">
                 <div class="channel-thumb c1"></div>
                 <div class="channel-info">
                     <div class="channel-name">IPL Retentions HQ</div>
                     <div class="channel-cat">Cricket • Live</div>
                 </div>
             </div>
-            <div class="channel-card">
-                <div class="channel-thumb c2"></div>
+            
+            <!-- NEW CSK CARD -->
+            <div class="channel-card" onclick="showVipAlert()">
+                <div class="channel-thumb csk"></div>
                 <div class="channel-info">
-                    <div class="channel-name">BGT Test Series</div>
-                    <div class="channel-cat">Sports • HD</div>
+                    <div class="channel-name">CSK Squad Analysis</div>
+                    <div class="channel-cat">MS Dhoni • Updates</div>
                 </div>
             </div>
-            <div class="channel-card">
+            
+            <div class="channel-card" onclick="showVipAlert()">
                 <div class="channel-thumb"></div>
                 <div class="channel-info">
-                    <div class="channel-name">WPL Live Updates</div>
+                    <div class="channel-name">WPL Live Action</div>
                     <div class="channel-cat">Women's Cricket</div>
                 </div>
             </div>
@@ -258,7 +254,6 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
-        // Viewer Count (Fluctuating around 300)
         let currentViewers = Math.floor(Math.random() * (350 - 250 + 1)) + 250;
         const viewCountEl = document.getElementById('view-count-text');
         viewCountEl.innerText = currentViewers;
@@ -271,13 +266,12 @@
             viewCountEl.innerText = currentViewers;
         }, 5000);
 
-        // Advanced Toast System
         let toastTimeout;
-        function showToast(message, isError = false) {
+        function showToast(message, isWarning = false) {
             const toast = document.getElementById('toast');
             toast.innerHTML = message;
             
-            if(isError) toast.classList.add('error-toast');
+            if(isWarning) toast.classList.add('error-toast');
             else toast.classList.remove('error-toast');
 
             toast.classList.add('show');
@@ -285,12 +279,16 @@
             toastTimeout = setTimeout(() => toast.classList.remove('show'), 3500);
         }
 
-        // *** THE PSYCHOLOGICAL TRICK: OWNER ALERT ***
+        // Owner Alert for Header Icons
         function showOwnerAlert() {
             showToast("🔒 <b>Restricted:</b> Only the owner can access these settings.", true);
         }
 
-        // Functional Buttons
+        // *** NEW VIP ALERT FOR TRENDING VIDEOS ***
+        function showVipAlert() {
+            showToast("🎟️ <b>Access Denied:</b> Without VIP Ticket you can't play this video.", true);
+        }
+
         function toggleWatchlist(btn) {
             btn.classList.toggle('active');
             if(btn.classList.contains('active')) showToast("✓ Added to your Watchlist");
@@ -315,7 +313,6 @@
             setTimeout(() => { showToast("⚠️ No supported devices found on this network."); }, 3500);
         }
 
-        // Video Player Setup
         document.addEventListener('DOMContentLoaded', () => {
             const video = document.querySelector('video');
             const source = 'https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8';
