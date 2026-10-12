@@ -2,12 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>MKS sports | Live Streaming</title>
+  <title>MKS Sports | Live Streaming</title>
 
-  <!-- Shaka Player -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.ui.js"></script>
 
   <link
@@ -21,175 +19,224 @@
 
     body {
       margin: 0;
-      min-height: 100vh;
       background: #080c14;
-      color: white;
+      color: #fff;
       font-family: Arial, sans-serif;
     }
 
     header {
-      padding: 18px;
+      padding: 22px 12px;
       text-align: center;
       background: #101827;
-      border-bottom: 2px solid #f5b942;
+      border-bottom: 3px solid #f5b942;
     }
 
     header h1 {
       margin: 0;
-      font-size: 27px;
       color: #f5b942;
-      letter-spacing: 1px;
+      font-size: clamp(25px, 4vw, 38px);
+      font-weight: 800;
     }
 
     header p {
-      margin: 7px 0 0;
+      margin: 8px 0 0;
       color: #cbd5e1;
-      font-size: 13px;
     }
 
     main {
       width: 100%;
-      max-width: 1050px;
-      margin: 25px auto;
-      padding: 0 12px;
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 16px;
     }
 
     .player-card {
-      padding: 12px;
+      padding: 18px;
       background: #111827;
-      border: 1px solid #273449;
-      border-radius: 12px;
-      box-shadow: 0 8px 30px #0008;
+      border: 1px solid #293548;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px #0007;
     }
 
-    .live-title {
+    .live-heading {
       display: flex;
       align-items: center;
-      gap: 9px;
-      margin: 4px 0 14px;
-      font-size: 17px;
+      gap: 10px;
+      margin: 0 0 16px;
+      font-size: 20px;
     }
 
     .live-dot {
-      width: 9px;
-      height: 9px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       background: #22c55e;
     }
 
-    .video-container {
+    .video-box {
       width: 100%;
       aspect-ratio: 16 / 9;
       background: #000;
       overflow: hidden;
-      border-radius: 8px;
+      border-radius: 9px;
     }
 
     video {
-      display: block;
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
 
     #status {
-      margin: 12px 2px 3px;
+      margin: 14px 2px 0;
       color: #cbd5e1;
-      font-size: 13px;
-      line-height: 1.5;
+      font-size: 14px;
+      overflow-wrap: anywhere;
     }
 
     footer {
-      padding: 20px;
+      margin-top: 45px;
+      padding: 22px 10px;
       text-align: center;
-      color: #64748b;
-      font-size: 12px;
+      color: #778399;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        margin: 18px auto;
+        padding: 0 10px;
+      }
+
+      .player-card {
+        padding: 12px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>MKS SPORTS</h1>
-    <p>Your Sports Streaming Hub</p>
-  </header>
+<header>
+  <h1>MKS SPORTS</h1>
+  <p>Your Sports Streaming Hub</p>
+</header>
 
-  <main>
-    <section class="player-card">
+<main>
+  <section class="player-card">
 
-      <div class="live-title">
-        <span class="live-dot"></span>
-        <span>Live Sports</span>
-      </div>
+    <h2 class="live-heading">
+      <span class="live-dot"></span>
+      Live Sports
+    </h2>
 
-      <div class="video-container"
-           data-shaka-player-container>
+    <div class="video-box" data-shaka-player-container>
+      <video
+        id="videoPlayer"
+        data-shaka-player
+        playsinline
+        controls>
+      </video>
+    </div>
 
-        <video
-          id="videoPlayer"
-          data-shaka-player
-          playsinline
-          controls>
-        </video>
+    <div id="status" role="status" aria-live="polite">
+      Initializing player...
+    </div>
 
-      </div>
+  </section>
+</main>
 
-      <div id="status" role="status" aria-live="polite">
-        Initializing player...
-      </div>
+<footer>
+  MKS Sports &copy; 2026
+</footer>
 
-    </section>
-  </main>
+<script>
+  // Replace this with your authorized DASH stream URL.
+  const STREAM_URL = "YOUR_AUTHORIZED_STREAM_URL.mpd";
 
-  <footer>
-    MKS Sports &copy; 2026
-  </footer>
+  // Optional: configure only keys authorized for your stream.
+  const CLEAR_KEYS = {
+    "YOUR_AUTHORIZED_KEY_ID": "YOUR_AUTHORIZED_CONTENT_KEY"
+  };
 
-  <script>
-    const STREAM_URL = "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/puehlftk5j/out/v1/f7f0da1ee112481ca0024e6d4dd97f4a/cenc.mpd";
+  async function initPlayer() {
+    const status = document.getElementById("status");
+    const video = document.getElementById("videoPlayer");
 
-    async function initPlayer() {
-      const status = document.getElementById("status");
+    try {
+      if (!window.shaka) {
+        throw new Error(
+          "Player library failed to load. Check your internet connection."
+        );
+      }
 
-      try {
-        shaka.polyfill.installAll();
+      shaka.polyfill.installAll();
 
-        if (!shaka.Player.isBrowserSupported()) {
-          throw new Error(
-            "Your browser does not support this player."
-          );
-        }
+      if (!shaka.Player.isBrowserSupported()) {
+        throw new Error(
+          "This browser does not support Shaka Player."
+        );
+      }
 
-        const video = document.getElementById("videoPlayer");
+      const player = new shaka.Player();
+      await player.attach(video);
 
-        // Create player and attach it to the video.
-        const player = new shaka.Player();
+      player.addEventListener("error", event => {
+        const error = event.detail;
 
-        await player.attach(video);
-
-        player.addEventListener("error", (event) => {
-          console.error("Shaka Player error:", event.detail);
-
-          status.textContent =
-            "Playback error. Check the browser console.";
-        });
-
-        // Load an authorized DASH stream.
-        await player.load(STREAM_URL);
-
-        status.textContent = "Stream loaded successfully.";
-
-      } catch (error) {
-        console.error("Player initialization failed:", error);
+        console.error("Shaka playback error:", error);
 
         status.textContent =
-          "Unable to play the stream: " + error.message;
-      }
-    }
+          "Playback error: " +
+          (error.message || "Check the browser console.") +
+          " Error code: " + error.code;
+      });
 
-    document.addEventListener("DOMContentLoaded", initPlayer);
-  </script>
+      // Apply ClearKey configuration only when authorized values
+      // have been supplied by the content provider.
+      const validKeys = Object.entries(CLEAR_KEYS).filter(
+        ([id, key]) =>
+          /^[a-fA-F0-9]{32}$/.test(id) &&
+          /^[a-fA-F0-9]{32}$/.test(key)
+      );
+
+      if (validKeys.length > 0) {
+        const clearKeys = Object.fromEntries(validKeys);
+
+        player.configure({
+          drm: {
+            clearKeys: clearKeys
+          }
+        });
+      }
+
+      if (
+        !STREAM_URL.startsWith("https://") ||
+        STREAM_URL.includes("YOUR_AUTHORIZED")
+      ) {
+        throw new Error(
+          "Add your authorized stream URL before playback."
+        );
+      }
+
+      status.textContent = "Connecting to stream...";
+
+      await player.load(STREAM_URL);
+
+      status.textContent =
+        "Stream loaded. Press Play to start watching.";
+
+    } catch (error) {
+      console.error("Player setup error:", error);
+
+      status.textContent =
+        "Unable to play: " +
+        (error.message || "Unknown error. Check the browser console.");
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", initPlayer);
+</script>
 
 </body>
 </html>
