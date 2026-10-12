@@ -4,201 +4,148 @@
   <meta charset="UTF-8">
   <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>MKS SPORTS LIVE | VIP</title>
-
-  <!-- Shaka Player UI Styles and Scripts -->
+  <title>MKS SPORTS LIVE</title>
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/shaka-player.ui.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
-
-  <!-- Plyr & HLS.js Styles and Scripts -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.6.12/dist/plyr.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.1.4/dist/hls.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/plyr@3.6.12/dist/plyr.min.js"></script>
-
+  
   <style type="text/css">
-      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
 
       html, body {
-        margin: 0; padding: 0; background: #000;
-        width: 100%; height: 100%; overflow: hidden; font-family: 'Outfit', sans-serif;
+        margin: 0; padding: 0; 
+        background: radial-gradient(circle at 50% 0%, #151520 0%, #050505 80%);
+        width: 100%; height: 100%; overflow: hidden;
+        font-family: 'Outfit', system-ui, -apple-system, sans-serif;
       }
 
-      /* --- VIP METALLIC GOLD THEME START --- */
+      /* Sleek Cinematic Header */
       .app-header {
-        position: absolute; top: 0; left: 0; width: 100%; height: 70px;
-        background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);
+        position: absolute; top: 0; left: 0; width: 100%; height: 55px;
+        background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
         display: flex; align-items: center; justify-content: space-between;
-        padding: 0 25px; box-sizing: border-box; z-index: 1000; pointer-events: none;
+        padding: 0 25px; box-sizing: border-box; z-index: 1000;
       }
-      .brand-logo { color: #fff; font-size: 24px; font-weight: 900; letter-spacing: 2px; display: flex; align-items: center; gap: 8px; text-shadow: 0 5px 15px rgba(0,0,0,0.9); }
-      
-      /* 3D Metallic Text Effect */
-      .brand-logo span { 
-        background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0 0 10px rgba(229, 184, 11, 0.4));
+
+      .brand-logo { 
+        color: #fff; font-size: 20px; font-weight: 800; letter-spacing: 1.5px; 
+        display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);
       }
+      .brand-logo span { color: #d4af37; /* Royal Gold */ }
       
       .live-badge {
-        background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); 
-        color: white; font-size: 11px; font-weight: 900; letter-spacing: 1px;
-        padding: 5px 12px; border-radius: 4px; text-transform: uppercase; 
-        box-shadow: 0 0 15px rgba(255, 8, 68, 0.6);
-        animation: pulseLive 2s infinite; border: 1px solid rgba(255,255,255,0.2);
+        background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+        color: white; font-size: 11px; font-weight: 800;
+        padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 1px;
+        animation: pulseLive 2s infinite; box-shadow: 0 0 15px rgba(255, 8, 68, 0.4);
       }
-      @keyframes pulseLive { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(0.95); } }
 
-      /* Metallic Gold Telegram Button */
-      .tg-floating-btn {
-        position: fixed; top: 75px; right: 20px; 
-        background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728);
-        border: 1px solid #FCF6BA; color: #000; padding: 12px 20px; border-radius: 50px; 
-        font-size: 14px; font-weight: 900; text-decoration: none; display: flex; align-items: center; gap: 8px; 
-        z-index: 9999; box-shadow: 0 10px 25px rgba(191, 149, 63, 0.5);
-        transition: transform 0.3s ease;
-      }
-      .tg-floating-btn:hover { transform: scale(1.05); box-shadow: 0 15px 35px rgba(252, 246, 186, 0.7); }
-      .tg-floating-btn svg { width: 18px; height: 18px; fill: #000; }
+      @keyframes pulseLive { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
 
-      /* VIP Popup Design */
-      .tg-popup-overlay {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9);
-        backdrop-filter: blur(8px); z-index: 10000; display: none; justify-content: center; align-items: center;
-      }
-      .tg-popup-box {
-        background: #0a0a0a; border: 2px solid #BF953F; 
-        border-radius: 20px; padding: 45px 30px; width: 85%; max-width: 380px; text-align: center; 
-        box-shadow: 0 0 50px rgba(191, 149, 63, 0.3), inset 0 0 20px rgba(191, 149, 63, 0.1);
-        position: relative;
-      }
-      .tg-popup-close { 
-        position: absolute; top: -15px; right: -15px; 
-        background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728); color: #000; 
-        width: 40px; height: 40px; border-radius: 50%; font-size: 20px; font-weight: 900; 
-        display: flex; justify-content: center; align-items: center; cursor: pointer; text-decoration: none;
-        border: 2px solid #000; box-shadow: 0 5px 15px rgba(0,0,0,0.8);
-      }
-      .premium-icon-wrapper {
-        width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 50%; 
-        background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728);
-        display: flex; justify-content: center; align-items: center; 
-        box-shadow: 0 0 30px rgba(252, 246, 186, 0.4);
-      }
-      .premium-icon-wrapper svg { width: 40px; height: 40px; fill: #000; }
+      /* Video Container */
+      .video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1; }
+      .shaka-video-container { width: 100%; height: 100%; }
+      video { width: 100%; height: 100%; background: #000; outline: none; }
+
+      /* 🔥 HIDE CENTER PLAY BUTTON AND SPINNER 🔥 */
+      .shaka-play-button-container, .shaka-spinner-container { display: none !important; }
+
+      /* Custom Shaka Controls Theme */
+      .youtube-theme { font-family: 'Outfit', sans-serif; }
+      .youtube-theme .shaka-bottom-controls { padding: 0; z-index: 2; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%); }
+      .youtube-theme .shaka-controls-button-panel { height: 60px; padding: 0 15px; }
+      .youtube-theme .shaka-played-range { background: #d4af37 !important; box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
       
-      .tg-popup-title { 
-        background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        font-size: 26px; font-weight: 900; margin: 0 0 12px; filter: drop-shadow(0 2px 5px rgba(191,149,63,0.3));
+      /* =========================================
+         ROYAL GOLD TELEGRAM POPUP & FLOATING BTN
+         ========================================= */
+      
+      .tg-floating-btn {
+        position: fixed; top: 75px; right: 20px;
+        background: rgba(20, 20, 25, 0.6); backdrop-filter: blur(12px);
+        border: 1px solid rgba(212, 175, 55, 0.3); color: #d4af37;
+        padding: 10px 18px; border-radius: 50px; font-size: 13px; font-weight: 800;
+        text-decoration: none; display: flex; align-items: center; gap: 8px; z-index: 9999;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6); transition: all 0.3s ease;
+        text-transform: uppercase; letter-spacing: 0.5px;
+        animation: floatGently 3s ease-in-out infinite;
       }
-      .tg-popup-text { color: #cccccc; font-size: 15px; line-height: 1.6; margin-bottom: 30px; font-weight: 400; }
+      @keyframes floatGently { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+      .tg-floating-btn svg { width: 18px; height: 18px; fill: #d4af37; }
+      .tg-floating-btn:hover { background: rgba(212, 175, 55, 0.15); transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 25px rgba(212, 175, 55, 0.2); }
+
+      .tg-popup-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px);
+        z-index: 10000; display: none; justify-content: center; align-items: center;
+      }
+
+      /* Royal Glass Box */
+      .tg-popup-box {
+        background: linear-gradient(145deg, rgba(25,25,30,0.9) 0%, rgba(10,10,15,0.95) 100%);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        border-radius: 28px; padding: 45px 30px; width: 85%; max-width: 380px; text-align: center;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 1px 20px rgba(212,175,55,0.05);
+        position: relative; transform: translateY(30px) scale(0.95); opacity: 0;
+        animation: royalPop 0.6s forwards;
+      }
+      @keyframes royalPop { to { transform: translateY(0) scale(1); opacity: 1; } }
+
+      .tg-popup-close { position: absolute; top: 15px; right: 25px; color: rgba(255,255,255,0.4); font-size: 32px; cursor: pointer; text-decoration: none; transition: 0.3s; }
+      .tg-popup-close:hover { color: #d4af37; transform: rotate(90deg); }
+      
+      /* Glowing Icon */
+      .premium-icon-wrapper {
+        width: 75px; height: 75px; margin: 0 auto 25px; border-radius: 50%;
+        background: linear-gradient(135deg, #d4af37, #f3e5ab);
+        display: flex; justify-content: center; align-items: center;
+        box-shadow: 0 0 40px rgba(212, 175, 55, 0.3), inset 0 0 15px rgba(255,255,255,0.6); position: relative;
+      }
+      .premium-icon-wrapper::after {
+        content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px;
+        border-radius: 50%; background: linear-gradient(135deg, transparent, rgba(212, 175, 55, 0.5), transparent);
+        animation: shimmerRotate 3s linear infinite; z-index: -1;
+      }
+      @keyframes shimmerRotate { 100% { transform: rotate(360deg); } }
+
+      .premium-icon-wrapper svg { width: 38px; height: 38px; fill: #111; }
+
+      .tg-popup-title { color: #fff; font-size: 24px; font-weight: 800; margin: 0 0 12px; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+      .tg-popup-text { color: #a0a0ab; font-size: 15px; line-height: 1.6; margin-bottom: 35px; font-weight: 400; }
+      .tg-popup-text b { color: #d4af37; }
       
       .tg-popup-btn {
-        background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728); color: #000; text-decoration: none; padding: 16px 0;
-        width: 100%; border-radius: 12px; font-size: 16px; font-weight: 900; display: inline-flex; justify-content: center; align-items: center; gap: 10px;
-        box-shadow: 0 10px 20px rgba(191, 149, 63, 0.4); border: none; text-transform: uppercase; letter-spacing: 1px;
+        background: linear-gradient(135deg, #d4af37 0%, #aa8529 100%);
+        color: #000; text-decoration: none; padding: 16px 0; width: 100%; border-radius: 16px; 
+        font-size: 16px; font-weight: 800; display: inline-flex; justify-content: center; align-items: center; gap: 10px;
+        box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3); transition: 0.3s;
+        text-transform: uppercase; letter-spacing: 0.5px;
       }
       .tg-popup-btn svg { width: 22px; height: 22px; fill: #000; }
-      /* --- VIP METALLIC GOLD THEME END --- */
-
-      .error-container { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; background-color: #000; color: #fff; text-align: center; }
-      .error-container h1 { font-size: 90px; margin: 0; background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
-      .error-container h2 { font-size: 24px; margin: 10px 0; color: #e0e0e0; }
-      
-      .video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; overflow: hidden; }
-      .shaka-video-container, .plyr, iframe { position: absolute; width: 100%; height: 100%; border: none; background: #000; }
-      video { width: 100%; height: 100%; background-color: #000; }
-
-      /* 🔥 ALAG LEVEL KA GOLD PLAYER UI 🔥 */
-      
-      /* PLYR (Fancode) Gold Metallic UI */
-      .plyr { 
-        --plyr-color-main: #E5B80B;
-        --plyr-video-control-color: #E5B80B;
-        --plyr-video-control-color-hover: #FCF6BA;
-        --plyr-video-control-background-hover: rgba(191, 149, 63, 0.2);
-      }
-      .plyr__controls { 
-        background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%) !important; 
-        padding-bottom: 25px !important;
-      }
-      /* Icon Glow */
-      .plyr__controls .plyr__control svg { filter: drop-shadow(0px 0px 5px rgba(229,184,11,0.6)); }
-      .plyr__controls .plyr__control:hover svg { filter: drop-shadow(0px 0px 12px #FCF6BA); }
-      
-      .plyr__menu__container { 
-        background: #0a0a0a !important; 
-        border: 1px solid #BF953F !important; 
-        box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 20px rgba(191,149,63,0.3) !important; 
-        border-radius: 12px;
-      }
-      .plyr__menu__container [role="menuitem"] { color: #E5B80B !important; font-weight: 600; font-size: 14px; }
-      .plyr__menu__container [role="menuitem"]:hover { background: linear-gradient(to right, #BF953F, #FCF6BA) !important; color: #000 !important; }
-      .plyr__time { color: #FCF6BA !important; font-weight: 700; text-shadow: 0 0 8px rgba(229,184,11,0.5); }
-
-      /* SHAKA (JioTV) Gold Metallic UI */
-      .youtube-theme .shaka-bottom-controls { 
-        width: 100%; padding: 0 15px 15px 15px !important; z-index: 1; display: flex; flex-direction: column;
-        background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
-      }
-      .youtube-theme .shaka-controls-button-panel { order: 2; height: 50px; padding: 0; }
-      .youtube-theme .shaka-seek-bar-container { height: 4px; margin-bottom: 12px; }
-      .youtube-theme .shaka-seek-bar-container:hover { height: 7px; cursor: pointer; }
-      
-      .shaka-spinner-container, .shaka-spinner, .shaka-spinner-svg { display: none !important; }
-      .youtube-theme .shaka-seek-bar { background: rgba(255,255,255,0.15) !important; }
-      .youtube-theme .shaka-buffered-range { background: rgba(191,149,63,0.4) !important; }
-      
-      /* Glowing Metallic Slider */
-      .youtube-theme .shaka-played-range { 
-        background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728) !important; 
-        box-shadow: 0 0 15px rgba(252, 246, 186, 0.7); border-radius: 5px; 
-      }
-      
-      /* Pure Gold Icons with Glow */
-      .shaka-controls-button-panel button { 
-        color: #E5B80B !important; 
-        filter: drop-shadow(0 0 5px rgba(229,184,11,0.5));
-        transition: all 0.3s ease; margin: 0 8px; 
-      }
-      .shaka-controls-button-panel button:hover { 
-        color: #FCF6BA !important; 
-        filter: drop-shadow(0 0 12px #FCF6BA);
-        transform: scale(1.15); 
-      }
-      .shaka-current-time { color: #FCF6BA !important; font-weight: 700; margin-left: 10px; text-shadow: 0 0 8px rgba(229,184,11,0.5); }
-      
-      /* VIP Settings Menu */
-      .shaka-settings-menu { 
-        background: #0a0a0a !important; 
-        border: 1px solid #BF953F !important; 
-        border-radius: 12px; padding: 8px; 
-        box-shadow: 0 10px 40px rgba(0,0,0,0.9), 0 0 25px rgba(191,149,63,0.25) !important; 
-      }
-      .shaka-settings-menu button { color: #E5B80B !important; font-weight: 600; font-size: 14px; transition: all 0.2s; }
-      .shaka-settings-menu button:hover { 
-        background: linear-gradient(to right, #BF953F, #FCF6BA) !important; 
-        color: #000 !important; border-radius: 6px; 
-      }
+      .tg-popup-btn:hover { transform: translateY(-4px); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.5); }
   </style>
 </head>
 <body>
-  <!-- MKS VIP UI Components -->
+
+  <!-- Floating Button with Telegram Icon & Catchy Text -->
   <a href="https://t.me/MKSsports_3" target="_blank" class="tg-floating-btn">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.18-.08-.05-.19-.02-.27 0-.11.03-1.84 1.18-5.18 3.44-.49.34-.93.5-1.33.49-.44-.01-1.28-.25-1.91-.46-.77-.25-1.38-.38-1.32-.81.03-.22.34-.45.92-.69 3.61-1.57 6.02-2.61 7.23-3.11 3.44-1.42 4.15-1.67 4.62-1.68.1 0 .32.02.44.11.1.08.13.19.14.28 0 .04.01.16.01.27z"/></svg>
-    GET FREE LINKS
+    🔥 GET FREE LINKS
   </a>
 
+  <!-- Royal Popup Box -->
   <div class="tg-popup-overlay" id="tgPopup">
     <div class="tg-popup-box">
-      <a href="#" class="tg-popup-close" onclick="closePopup(); return false;">&#x2715;</a>
+      <a href="#" class="tg-popup-close" onclick="closePopup(); return false;">&times;</a>
       <div class="premium-icon-wrapper">
+        <!-- True Telegram SVG Icon -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.18-.08-.05-.19-.02-.27 0-.11.03-1.84 1.18-5.18 3.44-.49.34-.93.5-1.33.49-.44-.01-1.28-.25-1.91-.46-.77-.25-1.38-.38-1.32-.81.03-.22.34-.45.92-.69 3.61-1.57 6.02-2.61 7.23-3.11 3.44-1.42 4.15-1.67 4.62-1.68.1 0 .32.02.44.11.1.08.13.19.14.28 0 .04.01.16.01.27z"/></svg>
       </div>
       <div class="tg-popup-title">NEVER MISS A MATCH!</div>
-      <div class="tg-popup-text">Join our Telegram family for <b>100% Free Daily Live Links</b>, No Ads, No Buffering!</div>
-      <a href="https://t.me/MKSsports_3" target="_blank" class="tg-popup-btn">JOIN TELEGRAM NOW</a>
+      <div class="tg-popup-text">Kal ke match ka link kahan milega? Join our Telegram family for <b>100% Free Daily Live Links</b>, No Ads, No Buffering!</div>
+      <a href="https://t.me/MKSsports_3" target="_blank" class="tg-popup-btn" onclick="closePopup()">
+        JOIN TELEGRAM NOW
+      </a>
     </div>
   </div>
 
@@ -207,209 +154,144 @@
     <div class="live-badge">● LIVE</div>
   </div>
 
-  <div id="error-box" class="error-container" style="display: none;">
-    <h1>ERROR</h1>
-    <h2>Link Not Found</h2>
-    <a href="#" onclick="window.location.reload(); return false;">← Retry</a>
-  </div>
-
-  <div class="video-container" id="player-box" style="display: none;">
+  <div class="video-container" id="player-box">
     <div class="shaka-video-container youtube-theme" data-shaka-player>
-      <video id="video" autoplay muted playsinline preload="auto"></video>
+      <video id="video" autoplay playsinline preload="auto"></video>
     </div>
   </div>
 
 
 
   <script>
+    // Popup logic
     window.onload = () => { setTimeout(() => { document.getElementById('tgPopup').style.display = 'flex'; }, 3000); };
     function closePopup() { document.getElementById('tgPopup').style.display = 'none'; }
 
-    // Fancode / HLS.js Player
-    function initHlsPlayer(finalUrl) {
-      document.getElementById('player-box').innerHTML = `
-        <div style="width:100%;height:100%;background:#000;position:relative;">
-          <video autoplay playsinline id="plyr-player" preload="metadata" style="width:100%;height:100%;"></video>
-        </div>
-      `;
-      const vd = document.getElementById('plyr-player');
-
-      if (Hls.isSupported() && finalUrl.includes('.m3u8')) {
-        const h = new Hls({maxMaxBufferLength:100});
-        h.loadSource(finalUrl); 
-        h.attachMedia(vd);
-        
-        h.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-          let hlsLevels = h.levels.map(l => l.height).filter(Boolean).sort((a,b) => b-a);
-          new Plyr(vd, {
-            controls: ['play-large','play','progress','current-time','duration','mute','volume','quality','settings','fullscreen'],
-            quality: { default: hlsLevels[0] || 1080, options: hlsLevels, forced: true, onChange: (q) => { h.levels.forEach((l, i) => { if (l.height === q) h.currentLevel = i; }); } }
-          });
-          vd.muted = true;
-          vd.play().then(() => { vd.muted = false; }).catch(e => console.log(e));
-        });
-
-        h.on(Hls.Events.ERROR, function (event, data) {
-          if (data.fatal) {
-            vd.src = finalUrl;
-            new Plyr(vd, { controls: ['play-large','play','progress','current-time','duration','mute','volume','quality','settings','fullscreen'] });
-            vd.play().catch(e => console.log(e));
-          }
-        });
-      } else {
-        vd.src = finalUrl;
-        new Plyr(vd, { controls: ['play-large','play','progress','current-time','duration','mute','volume','quality','settings','fullscreen'] });
-        vd.muted = true;
-        vd.play().then(() => { vd.muted = false; }).catch(e => console.log(e));
-      }
-    }
-
-    // Advanced 3X Decoder (Cleaned)
+    // Dual Parser
     function parseEngine() {
-      let raw = window.location.href;
-      for (let i = 0; i < 3; i++) {
-        try {
-          if (raw.includes('%')) raw = decodeURIComponent(raw);
-        } catch (e) { break; }
-      }
+      let rawUrl = window.location.href;
+      try { rawUrl = decodeURIComponent(rawUrl); } catch (e) {}
 
       let streamUrl = "";
       let clearKeys = {};
       let cookie = "";
 
-      const qIndex = raw.indexOf('?');
-      if (qIndex === -1) return { streamUrl, clearKeys, cookie };
-
-      let queryPart = raw.substring(qIndex + 1);
-      let matchHttp = queryPart.match(/(?:url=)?(https?:\/\/[^\s]+)/i);
-      if (!matchHttp) return { streamUrl, clearKeys, cookie };
-
-      let fullExtracted = matchHttp[1];
-
-      if (fullExtracted.includes('.m3u8')) {
-        streamUrl = fullExtracted;
-      } 
-      else if (fullExtracted.includes('.mpd')) {
-        const mpdIndex = fullExtracted.indexOf('.mpd');
-        streamUrl = fullExtracted.substring(0, mpdIndex + 4);
-        let afterStream = fullExtracted.substring(mpdIndex + 4);
-
-        const tokenMatch = afterStream.match(/[&?](token=[^#\s]+)/i) || afterStream.match(/(&hdnea=[^#\s]+)/i);
-        if (tokenMatch) {
-          cookie = tokenMatch[1].replace(/^[&?]/, '');
-          afterStream = afterStream.replace(tokenMatch[0], '');
-        } else if (afterStream.includes('&')) {
-          const parts = afterStream.split('&');
-          afterStream = parts[0];
-          if (parts.length > 1) { cookie = parts.slice(1).join('&'); }
-        }
-
-        const cleanHex = afterStream.replace(/0x/gi, '').replace(/([a-f0-9]{8})-([a-f0-9]{4})-([a-f0-9]{4})-([a-f0-9]{4})-([a-f0-9]{12})/gi, '$1$2$3$4$5');
-        const gluedMatch = cleanHex.match(/[?&#/|;:=_-]?([a-fA-F0-9]{64})/i);
-        if (gluedMatch) {
-          const hex = gluedMatch[1];
-          clearKeys[hex.substring(0, 32).toLowerCase()] = hex.substring(32, 64).toLowerCase();
-          clearKeys[hex.substring(32, 64).toLowerCase()] = hex.substring(0, 32).toLowerCase();
-        }
-      } else {
-        streamUrl = fullExtracted;
+      const qIndex = rawUrl.indexOf('?');
+      if (qIndex === -1) {
+        return {
+          streamUrl: sessionStorage.getItem('mks_url') || "",
+          clearKeys: JSON.parse(sessionStorage.getItem('mks_keys') || "{}"),
+          cookie: sessionStorage.getItem('mks_cookie') || ""
+        };
       }
 
+      let queryPart = rawUrl.substring(qIndex + 1);
+
+      if (queryPart.includes('|drmScheme=')) {
+        let parts = queryPart.split('|');
+        streamUrl = parts[0];
+        if (streamUrl.startsWith('url=')) streamUrl = streamUrl.substring(4);
+        
+        let drmPart = parts[1];
+        if (drmPart && drmPart.includes('drmLicense=')) {
+          let licenseStr = drmPart.split('drmLicense=')[1].split('&')[0];
+          let keyPairs = licenseStr.split(','); 
+          keyPairs.forEach(pair => {
+            let kp = pair.split(':');
+            if (kp.length === 2) { clearKeys[kp[0].trim()] = kp[1].trim(); }
+          });
+        }
+        
+        const tokenMatch = streamUrl.match(/[&?](token=[^#\s]+)/i) || streamUrl.match(/(&__hdnea__=[^#\s]+)/i) || streamUrl.match(/(\?__hdnea__=[^#\s]+)/i);
+        if (tokenMatch) {
+            cookie = tokenMatch[1].replace(/^[&?]/, '').replace('__hdnea__=', '');
+            streamUrl = streamUrl.split('?__hdnea__=')[0].split('&__hdnea__=')[0];
+        }
+      } 
+      else {
+        const urlParams = new URLSearchParams(window.location.search);
+        streamUrl = urlParams.get('url');
+        
+        let kId = urlParams.get('keyId');
+        let k = urlParams.get('key');
+        if (kId && k) clearKeys[kId] = k;
+        
+        cookie = urlParams.get('token');
+        
+        if (!cookie && streamUrl) {
+           const tokenMatch = streamUrl.match(/[&?](token=[^#\s]+)/i) || streamUrl.match(/(&__hdnea__=[^#\s]+)/i) || streamUrl.match(/(\?__hdnea__=[^#\s]+)/i);
+           if (tokenMatch) {
+              cookie = tokenMatch[1].replace(/^[&?]/, '').replace('__hdnea__=', '');
+              streamUrl = streamUrl.split('?__hdnea__=')[0].split('&__hdnea__=')[0];
+           }
+        }
+      }
+
+      if (streamUrl) {
+        sessionStorage.setItem('mks_url', streamUrl);
+        sessionStorage.setItem('mks_keys', JSON.stringify(clearKeys));
+        sessionStorage.setItem('mks_cookie', cookie || "");
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
       return { streamUrl, clearKeys, cookie };
     }
 
-    let player = null;
+    const { streamUrl, clearKeys, cookie } = parseEngine();
+    const video = document.getElementById('video');
 
-    // JioTV & Amazon Shaka Player
-    async function initializePlayer(targetStreamUrl, targetClearKeys = {}, targetCookie = "") {
+    async function initializePlayer() {
+      if (!streamUrl) return;
+
       try {
-        const video = document.getElementById('video');
         shaka.polyfill.installAll();
-
-        if (window.player) {
-          await window.player.destroy();
-          window.player = null;
-        }
-
-        player = new shaka.Player();
-        window.player = player;
+        const player = new shaka.Player();
         await player.attach(video);
 
         const container = document.querySelector('.shaka-video-container');
-        const existingUI = container.querySelector('.shaka-controls');
-        if (existingUI) { existingUI.remove(); }
-
         const ui = new shaka.ui.Overlay(player, container, video);
         
+        // 🔥 BIG BUTTON HIDDEN & GOLD SEEKBAR APPLIED 🔥
         ui.configure({
-          'addBigPlayButton': false,
-          'seekBarColors': { base: 'rgba(255,255,255,.2)', buffered: 'rgba(255,255,255,.4)', played: '#d4af37' },
-          'controlPanelElements': ['play_pause', 'mute', 'time_and_duration', 'restart', 'spacer', 'quality', 'language', 'picture_in_picture', 'fullscreen', 'overflow_menu']
+          'addBigPlayButton': false, 
+          'seekBarColors': { base: 'rgba(255,255,255,.2)', buffered: 'rgba(255,255,255,.5)', played: '#d4af37' },
+          'controlPanelElements': ['play_pause', 'mute', 'time_and_duration', 'spacer', 'quality', 'fullscreen']
         });
 
-        const playerConfig = {
-          streaming: { bufferingGoal: 10, rebufferingGoal: 2, bufferBehind: 30, lowLatencyMode: true },
-          manifest: { dash: { ignoreMinBufferTime: true } }
+        // 🔥 5-SECOND DELAY TO STOP BUFFERING 🔥
+        const playerConfig = { 
+            streaming: { 
+                safeSeekOffset: 5,        // Keeps stream exactly 5 seconds behind live
+                bufferingGoal: 30,        // Loads 30 seconds ahead
+                rebufferingGoal: 2,       
+                lowLatencyMode: false     // Focus on smoothness
+            }
         };
-
-        if (Object.keys(targetClearKeys).length > 0) {
-          playerConfig.drm = { clearKeys: targetClearKeys };
-        }
-
+        
+        if (Object.keys(clearKeys).length > 0) { playerConfig.drm = { clearKeys: clearKeys }; }
         player.configure(playerConfig);
 
         player.getNetworkingEngine().registerRequestFilter((type, request) => {
-          if (targetStreamUrl.includes('jio.com')) {
+          if (streamUrl.includes('jio.com')) {
               request.headers['Referer'] = 'https://www.jiotv.com/';
               request.headers['User-Agent'] = 'plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6';
-          }
-          if (targetCookie && (type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT)) {
-            const baseUri = request.uris[0].split('?')[0];
-            request.uris[0] = baseUri + '?' + targetCookie;
+              if (cookie && (type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT)) {
+                const baseUri = request.uris[0].split('?')[0];
+                request.uris[0] = baseUri + '?' + '__hdnea__=' + cookie;
+              }
           }
         });
 
         video.autoplay = true;
-        video.controls = false;
-        video.volume = 1;
-        video.muted = true; // Prevents block
-        video.preload = 'auto';
-
-        await player.load(targetStreamUrl);
-
-        try { await video.play(); } catch (e) { console.log(e); }
+        video.muted = false;
+        await player.load(streamUrl);
+        video.play().catch(e => console.log("Autoplay blocked by browser."));
 
       } catch (error) {
-        console.error('Error initializing player:', error);
+        console.error('Error:', error);
       }
     }
 
-    // MAIN EXECUTION BLOCK (Cleaned up and URL Masking added)
-    document.addEventListener('DOMContentLoaded', async () => {
-      // 1. Link nikalo
-      const { streamUrl, clearKeys, cookie } = parseEngine();
-
-      // 2. 🔥 URL MASKING MAGIC: Address bar se lamba link hata do! 🔥
-      if (window.history && window.history.replaceState) {
-          window.history.replaceState({}, document.title, window.location.pathname);
-      }
-
-      // 3. Play video ya Error dikhao
-      if (streamUrl) {
-        document.getElementById('error-box').style.display = 'none';
-        document.getElementById('player-box').style.display = 'block';
-
-        const lowerFinalUrl = streamUrl.toLowerCase();
-        if (lowerFinalUrl.includes('.m3u8')) {
-          initHlsPlayer(streamUrl);
-        } else {
-          initializePlayer(streamUrl, clearKeys, cookie);
-        }
-      } else {
-        document.getElementById('error-box').style.display = 'flex';
-        document.getElementById('player-box').style.display = 'none';
-      }
-    });
+    document.addEventListener('DOMContentLoaded', initializePlayer);
   </script>
 </body>
 </html>
