@@ -1,104 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKS sports</title>
-    
-    <!-- Plyr CSS for Premium UI -->
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    
-    <style>
-        body {
-            margin: 0;
-            background-color: #0f0f0f;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-        }
-        .player-container {
-            width: 100%;
-            max-width: 900px; /* Laptop ke liye perfect width */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        /* Ye line mobile/browser ke default gande ghumte hue spinner ko hide kar degi */
-        video::-webkit-media-controls {
-            display: none !important;
-        }
-
-        /* Agar aapko naye player ka modern spinner bhi bilkul nahi chahiye, 
-           toh neeche wali line ke aage se /* hata dijiye */
-        /* .plyr__loading-spinner { display: none !important; } */
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DASH Stream Player</title>
+  <!-- Shaka Player Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
+  <style>
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .player-container {
+      width: 80%;
+      max-width: 900px;
+    }
+    video {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+  </style>
 </head>
 <body>
 
-    <div class="player-container">
-        <!-- Plyr Video Element -->
-        <video id="player" controls crossorigin playsinline></video>
-    </div>
+  <div class="player-container">
+    <h2>Live DASH Stream Player</h2>
+    <video id="videoPlayer" controls autoplay></video>
+  </div>
 
-    <!-- HLS.js aur Plyr JS libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+  <script>
+    const streamUrl = "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/puehlftk5j/out/v1/f7f0da1ee112481ca0024e6d4dd97f4a/cenc.mpd";
+    
+    const clearKeysConfig = {
+      "f3df7843080ae743bf865dc5fdf64c68": "567c863bc12eb74788ea74888c042e1b"
+    };
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const video = document.querySelector('#player');
-            const streamUrl = 'https://tvsen6.aynaott.com/zv68oqPDu7MZZwmHhRxt/tracks-v1a1/mono.ts.m3u8';
-            
-            // Plyr ki settings (Quality aur Speed control ke liye)
-            const defaultOptions = {
-                controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
-                settings: ['quality'], // Gear icon me quality option aayega
-            };
+    async function initApp() {
+      // Browser polyfills install karna
+      shaka.polyfill.installAll();
 
-            if (Hls.isSupported()) {
-                const hls = new Hls();
-                hls.loadSource(streamUrl);
+      if (shaka.Player.isBrowserSupported()) {
+        initPlayer();
+      } else {
+        console.error('Browser theek se support nahi kar raha hai!');
+      }
+    }
 
-                hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
-                    // M3u8 se saari qualities fetch karna
-                    const availableQualities = hls.levels.map((l) => l.height);
-                    
-                    // 'Auto' mode ko list me sabse upar add karna (0 ka matlab Plyr me Auto hota hai)
-                    availableQualities.unshift(0); 
+    async function initPlayer() {
+      const video = document.getElementById('videoPlayer');
+      const player = new shaka.Player(video);
 
-                    defaultOptions.quality = {
-                        default: 0,
-                        options: availableQualities,
-                        forced: true,
-                        onChange: (newQuality) => {
-                            if (newQuality === 0) {
-                                hls.currentLevel = -1; // -1 matlab hls.js me Auto
-                            } else {
-                                hls.levels.forEach((level, levelIndex) => {
-                                    if (level.height === newQuality) {
-                                        hls.currentLevel = levelIndex;
-                                    }
-                                });
-                            }
-                        }
-                    };
+      // Error listener
+      player.addEventListener('error', (event) => {
+        console.error('Error code', event.detail.code, event.detail);
+      });
 
-                    // Quality load hone ke baad player start karna
-                    new Plyr(video, defaultOptions);
-                });
+      // ClearKey DRM configuration set karna
+      player.configure({
+        drm: {
+          clearKeys: clearKeysConfig
+        }
+      });
 
-                hls.attachMedia(video);
+      try {
+        await player.load(streamUrl);
+        console.log('Stream successfully load ho gayi hai!');
+      } catch (error) {
+        console.error('Load karne me error aaya:', error);
+      }
+    }
 
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Apple/Safari devices ke liye
-                video.src = streamUrl;
-                new Plyr(video, defaultOptions);
-            }
-        });
-    </script>
+    document.addEventListener('DOMContentLoaded', initApp);
+  </script>
 
 </body>
 </html>
