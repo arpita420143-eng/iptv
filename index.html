@@ -10,100 +10,148 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
   
   <style type="text/css">
-      @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
 
       html, body {
-        margin: 0; padding: 0; background-color: #000;
-        width: 100%; height: 100%; overflow: hidden; font-family: 'Roboto', sans-serif;
+        margin: 0; padding: 0; 
+        background: radial-gradient(circle at 50% 0%, #151520 0%, #050505 80%);
+        width: 100%; height: 100%; overflow: hidden;
+        font-family: 'Outfit', system-ui, -apple-system, sans-serif;
       }
 
-      /* Clean Header */
+      /* Sleek Cinematic Header */
       .app-header {
-        position: absolute; top: 0; left: 0; width: 100%; height: 50px;
-        background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+        position: absolute; top: 0; left: 0; width: 100%; height: 55px;
+        background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
         display: flex; align-items: center; justify-content: space-between;
-        padding: 0 20px; box-sizing: border-box; z-index: 1000;
+        padding: 0 25px; box-sizing: border-box; z-index: 1000;
       }
-      .brand-logo { color: #fff; font-size: 18px; font-weight: 900; letter-spacing: 1px; }
-      .brand-logo span { color: #0099ff; }
+
+      .brand-logo { 
+        color: #fff; font-size: 20px; font-weight: 800; letter-spacing: 1.5px; 
+        display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      }
+      .brand-logo span { color: #d4af37; /* Royal Gold */ }
       
       .live-badge {
-        background: #ef4444; color: white; font-size: 10px; font-weight: 700;
-        padding: 3px 8px; border-radius: 4px; text-transform: uppercase;
-        animation: blink 2s infinite;
+        background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+        color: white; font-size: 11px; font-weight: 800;
+        padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 1px;
+        animation: pulseLive 2s infinite; box-shadow: 0 0 15px rgba(255, 8, 68, 0.4);
       }
-      @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+      @keyframes pulseLive { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
 
       /* Video Container */
       .video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1; }
       .shaka-video-container { width: 100%; height: 100%; }
       video { width: 100%; height: 100%; background: #000; outline: none; }
 
-      /* HIDE THE BIG ANNOYING CENTER BUTTON */
+      /* 🔥 HIDE CENTER PLAY BUTTON AND SPINNER 🔥 */
       .shaka-play-button-container, .shaka-spinner-container { display: none !important; }
 
-      /* UI Theme */
+      /* Custom Shaka Controls Theme */
+      .youtube-theme { font-family: 'Outfit', sans-serif; }
       .youtube-theme .shaka-bottom-controls { padding: 0; z-index: 2; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%); }
-      .youtube-theme .shaka-controls-button-panel { height: 50px; padding: 0 15px; }
-      .youtube-theme .shaka-played-range { background: #ef4444 !important; }
+      .youtube-theme .shaka-controls-button-panel { height: 60px; padding: 0 15px; }
+      .youtube-theme .shaka-played-range { background: #d4af37 !important; box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
       
       /* =========================================
-         CLEAN TELEGRAM BUTTON (NO WARNING ICON)
+         ROYAL GOLD TELEGRAM POPUP & FLOATING BTN
          ========================================= */
+      
       .tg-floating-btn {
-        position: fixed; top: 65px; right: 15px;
-        background: #0088cc; border: 1px solid rgba(255, 255, 255, 0.2); color: #fff;
-        padding: 8px 15px; border-radius: 50px; font-size: 13px; font-weight: 700;
-        text-decoration: none; display: flex; align-items: center; gap: 6px; z-index: 9999;
-        box-shadow: 0 4px 15px rgba(0, 136, 204, 0.5); transition: 0.3s;
+        position: fixed; top: 75px; right: 20px;
+        background: rgba(20, 20, 25, 0.6); backdrop-filter: blur(12px);
+        border: 1px solid rgba(212, 175, 55, 0.3); color: #d4af37;
+        padding: 10px 18px; border-radius: 50px; font-size: 13px; font-weight: 800;
+        text-decoration: none; display: flex; align-items: center; gap: 8px; z-index: 9999;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6); transition: all 0.3s ease;
+        text-transform: uppercase; letter-spacing: 0.5px;
+        animation: floatGently 3s ease-in-out infinite;
       }
-      .tg-floating-btn svg { width: 16px; height: 16px; fill: #fff; }
-      .tg-floating-btn:hover { background: #00aaff; transform: scale(1.05); }
+      @keyframes floatGently { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+      .tg-floating-btn svg { width: 18px; height: 18px; fill: #d4af37; }
+      .tg-floating-btn:hover { background: rgba(212, 175, 55, 0.15); transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 25px rgba(212, 175, 55, 0.2); }
 
-      /* Premium Popup */
       .tg-popup-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
+        background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px);
         z-index: 10000; display: none; justify-content: center; align-items: center;
       }
+
+      /* Royal Glass Box */
       .tg-popup-box {
-        background: #111; border: 1px solid #0088cc; border-radius: 20px;
-        padding: 30px 20px; width: 85%; max-width: 340px; text-align: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.9); position: relative;
+        background: linear-gradient(145deg, rgba(25,25,30,0.9) 0%, rgba(10,10,15,0.95) 100%);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        border-radius: 28px; padding: 45px 30px; width: 85%; max-width: 380px; text-align: center;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 1px 20px rgba(212,175,55,0.05);
+        position: relative; transform: translateY(30px) scale(0.95); opacity: 0;
+        animation: royalPop 0.6s forwards;
       }
-      .tg-popup-close { position: absolute; top: 10px; right: 15px; color: #888; font-size: 28px; cursor: pointer; text-decoration: none; }
-      .tg-popup-title { color: #fff; font-size: 20px; font-weight: 900; margin-bottom: 10px; }
-      .tg-popup-text { color: #aaa; font-size: 14px; margin-bottom: 20px; }
+      @keyframes royalPop { to { transform: translateY(0) scale(1); opacity: 1; } }
+
+      .tg-popup-close { position: absolute; top: 15px; right: 25px; color: rgba(255,255,255,0.4); font-size: 32px; cursor: pointer; text-decoration: none; transition: 0.3s; }
+      .tg-popup-close:hover { color: #d4af37; transform: rotate(90deg); }
+      
+      /* Glowing Icon */
+      .premium-icon-wrapper {
+        width: 75px; height: 75px; margin: 0 auto 25px; border-radius: 50%;
+        background: linear-gradient(135deg, #d4af37, #f3e5ab);
+        display: flex; justify-content: center; align-items: center;
+        box-shadow: 0 0 40px rgba(212, 175, 55, 0.3), inset 0 0 15px rgba(255,255,255,0.6); position: relative;
+      }
+      .premium-icon-wrapper::after {
+        content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px;
+        border-radius: 50%; background: linear-gradient(135deg, transparent, rgba(212, 175, 55, 0.5), transparent);
+        animation: shimmerRotate 3s linear infinite; z-index: -1;
+      }
+      @keyframes shimmerRotate { 100% { transform: rotate(360deg); } }
+
+      .premium-icon-wrapper svg { width: 38px; height: 38px; fill: #111; }
+
+      .tg-popup-title { color: #fff; font-size: 24px; font-weight: 800; margin: 0 0 12px; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+      .tg-popup-text { color: #a0a0ab; font-size: 15px; line-height: 1.6; margin-bottom: 35px; font-weight: 400; }
+      .tg-popup-text b { color: #d4af37; }
+      
       .tg-popup-btn {
-        background: #0088cc; color: #fff; text-decoration: none; padding: 12px 0; width: 100%;
-        border-radius: 10px; font-size: 15px; font-weight: 700; display: inline-flex; justify-content: center; align-items: center; gap: 8px;
+        background: linear-gradient(135deg, #d4af37 0%, #aa8529 100%);
+        color: #000; text-decoration: none; padding: 16px 0; width: 100%; border-radius: 16px; 
+        font-size: 16px; font-weight: 800; display: inline-flex; justify-content: center; align-items: center; gap: 10px;
+        box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3); transition: 0.3s;
+        text-transform: uppercase; letter-spacing: 0.5px;
       }
+      .tg-popup-btn svg { width: 22px; height: 22px; fill: #000; }
+      .tg-popup-btn:hover { transform: translateY(-4px); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.5); }
   </style>
 </head>
 <body>
 
-  <!-- Clean Floating Telegram Button -->
+  <!-- Floating Button with Telegram Icon & Catchy Text -->
   <a href="https://t.me/MKSsports_3" target="_blank" class="tg-floating-btn">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.83l7.65 13.17H4.35L12 5.83zM11 16h2v2h-2v-2zm0-7h2v5h-2V9z"/></svg>
-    JOIN TELEGRAM
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.18-.08-.05-.19-.02-.27 0-.11.03-1.84 1.18-5.18 3.44-.49.34-.93.5-1.33.49-.44-.01-1.28-.25-1.91-.46-.77-.25-1.38-.38-1.32-.81.03-.22.34-.45.92-.69 3.61-1.57 6.02-2.61 7.23-3.11 3.44-1.42 4.15-1.67 4.62-1.68.1 0 .32.02.44.11.1.08.13.19.14.28 0 .04.01.16.01.27z"/></svg>
+    🔥 GET FREE LINKS
   </a>
 
-  <!-- Popup -->
+  <!-- Royal Popup Box -->
   <div class="tg-popup-overlay" id="tgPopup">
     <div class="tg-popup-box">
       <a href="#" class="tg-popup-close" onclick="closePopup(); return false;">&times;</a>
-      <div class="tg-popup-title">🔥 GET FREE LINKS</div>
-      <div class="tg-popup-text">Join our Telegram channel for daily Live Match Links. No Ads, No Buffering!</div>
+      <div class="premium-icon-wrapper">
+        <!-- True Telegram SVG Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.18-.08-.05-.19-.02-.27 0-.11.03-1.84 1.18-5.18 3.44-.49.34-.93.5-1.33.49-.44-.01-1.28-.25-1.91-.46-.77-.25-1.38-.38-1.32-.81.03-.22.34-.45.92-.69 3.61-1.57 6.02-2.61 7.23-3.11 3.44-1.42 4.15-1.67 4.62-1.68.1 0 .32.02.44.11.1.08.13.19.14.28 0 .04.01.16.01.27z"/></svg>
+      </div>
+      <div class="tg-popup-title">NEVER MISS A MATCH!</div>
+      <div class="tg-popup-text">Kal ke match ka link kahan milega? Join our Telegram family for <b>100% Free Daily Live Links</b>, No Ads, No Buffering!</div>
       <a href="https://t.me/MKSsports_3" target="_blank" class="tg-popup-btn" onclick="closePopup()">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.83l7.65 13.17H4.35L12 5.83zM11 16h2v2h-2v-2zm0-7h2v5h-2V9z"/></svg>
-        JOIN NOW
+        JOIN TELEGRAM NOW
       </a>
     </div>
   </div>
 
   <div class="app-header" id="header-bar">
     <div class="brand-logo">MKS <span>SPORTS</span></div>
-    <div class="live-badge">LIVE</div>
+    <div class="live-badge">● LIVE</div>
   </div>
 
   <div class="video-container" id="player-box">
@@ -113,11 +161,15 @@
   </div>
 
 
+  
 
 
-  <script>
+
+
+
+<script>
     // Popup logic
-    window.onload = () => { setTimeout(() => { document.getElementById('tgPopup').style.display = 'flex'; }, 2000); };
+    window.onload = () => { setTimeout(() => { document.getElementById('tgPopup').style.display = 'flex'; }, 3000); };
     function closePopup() { document.getElementById('tgPopup').style.display = 'none'; }
 
     // Dual Parser
@@ -203,10 +255,10 @@
         const container = document.querySelector('.shaka-video-container');
         const ui = new shaka.ui.Overlay(player, container, video);
         
-        // 🔥 MAGIC HERE: addBigPlayButton: false Hides the annoying center button!
+        // 🔥 BIG BUTTON HIDDEN & GOLD SEEKBAR APPLIED 🔥
         ui.configure({
           'addBigPlayButton': false, 
-          'seekBarColors': { base: 'rgba(255,255,255,.2)', buffered: 'rgba(255,255,255,.5)', played: '#ef4444' },
+          'seekBarColors': { base: 'rgba(255,255,255,.2)', buffered: 'rgba(255,255,255,.5)', played: '#d4af37' },
           'controlPanelElements': ['play_pause', 'mute', 'time_and_duration', 'spacer', 'quality', 'fullscreen']
         });
 
