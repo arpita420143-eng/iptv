@@ -38,7 +38,6 @@
       margin: 20px auto;
       padding: 0 16px;
     }
-    /* Input Form Styling */
     .config-card {
       background: #111827;
       border: 1px solid #293548;
@@ -69,16 +68,13 @@
       margin-top: 10px;
       font-size: 15px;
     }
-    .config-card button:hover {
-      opacity: 0.9;
-    }
     .player-card {
       padding: 18px;
       background: #111827;
       border: 1px solid #293548;
       border-radius: 14px;
       box-shadow: 0 8px 30px #0007;
-      display: none; /* Pehle hidden rahega jab tak play na dabayein */
+      display: none;
     }
     .live-heading {
       display: flex;
@@ -151,7 +147,7 @@
       Live Sports
     </h2>
 
-    <div class="video-box" data-shaka-player-container>
+    <div class="video-box" data-shaka-player-container id="playerContainer">
       <video
         id="videoPlayer"
         data-shaka-player
@@ -188,6 +184,7 @@
 
     const status = document.getElementById("status");
     const video = document.getElementById("videoPlayer");
+    const container = document.getElementById("playerContainer");
 
     try {
       if (!window.shaka) {
@@ -200,7 +197,8 @@
         throw new Error("Browser Shaka Player support nahi karta.");
       }
 
-      const ui = video['ui'];
+      // Sahi tarike se Shaka UI instance banana
+      const ui = new shaka.ui.Overlay(null, container, video);
       const player = ui.getPlayer();
 
       player.addEventListener("error", event => {
