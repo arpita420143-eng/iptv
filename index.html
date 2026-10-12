@@ -5,111 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MKS sports</title>
     
-    <!-- hls.js library -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <!-- Plyr CSS for Premium UI -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #121212;
             margin: 0;
+            background-color: #0f0f0f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
             font-family: Arial, sans-serif;
         }
         .player-container {
             width: 100%;
-            max-width: 800px;
-            background: #000;
-            border-radius: 10px;
+            max-width: 900px; /* Laptop ke liye perfect width */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
         }
-        video {
-            width: 100%;
-            display: block;
+        
+        /* Ye line mobile/browser ke default gande ghumte hue spinner ko hide kar degi */
+        video::-webkit-media-controls {
+            display: none !important;
         }
-        .controls {
-            padding: 10px 15px;
-            background: #222;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            color: #fff;
-        }
-        .controls label {
-            margin-right: 10px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-        .controls select {
-            background: #333;
-            color: #fff;
-            border: 1px solid #555;
-            padding: 5px 10px;
-            border-radius: 5px;
-            outline: none;
-            cursor: pointer;
-        }
+
+        /* Agar aapko naye player ka modern spinner bhi bilkul nahi chahiye, 
+           toh neeche wali line ke aage se /* hata dijiye */
+        /* .plyr__loading-spinner { display: none !important; } */
     </style>
 </head>
 <body>
 
     <div class="player-container">
-        <!-- Video Element -->
-        <video id="my-video" controls autoplay muted></video>
-        
-        <!-- Quality Control Dropdown -->
-        <div class="controls">
-            <label for="quality">Video Quality: </label>
-            <select id="quality">
-                <option value="-1">Auto</option>
-            </select>
-        </div>
+        <!-- Plyr Video Element -->
+        <video id="player" controls crossorigin playsinline></video>
     </div>
 
+    <!-- HLS.js aur Plyr JS libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+
     <script>
-        var video = document.getElementById('my-video');
-        var qualitySelector = document.getElementById('quality');
-        var streamUrl = 'https://tvsen6.aynaott.com/zv68oqPDu7MZZwmHhRxt/tracks-v1a1/mono.ts.m3u8';
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.querySelector('#player');
+            const streamUrl = 'https://tvsen6.aynaott.com/zv68oqPDu7MZZwmHhRxt/tracks-v1a1/mono.ts.m3u8';
+            
+            // Plyr ki settings (Quality aur Speed control ke liye)
+            const defaultOptions = {
+                controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
+                settings: ['quality'], // Gear icon me quality option aayega
+            };
 
-        if (Hls.isSupported()) {
-            var hls = new Hls();
-            hls.loadSource(streamUrl);
-            hls.attachMedia(video);
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(streamUrl);
 
-            // Jab stream ka data (manifest) load ho jaye
-            hls.on(Hls.Events.MANIFEST_PARSED, function(event, data) {
-                // Available quality levels ko dropdown me add karna
-                var availableQualities = hls.levels;
-                
-                availableQualities.forEach(function(level, index) {
-                    var option = document.createElement('option');
-                    option.value = index; // Hls.js me level ka index use hota hai
-                    option.text = level.height + 'p'; // Jaise 720p, 1080p
-                    qualitySelector.appendChild(option);
+                hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                    // M3u8 se saari qualities fetch karna
+                    const availableQualities = hls.levels.map((l) => l.height);
+                    
+                    // 'Auto' mode ko list me sabse upar add karna (0 ka matlab Plyr me Auto hota hai)
+                    availableQualities.unshift(0); 
+
+                    defaultOptions.quality = {
+                        default: 0,
+                        options: availableQualities,
+                        forced: true,
+                        onChange: (newQuality) => {
+                            if (newQuality === 0) {
+                                hls.currentLevel = -1; // -1 matlab hls.js me Auto
+                            } else {
+                                hls.levels.forEach((level, levelIndex) => {
+                                    if (level.height === newQuality) {
+                                        hls.currentLevel = levelIndex;
+                                    }
+                                });
+                            }
+                        }
+                    };
+
+                    // Quality load hone ke baad player start karna
+                    new Plyr(video, defaultOptions);
                 });
 
-                video.play();
-            });
+                hls.attachMedia(video);
 
-            // Jab user dropdown se quality change kare
-            qualitySelector.addEventListener('change', function() {
-                var selectedQuality = parseInt(this.value);
-                hls.currentLevel = selectedQuality; // -1 means Auto, otherwise level index
-            });
-        } 
-        // Apple devices ke liye (iOS Safari me direct switch native player me hota hai)
-        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = streamUrl;
-            video.addEventListener('loadedmetadata', function() {
-                video.play();
-            });
-            // Native player hone ki wajah se custom dropdown hide kar denge
-            document.querySelector('.controls').style.display = 'none';
-        }
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Apple/Safari devices ke liye
+                video.src = streamUrl;
+                new Plyr(video, defaultOptions);
+            }
+        });
     </script>
 
 </body>
