@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MKS sports Premium stream</title>
+  <title>MKS Sports Premium stream</title>
   <!-- Shaka Player compiled library & UI CSS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.ui.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/controls.css">
@@ -20,10 +20,10 @@
       margin: 0;
     }
     h2 {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 700;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -38,14 +38,9 @@
       overflow: hidden;
       background: #000;
     }
-    /* Ghoomne wala spinner/loader ko gayab karne ke liye */
+    /* Ghoomne wala spinner/loader ko hide karne ke liye */
     .shaka-spinner-container, .shaka-spinner {
       display: none !important;
-    }
-    video {
-      width: 100%;
-      height: auto;
-      display: block;
     }
   </style>
 </head>
@@ -55,7 +50,7 @@
     <h2>MKS Sports Premium stream</h2>
     <!-- Shaka UI container -->
     <div data-shaka-player-container style="width: 100%; height: 100%;">
-      <video data-shaka-player id="videoPlayer" autoplay></video>
+      <video data-shaka-player id="videoPlayer" autoplay style="width:100%; height:100%;"></video>
     </div>
   </div>
 
@@ -79,8 +74,8 @@
 
     async function initPlayer() {
       const video = document.getElementById('videoPlayer');
-      const container = video.uiContainer;
-      const player = video.getController().getPlayer();
+      const ui = video['ui'];
+      const player = ui.getPlayer();
 
       // Error listener
       player.addEventListener('error', (event) => {
