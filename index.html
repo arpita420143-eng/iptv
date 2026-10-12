@@ -2,462 +2,115 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MKS SPORTS - SA20 Auction Live</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MKS sports</title>
     
-    <!-- Premium App Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+    <!-- hls.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
-    <!-- Plyr CSS -->
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-
     <style>
-        :root {
-            --bg-base: #08090c; 
-            --bg-surface: #13151c;
-            --accent-blue: #005ce6;
-            --accent-gold: linear-gradient(135deg, #d4af37 0%, #aa7c11 100%);
-            --text-main: #ffffff;
-            --text-dim: #9ba3b5;
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #121212;
+            margin: 0;
+            font-family: Arial, sans-serif;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-        body { 
-            background: var(--bg-base);
-            color: var(--text-main); 
-            font-family: 'Inter', sans-serif; 
-            overflow-x: hidden; 
-            min-height: 100vh;
+        .player-container {
+            width: 100%;
+            max-width: 800px;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
         }
-
-        /* --- 1. APP HEADER --- */
-        .app-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 16px; background: rgba(8, 9, 12, 0.9);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            position: sticky; top: 0; z-index: 100;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+        video {
+            width: 100%;
+            display: block;
         }
-
-        .header-left { display: flex; align-items: center; gap: 14px; }
-        .menu-icon, .search-icon, .profile-avatar { cursor: pointer; opacity: 0.9; transition: 0.2s; }
-        .menu-icon:active, .search-icon:active, .profile-avatar:active { opacity: 0.5; transform: scale(0.95); }
-        .menu-icon svg { width: 26px; height: 26px; fill: #fff; }
-        
-        .app-logo {
-            font-family: 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 900;
-            background: linear-gradient(90deg, #fff, #b3d1ff);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            letter-spacing: 0.5px;
+        .controls {
+            padding: 10px 15px;
+            background: #222;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            color: #fff;
         }
-
-        .header-right { display: flex; align-items: center; gap: 18px; }
-        .search-icon svg { width: 24px; height: 24px; fill: #fff; }
-        .profile-avatar {
-            width: 32px; height: 32px; border-radius: 50%;
-            background: linear-gradient(135deg, #005ce6, #00bfff);
-            display: flex; justify-content: center; align-items: center;
-            font-size: 0.85rem; font-weight: 800; border: 2px solid rgba(255,255,255,0.2);
-            box-shadow: 0 0 10px rgba(0, 92, 230, 0.4);
+        .controls label {
+            margin-right: 10px;
+            font-size: 14px;
+            font-weight: bold;
         }
-
-        /* --- 2. HERO PLAYER (YOUTUBE WITH PLYR) --- */
-        .hero-player { width: 100%; position: relative; background: #000; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
-        .player-overlay-top { position: absolute; top: 0; left: 0; width: 100%; height: 70px; background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, transparent 100%); z-index: 10; pointer-events: none; }
-        .live-tag-container { position: absolute; top: 14px; left: 16px; z-index: 11; display: flex; align-items: center; gap: 8px; pointer-events: none; }
-        
-        .live-badge { 
-            background: linear-gradient(90deg, #ff0033, #cc0000); color: white; font-size: 0.7rem; font-weight: 800; 
-            padding: 4px 8px; border-radius: 4px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 5px; 
-            box-shadow: 0 2px 10px rgba(255, 0, 51, 0.5);
+        .controls select {
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 5px 10px;
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
         }
-        .live-badge::before { content: ''; width: 6px; height: 6px; background: white; border-radius: 50%; animation: pulse-dot 1s infinite alternate; }
-        .view-count { background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.15); color: white; font-size: 0.75rem; font-weight: 600; padding: 4px 8px; border-radius: 4px; display: flex; align-items: center; gap: 5px; }
-        @keyframes pulse-dot { to { opacity: 0.2; transform: scale(0.8); } }
-        
-        /* Premium Plyr styling overrides */
-        --plyr-color-main: var(--accent-blue);
-        .plyr__controls { background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%) !important; padding: 25px 12px 8px !important; }
-        .plyr__control--overlaid { background: rgba(0, 0, 0, 0.6) !important; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.3) !important; padding: 18px !important; }
-
-        /* --- 3. CONTENT AREA --- */
-        .content-area { padding: 18px 16px; max-width: 1000px; margin: 0 auto; }
-        
-        .video-title { font-size: 1.35rem; font-weight: 800; line-height: 1.3; margin-bottom: 8px; color: #fff; }
-        .title-highlight { color: #d4af37; }
-        
-        .video-tags { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-        .tag { background: rgba(255,255,255,0.08); font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; color: #ccc; font-weight: 600; letter-spacing: 0.3px; border: 1px solid rgba(255,255,255,0.05); }
-
-        .action-bar { display: flex; justify-content: space-between; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 18px; }
-        .action-btn { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-dim); font-size: 0.75rem; font-weight: 600; border: none; background: none; transition: 0.2s; cursor: pointer; flex: 1;}
-        .action-btn:hover, .action-btn.active { color: var(--text-main); }
-        .action-btn svg { width: 24px; height: 24px; fill: currentColor; }
-
-        /* --- 4. FAKE LIVE CHAT --- */
-        .chat-section {
-            background: rgba(19, 21, 28, 0.6);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 25px;
-            display: flex; flex-direction: column;
-        }
-        .chat-header {
-            font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 10px;
-            display: flex; align-items: center; gap: 8px;
-        }
-        .chat-header::before {
-            content: ''; width: 8px; height: 8px; background: #00ce5b; border-radius: 50%; box-shadow: 0 0 10px #00ce5b;
-        }
-        .chat-box {
-            height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
-            scrollbar-width: none;
-        }
-        .chat-box::-webkit-scrollbar { display: none; }
-        .chat-msg { font-size: 0.85rem; line-height: 1.4; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .chat-user { font-weight: 700; color: #a3c6ff; margin-right: 5px; }
-        .chat-text { color: #ddd; }
-        
-        .chat-input-wrapper {
-            margin-top: 10px; display: flex; gap: 10px;
-        }
-        .chat-input {
-            flex: 1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px; padding: 10px 15px; color: #fff; font-size: 0.85rem; outline: none; cursor: pointer;
-        }
-        .chat-input::placeholder { color: #666; }
-
-        /* --- 5. PREMIUM VIP CARD --- */
-        .vip-card {
-            background: var(--bg-surface); border-radius: 12px; padding: 1.5px; 
-            background-image: linear-gradient(var(--bg-surface), var(--bg-surface)), var(--accent-gold);
-            background-origin: border-box; background-clip: padding-box, border-box; text-decoration: none; display: block;
-            margin-bottom: 30px; position: relative; overflow: hidden;
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.1);
-        }
-        .vip-content { background: linear-gradient(to right, #13151c, #1a1c24); border-radius: 11px; padding: 16px 18px; display: flex; justify-content: space-between; align-items: center; }
-        .vip-left { display: flex; flex-direction: column; gap: 4px; }
-        .vip-title { color: #d4af37; font-size: 1.05rem; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 6px; letter-spacing: 0.5px; }
-        .vip-desc { color: var(--text-dim); font-size: 0.8rem; font-weight: 500; }
-        .vip-btn { background: var(--accent-gold); color: #000; font-weight: 900; font-size: 0.85rem; padding: 10px 20px; border-radius: 25px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
-
-        /* --- 6. TRENDING EVENTS --- */
-        .section-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 12px; color: #fff; letter-spacing: 0.3px; }
-        .slider-container { display: flex; overflow-x: auto; gap: 14px; padding-bottom: 15px; scrollbar-width: none; }
-        .slider-container::-webkit-scrollbar { display: none; }
-        
-        .channel-card {
-            min-width: 150px; border-radius: 10px; overflow: hidden; position: relative;
-            background: #181b24; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .channel-card:active { transform: scale(0.95); }
-        .channel-thumb {
-            height: 85px; width: 100%; background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            display: flex; justify-content: center; align-items: center; position: relative;
-        }
-        .channel-thumb::after {
-            content: '▶'; position: absolute; color: rgba(255,255,255,0.9); font-size: 1.2rem;
-            background: rgba(0,0,0,0.5); width: 35px; height: 35px; display: flex; justify-content: center; align-items: center; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3);
-            backdrop-filter: blur(2px);
-        }
-        .channel-thumb.c1 { background: linear-gradient(135deg, #141E30, #243B55); }
-        .channel-thumb.csk { background: linear-gradient(135deg, #f1c40f, #d35400); } 
-        .channel-info { padding: 10px; }
-        .channel-name { font-size: 0.8rem; font-weight: 700; color: #fff; margin-bottom: 3px; }
-        .channel-cat { font-size: 0.7rem; color: var(--text-dim); }
-
-        /* --- RESTRICTED ALERT TOAST --- */
-        #toast { 
-            position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); 
-            background: rgba(20, 22, 30, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            color: #fff; padding: 12px 24px; border-radius: 30px; font-weight: 600; font-size: 0.9rem; 
-            border: 1px solid rgba(255,255,255,0.1); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            z-index: 9999; box-shadow: 0 10px 40px rgba(0,0,0,0.8); display: flex; align-items: center; gap: 8px; white-space: nowrap;
-        }
-        #toast.show { bottom: 30px; }
-        #toast.error-toast { border-color: rgba(255, 187, 51, 0.6); } 
     </style>
 </head>
 <body>
 
-    <header class="app-header">
-        <div class="header-left">
-            <div class="menu-icon" onclick="showOwnerAlert()">
-                <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-            </div>
-            <div class="app-logo">MKS SPORTS</div>
-        </div>
-        <div class="header-right">
-            <div class="search-icon" onclick="showOwnerAlert()">
-                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            </div>
-            <div class="profile-avatar" onclick="showOwnerAlert()">M</div>
-        </div>
-    </header>
-
-    <div class="hero-player">
-        <div class="player-overlay-top"></div>
-        <div class="live-tag-container">
-            <div class="live-badge">LIVE</div>
-            <div class="view-count">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                <span id="view-count-text">312</span>
-            </div>
-        </div>
+    <div class="player-container">
+        <!-- Video Element -->
+        <video id="my-video" controls autoplay muted></video>
         
-        <!-- YOUTUBE EMBED WITH PLYR -->
-        <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="f_HuMeuZ10Y"></div>
-
+        <!-- Quality Control Dropdown -->
+        <div class="controls">
+            <label for="quality">Video Quality: </label>
+            <select id="quality">
+                <option value="-1">Auto</option>
+            </select>
+        </div>
     </div>
 
-    <div class="content-area">
-        
-        <h1 class="video-title">SA20 Live Auction: <span class="title-highlight">Official Stream HQ</span></h1>
-        
-        <div class="video-tags">
-            <span class="tag">Auction</span>
-            <span class="tag">Cricket</span>
-            <span class="tag">HD 720p</span>
-        </div>
-        
-        <div class="action-bar">
-            <button class="action-btn" onclick="toggleWatchlist(this)">
-                <svg viewBox="0 0 24 24"><path d="M14 10H2v2h12v-2zm0-4H2v2h12V6zm4 8v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM2 16h8v-2H2v2z"/></svg>
-                Watchlist
-            </button>
-            <button class="action-btn" onclick="shareStream()">
-                <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
-                Share
-            </button>
-            <button class="action-btn" onclick="showOwnerAlert()">
-                <svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3v-2h18v2zm0-4H3V5h18v10zM5 7h2v2H5zm0 4h2v2H5zm4-4h8v2H9zm0 4h8v2H9z"/></svg>
-                Live Chat
-            </button>
-            <button class="action-btn" onclick="castStream()">
-                <svg viewBox="0 0 24 24"><path d="M1 9h2V7H1v2zm0 4h2v-2H1v2zm0-8h2V3c-1.1 0-2 .9-2 2zm14 14H5V5h10v14zm4-14h-2v2h2v-2zm0 16H3v-2h18v2zm-2-8h2v-2h-2v2zm0-4h2V7h-2v2zm0 8h2v-2h-2v2z"/></svg>
-                Cast
-            </button>
-        </div>
-
-        <!-- FAKE LIVE CHAT SECTION -->
-        <div class="chat-section">
-            <div class="chat-header">Top Chat</div>
-            <div class="chat-box" id="chatBox">
-                <!-- Chat messages will auto-generate here -->
-            </div>
-            <div class="chat-input-wrapper">
-                <input type="text" class="chat-input" placeholder="Chat publicly as guest..." onclick="showVipChatAlert()" readonly>
-            </div>
-        </div>
-
-        <a href="https://t.me/MKSsports_3" target="_blank" class="vip-card">
-            <div class="vip-content">
-                <div class="vip-left">
-                    <div class="vip-title">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#d4af37"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                        MKS Premium
-                    </div>
-                    <div class="vip-desc">Ad-Free Links & Private Servers</div>
-                </div>
-                <div class="vip-btn">Join Now</div>
-            </div>
-        </a>
-
-        <!-- TRENDING EVENTS -->
-        <h2 class="section-title">Trending Events</h2>
-        <div class="slider-container">
-            <div class="channel-card" onclick="showVipAlert()">
-                <div class="channel-thumb c1"></div>
-                <div class="channel-info">
-                    <div class="channel-name">IPL Retentions HQ</div>
-                    <div class="channel-cat">Cricket • Live</div>
-                </div>
-            </div>
-            
-            <div class="channel-card" onclick="showVipAlert()">
-                <div class="channel-thumb csk"></div>
-                <div class="channel-info">
-                    <div class="channel-name">CSK Squad Analysis</div>
-                    <div class="channel-cat">MS Dhoni • Updates</div>
-                </div>
-            </div>
-            
-            <div class="channel-card" onclick="showVipAlert()">
-                <div class="channel-thumb"></div>
-                <div class="channel-info">
-                    <div class="channel-name">WPL Live Action</div>
-                    <div class="channel-cat">Women's Cricket</div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div id="toast"></div>
-
-    <!-- Plyr JS -->
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
-        // --- LIVE VIEWER COUNT ---
-        let currentViewers = Math.floor(Math.random() * (350 - 250 + 1)) + 250;
-        const viewCountEl = document.getElementById('view-count-text');
-        viewCountEl.innerText = currentViewers;
-        setInterval(() => {
-            currentViewers += Math.floor(Math.random() * 15) - 7; 
-            if(currentViewers < 200) currentViewers = 210;
-            if(currentViewers > 450) currentViewers = 400;
-            viewCountEl.innerText = currentViewers;
-        }, 5000);
+        var video = document.getElementById('my-video');
+        var qualitySelector = document.getElementById('quality');
+        var streamUrl = 'https://tvsen6.aynaott.com/zv68oqPDu7MZZwmHhRxt/tracks-v1a1/mono.ts.m3u8';
 
-        // --- TOAST NOTIFICATIONS ---
-        let toastTimeout;
-        function showToast(message, isWarning = false) {
-            const toast = document.getElementById('toast');
-            toast.innerHTML = message;
-            if(isWarning) toast.classList.add('error-toast');
-            else toast.classList.remove('error-toast');
-            toast.classList.add('show');
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => toast.classList.remove('show'), 3500);
-        }
+        if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(streamUrl);
+            hls.attachMedia(video);
 
-        function showOwnerAlert() { showToast("🔒 <b>Restricted:</b> Only the owner can access these settings.", true); }
-        function showVipAlert() { showToast("🎟️ <b>Access Denied:</b> Without VIP Ticket you can't play this video.", true); }
-        function showVipChatAlert() { showToast("🔒 <b>Chat Locked:</b> Only VIP Members can send messages.", true); }
+            // Jab stream ka data (manifest) load ho jaye
+            hls.on(Hls.Events.MANIFEST_PARSED, function(event, data) {
+                // Available quality levels ko dropdown me add karna
+                var availableQualities = hls.levels;
+                
+                availableQualities.forEach(function(level, index) {
+                    var option = document.createElement('option');
+                    option.value = index; // Hls.js me level ka index use hota hai
+                    option.text = level.height + 'p'; // Jaise 720p, 1080p
+                    qualitySelector.appendChild(option);
+                });
 
-        function toggleWatchlist(btn) {
-            btn.classList.toggle('active');
-            if(btn.classList.contains('active')) showToast("✓ Added to your Watchlist");
-            else showToast("Removed from Watchlist");
-        }
-
-        function shareStream() {
-            if (navigator.share) {
-                navigator.share({ title: 'SA20 Live Auction on MKS Sports', url: window.location.href }).catch(console.error);
-            } else {
-                navigator.clipboard.writeText(window.location.href);
-                showToast("📋 Link copied to clipboard!");
-            }
-        }
-        function castStream() {
-            showToast("🔍 Searching for nearby Cast devices...");
-            setTimeout(() => { showToast("⚠️ No supported devices found on this network."); }, 3500);
-        }
-
-        // --- FAKE CHAT SYSTEM (60+ COMMENTS) ---
-        const chatNames = [
-            "Rahul D.", "CricLover99", "Vikram_Singh", "Thabo_SA", "John Smith", "Arjun", "Priya", 
-            "David_W", "MSDian_Forever", "SA20_Fan", "Sneha", "Rohit45", "Aman Kumar", "ABD_Fanatic",
-            "Jaco_Pretorius", "Imran_Khan", "Suresh_Raina_Fan", "MKS_Supporter", "Njabulo", "Chris_G",
-            "Amit_Sharma", "Prakash77", "Zulu_Warrior", "Kavya", "Deepak_Chahar_FC", "Sanjay", "Ravi_K"
-        ];
-        
-        const chatMessages = [
-            "Pollard ko JSK hi lega pakka! 🔥",
-            "Trent Boult will break the bank today 🤑",
-            "Faf du Plessis back to JSK 💛",
-            "Imran Tahir at 47! Unbelievable fitness 🏃‍♂️",
-            "Who is bidding for Shamar Joseph? That pace!",
-            "Moeen Ali back to JSK?",
-            "Dilshan Madushanka for SEC 🧡",
-            "Kyle Mayers will be dangerous in SA20",
-            "David Wiese is a massive match winner.",
-            "Reece Topley going to DSG for sure.",
-            "Colin Munro is a T20 beast 🔥",
-            "Fazalhaq Farooqi is highly underrated.",
-            "Shimron Hetmyer hitting sixes out of the park soon!",
-            "Rassie van der Dussen home town hero!",
-            "Anyone knows base price of Nabi?",
-            "Waiting for Zak Crawley bid...",
-            "Allah Mohammad Ghazanfar is the mystery spinner everyone wants.",
-            "Gulbadin Naib's muscles 💪 SEC should buy him.",
-            "Nahid Rana ki pace 150+ hai bhai, MI Cape Town le lo.",
-            "Tom Abell solid middle order option.",
-            "Rehan Ahmed future star ⭐",
-            "Joe Clarke is a great wicketkeeper batter.",
-            "Jordan Cox reserve price 15L ZAR.",
-            "Liam Dawson spin bowling allrounder ki demand hogi.",
-            "Richard Gleeson at 39 still bowling rockets 🚀",
-            "Saqib Mahmood injury ke baad wapas aa raha hai.",
-            "Tymal Mills slow bouncers will work in SA.",
-            "Craig Overton tall bounce milega SA pitches par.",
-            "Matthew Potts good powerplay bowler.",
-            "Jamie Smith is in red hot form!",
-            "Olly Stone express pace 🔥",
-            "Paul Walter tall left arm option.",
-            "David Willey swing king with new ball.",
-            "Luke Wood left arm pacers always in demand.",
-            "Jan Frylinck from Namibia could be a steal.",
-            "Brandon McMullen Scotland's pride.",
-            "Temba Bavuma unsold jayega kya? 😅",
-            "Nandre Burger fast and furious ⚡",
-            "Zubayr Hamza classy player.",
-            "Wiaan Mulder local boy massive bid coming.",
-            "Dwaine Pretorius death bowling specialist.",
-            "Eshan Malinga sling action like Lasith!",
-            "Milan Rathnayake pace allrounder.",
-            "Andries Gous USA hero in World Cup.",
-            "Hassan Khan solid spin allrounder.",
-            "Roston Chase very handy off spin and batting.",
-            "Matthew Forde swings it both ways.",
-            "Keemo Paul good slower balls.",
-            "Blessing Muzarabani tall bounce from Zimbabwe.",
-            "MKS Bhai big fan of your stream! ❤️",
-            "Audio ekdum clear hai, thanks admin.",
-            "Pretoria Capitals kisko target kar rahe hain?",
-            "Sunrisers Eastern Cape will go for Madushanka.",
-            "Paarl Royals need a solid middle order batter.",
-            "Durban Super Giants looking strong.",
-            "MI Cape Town purse kitna bacha hai?",
-            "Bhai stream lag kyu nahi kar rahi, itni smooth! 🔥",
-            "Faf ka base price kitna hai guys?",
-            "Pollard vs Hetmyer for the biggest bid today!",
-            "Stream quality is better than official app 😂",
-            "MKS VIP server is the best!"
-        ];
-
-        const chatBox = document.getElementById('chatBox');
-        
-        function addChatMessage() {
-            const randomName = chatNames[Math.floor(Math.random() * chatNames.length)];
-            const randomMsg = chatMessages[Math.floor(Math.random() * chatMessages.length)];
-            
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'chat-msg';
-            msgDiv.innerHTML = `<span class="chat-user">${randomName}:</span><span class="chat-text">${randomMsg}</span>`;
-            
-            chatBox.appendChild(msgDiv);
-            chatBox.scrollTop = chatBox.scrollHeight; 
-            
-            if (chatBox.children.length > 25) {
-                chatBox.removeChild(chatBox.firstChild);
-            }
-        }
-
-        for(let i=0; i<4; i++) { setTimeout(addChatMessage, i * 500); }
-        setInterval(addChatMessage, Math.floor(Math.random() * 1500) + 1500);
-
-
-        // --- YOUTUBE PLAYER SETUP (WITH PLYR & 720p DEFAULT) ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const player = new Plyr('#player', {
-                controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
-                settings: ['quality', 'speed'],
-                quality: { default: 720, options: [1080, 720, 480, 360, 240] },
-                youtube: { 
-                    noCookie: false, 
-                    rel: 0, 
-                    showinfo: 0, 
-                    iv_load_policy: 3, 
-                    modestbranding: 1,
-                    vq: 'hd720' // Forces YouTube embed to prioritize 720p
-                }
+                video.play();
             });
-        });
+
+            // Jab user dropdown se quality change kare
+            qualitySelector.addEventListener('change', function() {
+                var selectedQuality = parseInt(this.value);
+                hls.currentLevel = selectedQuality; // -1 means Auto, otherwise level index
+            });
+        } 
+        // Apple devices ke liye (iOS Safari me direct switch native player me hota hai)
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = streamUrl;
+            video.addEventListener('loadedmetadata', function() {
+                video.play();
+            });
+            // Native player hone ki wajah se custom dropdown hide kar denge
+            document.querySelector('.controls').style.display = 'none';
+        }
     </script>
+
 </body>
 </html>
