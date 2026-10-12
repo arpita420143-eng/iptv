@@ -3,229 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MKS Sports | Live Streaming</title>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.ui.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/controls.css">
-
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: #080c14;
-      color: #fff;
-      font-family: Arial, sans-serif;
-    }
-    header {
-      padding: 22px 12px;
-      text-align: center;
-      background: #101827;
-      border-bottom: 3px solid #f5b942;
-    }
-    header h1 {
-      margin: 0;
-      color: #f5b942;
-      font-size: clamp(25px, 4vw, 38px);
-      font-weight: 800;
-    }
-    header p {
-      margin: 8px 0 0;
-      color: #cbd5e1;
-    }
-    main {
-      width: 100%;
-      max-width: 1100px;
-      margin: 20px auto;
-      padding: 0 16px;
-    }
-    .config-card {
-      background: #111827;
-      border: 1px solid #293548;
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 30px #0007;
-    }
-    .config-card input {
-      width: 100%;
-      padding: 10px 14px;
-      margin: 8px 0;
-      background: #080c14;
-      border: 1px solid #334155;
-      color: #fff;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-    .config-card button {
-      background: linear-gradient(135deg, #f5b942 0%, #e09f2b 100%);
-      color: #000;
-      font-weight: bold;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 10px;
-      font-size: 15px;
-    }
-    .player-card {
-      padding: 18px;
-      background: #111827;
-      border: 1px solid #293548;
-      border-radius: 14px;
-      box-shadow: 0 8px 30px #0007;
-      display: none;
-    }
-    .live-heading {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 0 0 16px;
-      font-size: 20px;
-    }
-    .live-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #22c55e;
-    }
-    .video-box {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background: #000;
-      overflow: hidden;
-      border-radius: 9px;
-    }
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    #status {
-      margin: 14px 2px 0;
-      color: #cbd5e1;
-      font-size: 14px;
-      overflow-wrap: anywhere;
-    }
-    footer {
-      margin-top: 45px;
-      padding: 22px 10px;
-      text-align: center;
-      color: #778399;
-      font-size: 13px;
-    }
-  </style>
+  <title>Simple DASH Player</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
 </head>
+<body style="background:#000; color:#fff; text-align:center; padding-top:20px;">
 
-<body>
+  <h2>DASH Player</h2>
+  
+  <video id="video" controls autoplay style="width:100%; max-width:800px; background:#111;"></video>
+  
+  <p id="status" style="color:#aaa; font-family:monospace;"></p>
 
-<header>
-  <h1>MKS SPORTS</h1>
-  <p>Your Sports Streaming Hub</p>
-</header>
+  <script>
+    const STREAM_URL = "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/puehlftk5j/out/v1/f7f0da1ee112481ca0024e6d4dd97f4a/cenc.mpd";
+    const CLEAR_KEYS = {
+      "f3df7843080ae743bf865dc5fdf64c68": "567c863bc12eb74788ea74888c042e1b"
+    };
 
-<main>
-  <!-- Input Form Section -->
-  <div class="config-card" id="configSection">
-    <h3 style="margin-top:0; color:#f5b942;">Stream Credentials Setup</h3>
-    <label style="font-size:13px; color:#cbd5e1;">MPD Stream Link:</label>
-    <input type="text" id="inputMpd" placeholder="https://.../cenc.mpd" value="https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/puehlftk5j/out/v1/f7f0da1ee112481ca0024e6d4dd97f4a/cenc.mpd">
-    
-    <label style="font-size:13px; color:#cbd5e1;">Key ID (32 hex characters):</label>
-    <input type="text" id="inputKeyId" placeholder="Key ID" value="f3df7843080ae743bf865dc5fdf64c68">
-    
-    <label style="font-size:13px; color:#cbd5e1;">Key (32 hex characters):</label>
-    <input type="text" id="inputKey" placeholder="Key" value="567c863bc12eb74788ea74888c042e1b">
-
-    <button onclick="startStream()">Play Stream & Hide Config</button>
-  </div>
-
-  <!-- Player Section -->
-  <section class="player-card" id="playerSection">
-    <h2 class="live-heading">
-      <span class="live-dot"></span>
-      Live Sports
-    </h2>
-
-    <div class="video-box" data-shaka-player-container id="playerContainer">
-      <video
-        id="videoPlayer"
-        data-shaka-player
-        playsinline
-        autoplay
-        controls>
-      </video>
-    </div>
-
-    <div id="status" role="status" aria-live="polite">
-      Waiting for input...
-    </div>
-  </section>
-</main>
-
-<footer>
-  MKS Sports &copy; 2026
-</footer>
-
-<script>
-  async function startStream() {
-    const mpdUrl = document.getElementById("inputMpd").value.trim();
-    const keyId = document.getElementById("inputKeyId").value.trim();
-    const key = document.getElementById("inputKey").value.trim();
-
-    if (!mpdUrl || !keyId || !key) {
-      alert("Bhai saari fields bharna zaroori hai!");
-      return;
-    }
-
-    // Input box gayab karke player card dikhana
-    document.getElementById("configSection").style.display = "none";
-    document.getElementById("playerSection").style.display = "block";
-
-    const status = document.getElementById("status");
-    const video = document.getElementById("videoPlayer");
-    const container = document.getElementById("playerContainer");
-
-    try {
-      if (!window.shaka) {
-        throw new Error("Player library load nahi ho payi.");
-      }
+    async function init() {
+      const status = document.getElementById('status');
+      const video = document.getElementById('video');
 
       shaka.polyfill.installAll();
-
       if (!shaka.Player.isBrowserSupported()) {
-        throw new Error("Browser Shaka Player support nahi karta.");
+        status.innerText = 'Browser support nahi karta!';
+        return;
       }
 
-      // Sahi tarike se Shaka UI instance banana
-      const ui = new shaka.ui.Overlay(null, container, video);
-      const player = ui.getPlayer();
+      const player = new shaka.Player(video);
 
-      player.addEventListener("error", event => {
-        const error = event.detail;
-        console.error("Playback error:", error);
-        status.textContent = "Error: " + (error.message || "Unknown") + " (Code: " + error.code + ")";
+      player.addEventListener('error', (e) => {
+        status.innerText = 'Error: ' + JSON.stringify(e.detail);
       });
 
-      // ClearKey configure karna
       player.configure({
-        drm: {
-          clearKeys: {
-            [keyId]: key
-          }
-        }
+        drm: { clearKeys: CLEAR_KEYS }
       });
 
-      status.textContent = "Connecting to stream...";
-      await player.load(mpdUrl);
-      status.textContent = "Stream successfully load ho gayi hai!";
-
-    } catch (error) {
-      console.error("Setup error:", error);
-      status.textContent = "Error: " + (error.message || "Stream nahi chal paayi.");
+      try {
+        status.innerText = 'Loading stream...';
+        await player.load(STREAM_URL);
+        status.innerText = 'Stream Chal Rahi Hai!';
+      } catch (e) {
+        status.innerText = 'Load error: ' + e.message;
+      }
     }
-  }
-</script>
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
 
 </body>
 </html>
