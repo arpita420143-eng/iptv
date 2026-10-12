@@ -6,107 +6,171 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>MKS SPORTS LIVE</title>
   
+  <!-- Shaka Player UI -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/shaka-player.ui.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.6.0/controls.min.css">
   
   <style type="text/css">
-      @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
 
       html, body {
-        margin: 0; padding: 0; background-color: #000;
-        width: 100%; height: 100%; overflow: hidden; font-family: 'Roboto', sans-serif;
+        margin: 0; padding: 0; 
+        background: radial-gradient(circle at 50% 0%, #151520 0%, #050505 80%);
+        width: 100%; height: 100%; overflow: hidden;
+        font-family: 'Outfit', system-ui, -apple-system, sans-serif;
       }
 
-      /* Clean Header */
+      /* Sleek Cinematic Header */
       .app-header {
-        position: absolute; top: 0; left: 0; width: 100%; height: 50px;
-        background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+        position: absolute; top: 0; left: 0; width: 100%; height: 55px;
+        background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
         display: flex; align-items: center; justify-content: space-between;
-        padding: 0 20px; box-sizing: border-box; z-index: 1000;
+        padding: 0 25px; box-sizing: border-box; z-index: 1000;
       }
-      .brand-logo { color: #fff; font-size: 18px; font-weight: 900; letter-spacing: 1px; }
-      .brand-logo span { color: #0099ff; }
+
+      .brand-logo { 
+        color: #fff; font-size: 20px; font-weight: 800; letter-spacing: 1.5px; 
+        display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      }
+      .brand-logo span { color: #d4af37; }
       
       .live-badge {
-        background: #ef4444; color: white; font-size: 10px; font-weight: 700;
-        padding: 3px 8px; border-radius: 4px; text-transform: uppercase;
-        animation: blink 2s infinite;
+        background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+        color: white; font-size: 11px; font-weight: 800;
+        padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 1px;
+        animation: pulseLive 2s infinite; box-shadow: 0 0 15px rgba(255, 8, 68, 0.4);
       }
-      @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-      /* Video Container */
-      .video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1; }
+      @keyframes pulseLive { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+
+      /* Cinematic Player Container */
+      .video-container { 
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+        background-color: #000; z-index: 1; 
+      }
       .shaka-video-container { width: 100%; height: 100%; }
-      video { width: 100%; height: 100%; background: #000; outline: none; }
+      video { width: 100%; height: 100%; background-color: #000; outline: none; }
 
-      /* HIDE THE BIG ANNOYING CENTER BUTTON */
-      .shaka-play-button-container, .shaka-spinner-container { display: none !important; }
-
-      /* UI Theme */
+      /* Custom Shaka Controls Theme */
+      .youtube-theme { font-family: 'Outfit', sans-serif; }
       .youtube-theme .shaka-bottom-controls { padding: 0; z-index: 2; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%); }
-      .youtube-theme .shaka-controls-button-panel { height: 50px; padding: 0 15px; }
-      .youtube-theme .shaka-played-range { background: #ef4444 !important; }
+      .youtube-theme .shaka-controls-button-panel { height: 60px; padding: 0 15px; }
+      .youtube-theme .shaka-played-range { background: #d4af37 !important; box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
       
       /* =========================================
-         CLEAN TELEGRAM BUTTON (NO WARNING ICON)
+         ATTRACTIVE TELEGRAM CTA (FLOATING & POPUP)
          ========================================= */
+      
       .tg-floating-btn {
-        position: fixed; top: 65px; right: 15px;
-        background: #0088cc; border: 1px solid rgba(255, 255, 255, 0.2); color: #fff;
-        padding: 8px 15px; border-radius: 50px; font-size: 13px; font-weight: 700;
-        text-decoration: none; display: flex; align-items: center; gap: 6px; z-index: 9999;
-        box-shadow: 0 4px 15px rgba(0, 136, 204, 0.5); transition: 0.3s;
+        position: fixed; top: 75px; right: 20px;
+        background: linear-gradient(135deg, #0088cc 0%, #00aaff 100%); 
+        border: 1px solid rgba(255, 255, 255, 0.2); color: #fff;
+        padding: 10px 18px; border-radius: 50px; font-size: 13px; font-weight: 800;
+        text-decoration: none; display: flex; align-items: center; gap: 8px; z-index: 9999;
+        box-shadow: 0 8px 20px rgba(0, 136, 204, 0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-transform: uppercase; letter-spacing: 0.5px;
+        animation: floatGently 3s ease-in-out infinite;
       }
-      .tg-floating-btn svg { width: 16px; height: 16px; fill: #fff; }
-      .tg-floating-btn:hover { background: #00aaff; transform: scale(1.05); }
+      @keyframes floatGently { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+      
+      .tg-floating-btn svg { width: 18px; height: 18px; fill: #fff; }
+      .tg-floating-btn:hover { background: linear-gradient(135deg, #00aaff 0%, #0088cc 100%); transform: translateY(-3px) scale(1.05); box-shadow: 0 12px 25px rgba(0, 136, 204, 0.7); }
 
-      /* Premium Popup */
       .tg-popup-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
+        background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
         z-index: 10000; display: none; justify-content: center; align-items: center;
       }
+
+      /* Premium Glass Box */
       .tg-popup-box {
-        background: #111; border: 1px solid #0088cc; border-radius: 20px;
-        padding: 30px 20px; width: 85%; max-width: 340px; text-align: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.9); position: relative;
+        background: linear-gradient(145deg, rgba(25,25,30,0.95) 0%, rgba(10,10,15,0.98) 100%);
+        border: 1px solid rgba(0, 136, 204, 0.4);
+        border-radius: 28px; padding: 45px 30px; width: 85%; max-width: 380px; text-align: center;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 1px 20px rgba(0, 136, 204, 0.1);
+        position: relative; transform: translateY(30px) scale(0.95); opacity: 0;
+        animation: royalPop 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
       }
-      .tg-popup-close { position: absolute; top: 10px; right: 15px; color: #888; font-size: 28px; cursor: pointer; text-decoration: none; }
-      .tg-popup-title { color: #fff; font-size: 20px; font-weight: 900; margin-bottom: 10px; }
-      .tg-popup-text { color: #aaa; font-size: 14px; margin-bottom: 20px; }
+
+      @keyframes royalPop { to { transform: translateY(0) scale(1); opacity: 1; } }
+
+      .tg-popup-close {
+        position: absolute; top: 15px; right: 25px; color: rgba(255,255,255,0.4); font-size: 32px;
+        line-height: 1; cursor: pointer; text-decoration: none; transition: 0.3s;
+      }
+      .tg-popup-close:hover { color: #fff; transform: rotate(90deg); }
+      
+      /* Glowing Telegram Icon */
+      .premium-icon-wrapper {
+        width: 75px; height: 75px; margin: 0 auto 25px; border-radius: 50%;
+        background: linear-gradient(135deg, #0088cc, #00aaff);
+        display: flex; justify-content: center; align-items: center;
+        box-shadow: 0 0 40px rgba(0, 136, 204, 0.4), inset 0 0 15px rgba(255,255,255,0.6);
+        position: relative;
+      }
+      .premium-icon-wrapper::after {
+        content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px;
+        border-radius: 50%; background: linear-gradient(135deg, transparent, rgba(0, 136, 204, 0.5), transparent);
+        animation: shimmerRotate 3s linear infinite; z-index: -1;
+      }
+      @keyframes shimmerRotate { 100% { transform: rotate(360deg); } }
+
+      .premium-icon-wrapper svg { width: 38px; height: 38px; fill: #fff; transform: translateX(-2px); }
+
+      .tg-popup-title { color: #fff; font-size: 24px; font-weight: 800; margin: 0 0 12px; letter-spacing: 0.5px; }
+      .tg-popup-text { color: #a0a0ab; font-size: 15px; line-height: 1.6; margin-bottom: 35px; font-weight: 400; }
+      .tg-popup-text b { color: #00aaff; }
+      
       .tg-popup-btn {
-        background: #0088cc; color: #fff; text-decoration: none; padding: 12px 0; width: 100%;
-        border-radius: 10px; font-size: 15px; font-weight: 700; display: inline-flex; justify-content: center; align-items: center; gap: 8px;
+        background: linear-gradient(135deg, #0088cc 0%, #00aaff 100%);
+        color: #fff; text-decoration: none; padding: 16px 0; width: 100%; border-radius: 16px; 
+        font-size: 16px; font-weight: 800; display: inline-flex; justify-content: center; align-items: center; gap: 10px;
+        box-shadow: 0 10px 25px rgba(0, 136, 204, 0.4); transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        text-transform: uppercase; letter-spacing: 0.5px;
       }
+      .tg-popup-btn svg { width: 22px; height: 22px; fill: #fff; }
+      .tg-popup-btn:hover { transform: translateY(-4px); box-shadow: 0 15px 35px rgba(0, 136, 204, 0.6); }
+
+      /* Loading / Error States */
+      .error-container { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; background: radial-gradient(circle, #1a1a24 0%, #000 100%); color: #ffffff; text-align: center; position: absolute; z-index: 10; }
+      .error-container h1 { font-size: 70px; margin: 0; color: #d4af37; font-weight: 800; text-shadow: 0 0 30px rgba(212,175,55,0.2); }
+      .error-container h2 { font-size: 18px; margin: 15px 0; color: #888; font-weight: 400; }
   </style>
 </head>
 <body>
 
-  <!-- Clean Floating Telegram Button -->
+  <!-- Super Catchy Floating Telegram Button -->
   <a href="https://t.me/MKSsports_3" target="_blank" class="tg-floating-btn">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.83l7.65 13.17H4.35L12 5.83zM11 16h2v2h-2v-2zm0-7h2v5h-2V9z"/></svg>
-    JOIN TELEGRAM
+    🔥 GET FREE LINKS
   </a>
 
-  <!-- Popup -->
+  <!-- Attractive Telegram Popup -->
   <div class="tg-popup-overlay" id="tgPopup">
     <div class="tg-popup-box">
       <a href="#" class="tg-popup-close" onclick="closePopup(); return false;">&times;</a>
-      <div class="tg-popup-title">🔥 GET FREE LINKS</div>
-      <div class="tg-popup-text">Join our Telegram channel for daily Live Match Links. No Ads, No Buffering!</div>
+      <div class="premium-icon-wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      </div>
+      <div class="tg-popup-title">NEVER MISS A MATCH!</div>
+      <div class="tg-popup-text">Kal ke match ka link kahan milega? Join our Telegram family for <b>100% Free Daily Live Links</b>, No Ads, No Buffering!</div>
       <a href="https://t.me/MKSsports_3" target="_blank" class="tg-popup-btn" onclick="closePopup()">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.83l7.65 13.17H4.35L12 5.83zM11 16h2v2h-2v-2zm0-7h2v5h-2V9z"/></svg>
-        JOIN NOW
+        JOIN TELEGRAM NOW
       </a>
     </div>
   </div>
 
   <div class="app-header" id="header-bar">
     <div class="brand-logo">MKS <span>SPORTS</span></div>
-    <div class="live-badge">LIVE</div>
+    <div class="live-badge">● LIVE</div>
   </div>
 
-  <div class="video-container" id="player-box">
+  <div id="error-box" class="error-container" style="display: none;">
+    <h1>NO SIGNAL</h1>
+    <h2>Stream Offline or Invalid Secured Link</h2>
+  </div>
+
+  <div class="video-container" id="player-box" style="display: none;">
     <div class="shaka-video-container youtube-theme" data-shaka-player>
       <video id="video" autoplay playsinline preload="auto"></video>
     </div>
@@ -114,12 +178,18 @@
 
 
 
-  <script>
-    // Popup logic
-    window.onload = () => { setTimeout(() => { document.getElementById('tgPopup').style.display = 'flex'; }, 2000); };
-    function closePopup() { document.getElementById('tgPopup').style.display = 'none'; }
 
-    // Dual Parser
+
+
+  <script>
+    // === TELEGRAM POPUP LOGIC ===
+    window.onload = () => {
+      setTimeout(() => { document.getElementById('tgPopup').style.display = 'flex'; }, 3000);
+    };
+    function closePopup() { document.getElementById('tgPopup').style.display = 'none'; }
+    // =============================
+
+    // === UNIVERSAL DUAL-PARSER ENGINE ===
     function parseEngine() {
       let rawUrl = window.location.href;
       try { rawUrl = decodeURIComponent(rawUrl); } catch (e) {}
@@ -150,7 +220,9 @@
           let keyPairs = licenseStr.split(','); 
           keyPairs.forEach(pair => {
             let kp = pair.split(':');
-            if (kp.length === 2) { clearKeys[kp[0].trim()] = kp[1].trim(); }
+            if (kp.length === 2) {
+              clearKeys[kp[0].trim()] = kp[1].trim();
+            }
           });
         }
         
@@ -185,47 +257,78 @@
         sessionStorage.setItem('mks_cookie', cookie || "");
         window.history.replaceState({}, document.title, window.location.pathname);
       }
+
       return { streamUrl, clearKeys, cookie };
     }
 
     const { streamUrl, clearKeys, cookie } = parseEngine();
+    let player = null;
     const video = document.getElementById('video');
 
-    async function initializePlayer() {
-      if (!streamUrl) return;
+    function showPlayButton() {
+      const existingBtn = document.getElementById('play-overlay-btn');
+      if (existingBtn) return;
+      const btn = document.createElement('div');
+      btn.id = 'play-overlay-btn';
+      btn.style.cssText = `
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #d4af37, #aa8529); color: #000; 
+        padding: 16px 35px; border-radius: 50px; cursor: pointer; font-size: 16px; 
+        z-index: 2000; font-weight: 800; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        text-transform: uppercase; letter-spacing: 1px;
+      `;
+      btn.textContent = '▶ Tap to Play';
+      btn.onclick = function() {
+        video.muted = false;
+        video.play().then(() => btn.remove()).catch(e => console.log(e));
+      };
+      document.getElementById('player-box').appendChild(btn);
+    }
 
+    async function initializePlayer() {
       try {
         shaka.polyfill.installAll();
-        const player = new shaka.Player();
+        player = new shaka.Player();
+        window.player = player;
         await player.attach(video);
 
         const container = document.querySelector('.shaka-video-container');
         const ui = new shaka.ui.Overlay(player, container, video);
         
-        // 🔥 MAGIC HERE: addBigPlayButton: false Hides the annoying center button!
         ui.configure({
-          'addBigPlayButton': false, 
-          'seekBarColors': { base: 'rgba(255,255,255,.2)', buffered: 'rgba(255,255,255,.5)', played: '#ef4444' },
-          'controlPanelElements': ['play_pause', 'mute', 'time_and_duration', 'spacer', 'quality', 'fullscreen']
+          'seekBarColors': { base: 'rgba(255,255,255,.2)', buffered: 'rgba(255,255,255,.5)', played: '#d4af37' },
+          'controlPanelElements': ['play_pause', 'mute', 'time_and_duration', 'spacer', 'quality', 'fullscreen', 'overflow_menu']
         });
 
-        // 🔥 5-SECOND DELAY TO STOP BUFFERING 🔥
+        // 🔥 EXTREME ANTI-BUFFERING SETTINGS 🔥
         const playerConfig = { 
+            manifest: {
+                dash: {
+                    defaultPresentationDelay: 15 // Stream ko automatically live edge se 15 second peeche kar dega
+                }
+            },
             streaming: { 
-                safeSeekOffset: 5,        // Keeps stream exactly 5 seconds behind live
-                bufferingGoal: 30,        // Loads 30 seconds ahead
-                rebufferingGoal: 2,       
-                lowLatencyMode: false     // Focus on smoothness
+                bufferingGoal: 60,        // 60 sec ka massive buffer store karega
+                rebufferingGoal: 15,      // Agar net atka, toh 15 sec load hone ke baad hi resume karega
+                bufferBehind: 30,         
+                lowLatencyMode: false,    
+                safeSeekOffset: 10        
+            },
+            abr: {
+                defaultBandwidthEstimate: 500000 // 480p/low quality se jaldi start hoga, fir net accha hone par khud HD hoga
             }
         };
         
-        if (Object.keys(clearKeys).length > 0) { playerConfig.drm = { clearKeys: clearKeys }; }
+        if (Object.keys(clearKeys).length > 0) {
+            playerConfig.drm = { clearKeys: clearKeys };
+        }
         player.configure(playerConfig);
 
         player.getNetworkingEngine().registerRequestFilter((type, request) => {
-          if (streamUrl.includes('jio.com')) {
+          if (streamUrl && streamUrl.includes('jio.com')) {
               request.headers['Referer'] = 'https://www.jiotv.com/';
               request.headers['User-Agent'] = 'plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6';
+              
               if (cookie && (type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT)) {
                 const baseUri = request.uris[0].split('?')[0];
                 request.uris[0] = baseUri + '?' + '__hdnea__=' + cookie;
@@ -235,15 +338,29 @@
 
         video.autoplay = true;
         video.muted = false;
+
         await player.load(streamUrl);
-        video.play().catch(e => console.log("Autoplay blocked by browser."));
+        try { await video.play(); } catch (e) { showPlayButton(); }
 
       } catch (error) {
         console.error('Error:', error);
+        document.getElementById('error-box').style.display = 'flex';
+        document.getElementById('player-box').style.display = 'none';
       }
     }
 
-    document.addEventListener('DOMContentLoaded', initializePlayer);
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!streamUrl) {
+        document.getElementById('error-box').style.display = 'flex';
+        document.getElementById('player-box').style.display = 'none';
+        document.getElementById('header-bar').style.display = 'none';
+      } else {
+        document.getElementById('error-box').style.display = 'none';
+        document.getElementById('player-box').style.display = 'block';
+        document.getElementById('header-bar').style.display = 'flex';
+        initializePlayer().catch(error => console.error(error));
+      }
+    });
   </script>
 </body>
 </html>
