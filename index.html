@@ -3,14 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>MKS Sports | Live Streaming</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.ui.js"></script>
-
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/controls.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/controls.css">
 
   <style>
     * {
@@ -107,7 +103,6 @@
         margin: 18px auto;
         padding: 0 10px;
       }
-
       .player-card {
         padding: 12px;
       }
@@ -135,6 +130,7 @@
         id="videoPlayer"
         data-shaka-player
         playsinline
+        autoplay
         controls>
       </video>
     </div>
@@ -151,10 +147,8 @@
 </footer>
 
 <script>
-  // Replace this with your authorized DASH stream URL.
   const STREAM_URL = "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/puehlftk5j/out/v1/f7f0da1ee112481ca0024e6d4dd97f4a/cenc.mpd";
 
-  // Optional: configure only keys authorized for your stream.
   const CLEAR_KEYS = {
     "f3df7843080ae743bf865dc5fdf64c68": "567c863bc12eb74788ea74888c042e1b"
   };
@@ -165,73 +159,40 @@
 
     try {
       if (!window.shaka) {
-        throw new Error(
-          "Player library failed to load. Check your internet connection."
-        );
+        throw new Error("Player library failed to load. Check your internet connection.");
       }
 
       shaka.polyfill.installAll();
 
       if (!shaka.Player.isBrowserSupported()) {
-        throw new Error(
-          "This browser does not support Shaka Player."
-        );
+        throw new Error("This browser does not support Shaka Player.");
       }
 
-      const player = new shaka.Player();
-      await player.attach(video);
+      // Shaka UI ke sath properly player create karna
+      const ui = video['ui'];
+      const player = ui.getPlayer();
 
       player.addEventListener("error", event => {
         const error = event.detail;
-
         console.error("Shaka playback error:", error);
-
-        status.textContent =
-          "Playback error: " +
-          (error.message || "Check the browser console.") +
-          " Error code: " + error.code;
+        status.textContent = "Playback error: " + (error.message || "Check the browser console.") + " Error code: " + error.code;
       });
 
-      // Apply ClearKey configuration only when authorized values
-      // have been supplied by the content provider.
-      const validKeys = Object.entries(CLEAR_KEYS).filter(
-        ([id, key]) =>
-          /^[a-fA-F0-9]{32}$/.test(id) &&
-          /^[a-fA-F0-9]{32}$/.test(key)
-      );
-
-      if (validKeys.length > 0) {
-        const clearKeys = Object.fromEntries(validKeys);
-
-        player.configure({
-          drm: {
-            clearKeys: clearKeys
-          }
-        });
-      }
-
-      if (
-        !STREAM_URL.startsWith("https://") ||
-        STREAM_URL.includes("YOUR_AUTHORIZED")
-      ) {
-        throw new Error(
-          "Add your authorized stream URL before playback."
-        );
-      }
+      // ClearKey DRM setup
+      player.configure({
+        drm: {
+          clearKeys: CLEAR_KEYS
+        }
+      });
 
       status.textContent = "Connecting to stream...";
 
       await player.load(STREAM_URL);
-
-      status.textContent =
-        "Stream loaded. Press Play to start watching.";
+      status.textContent = "Stream loaded successfully!";
 
     } catch (error) {
       console.error("Player setup error:", error);
-
-      status.textContent =
-        "Unable to play: " +
-        (error.message || "Unknown error. Check the browser console.");
+      status.textContent = "Unable to play: " + (error.message || "Unknown error.");
     }
   }
 
