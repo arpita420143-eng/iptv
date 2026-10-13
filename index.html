@@ -235,6 +235,10 @@
       
       if (streamUrl) {
         initializePlayer(streamUrl, clearKeys, cookie);
+        
+        // जादू यहाँ है: यह लाइन लोड होते ही URL से सबकुछ हटा कर बेस URL कर देगी
+        window.history.replaceState({}, document.title, window.location.pathname);
+        
       } else {
         document.getElementById('error-box').style.display = 'flex';
         document.getElementById('player-box').style.display = 'none';
