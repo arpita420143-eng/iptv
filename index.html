@@ -1,493 +1,121 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
+<!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TG_@Finallylive</title>
+<!-- Google tag (gtag.js) -->
+<script async="" src=""></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<meta
-    name="referrer"
-    content="no-referrer"
->
-
-<title>TG_@MKSsports_3</title>
-<script>(function(s){s.dataset.zone='11621694',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-
-<script src="https://cdn.jsdelivr.net/npm/shaka-player@5.1.10/dist/shaka-player.ui.min.js"></script>
-
-<link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/shaka-player@5.1.10/dist/controls.min.css"
->
-
+  gtag('config', 'G-SMZXC121E6');
+</script>
 <style>
-
-html,
-body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background: #000;
+html,body{
+margin:0;
+padding:0;
+background:#000;
+overflow:hidden;
+width:100%;
+height:100%;
 }
 
-.shaka-video-container {
-    width: 100%;
-    height: 100%;
-    background: #000;
+#main-iframe{
+width:100%;
+height:100%;
+border:none;
+display:block;
+position:absolute;
+top:0;
+left:0;
 }
 
-#videoPlayer {
-    width: 100%;
-    height: 100%;
-    background: #000;
-    object-fit: contain;
+.telegram-btn{
+position:absolute;
+top:15px;
+left:15px;
+z-index:9999;
+display:flex;
+align-items:center;
+gap:12px;
+background:linear-gradient(135deg,#1e88e5,#1565c0);
+padding:10px 16px;
+border-radius:14px;
+text-decoration:none;
+color:#fff;
+font-size:16px;
+font-weight:600;
+font-family:Arial,sans-serif;
+box-shadow:0 6px 18px rgba(0,0,0,0.5);
 }
 
+.telegram-icon{
+width:34px;
+height:34px;
+background:rgba(255,255,255,0.15);
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+border:2px solid #fff;
+}
+
+.telegram-icon svg{
+width:18px;
+height:18px;
+fill:#fff;
+}
+
+.error-msg{
+color:white;
+text-align:center;
+font-family:sans-serif;
+margin-top:20px;
+position:absolute;
+width:100%;
+top:50%;
+transform:translateY(-50%);
+}
 </style>
-
-</head>
+<style type="text/css">* {user-select: auto !important; -webkit-user-select: auto !important;}</style><input type="hidden" id="inject_idm_text_selection"><style></style></head>
 
 <body>
 
-<div
-    id="videoContainer"
-    class="shaka-video-container"
->
+<a href="https://t.me/MKSsports_3" target="_blank" class="telegram-btn">
 
-    <video
-        id="videoPlayer"
-        playsinline
-        autoplay
-        muted
-    ></video>
-
+<div class="telegram-icon">
+<svg viewBox="0 0 24 24">
+<path d="M9.993 15.674l-.398 5.604c.57 0 .817-.245 1.113-.54l2.67-2.557 5.53 4.047c1.014.558 1.734.264 1.987-.939l3.6-16.86.001-.001c.3-1.4-.506-1.95-1.496-1.58L1.27 9.64c-1.37.53-1.35 1.29-.233 1.64l5.68 1.77L19.29 5.73c.59-.39 1.13-.175.69.215"></path>
+</svg>
 </div>
 
+<span>Join our Channel</span>
 
+</a>
+
+<iframe id="main-iframe" allowfullscreen="" allow="encrypted-media; fullscreen; autoplay" src="https://ci365.pages.dev/STEN3"></iframe>
 <script>
+window.addEventListener('DOMContentLoaded',()=>{
 
-const STREAM_URL =
-    "https://jiotvmblive.cdn.jio.com/bpk-tv/Ten_3_MOB/WDVLive/index.mpd";
+const join = confirm("Join Our Telegram Channel");
 
-
-const DRM_KEYS =
-    "68318f7c97c55ba6ab8d0398a88fed3e:d312fb3325b4eb9462b4a0d2b6794adf";
-
-
-const COOKIE_JSON_URL =
-    "https://sonujson-v4.pages.dev/Data/sports.json";
-
-
-const CHANNEL_ID =
-    "hindi";
-
-
-const videoElement =
-    document.getElementById(
-        "videoPlayer"
-    );
-
-
-const videoContainer =
-    document.getElementById(
-        "videoContainer"
-    );
-
-
-let player;
-let ui;
-
-
-function parseDrmKeys(value) {
-
-    const clearKeys = {};
-
-    const pairs =
-        String(value || "")
-            .split(",")
-            .map(
-                pair =>
-                    pair.trim()
-            )
-            .filter(Boolean);
-
-
-    for (
-        const pair of pairs
-    ) {
-
-        const separator =
-            pair.indexOf(":");
-
-
-        if (
-            separator === -1
-        ) {
-
-            console.warn(
-                "Invalid DRM pair:",
-                pair
-            );
-
-            continue;
-        }
-
-
-        const kid =
-            pair
-                .slice(
-                    0,
-                    separator
-                )
-                .trim()
-                .toLowerCase();
-
-
-        const key =
-            pair
-                .slice(
-                    separator + 1
-                )
-                .trim()
-                .toLowerCase();
-
-
-        if (
-            !kid ||
-            !key
-        ) {
-
-            continue;
-        }
-
-
-        clearKeys[kid] =
-            key;
-
-    }
-
-
-    return clearKeys;
+if(join){
+location.href = "https://t.me/MKSsports_3";
 }
 
-async function getCookie() {
-
-    const response =
-        await fetch(
-            COOKIE_JSON_URL,
-            {
-                method: "GET",
-                cache: "no-store"
-            }
-        );
-
-
-    if (
-        !response.ok
-    ) {
-
-        throw new Error(
-            "Cookie JSON request failed: " +
-            response.status
-        );
-
-    }
-
-
-    const data =
-        await response.json();
-
-
-    if (
-        !data ||
-        !Array.isArray(
-            data.channels
-        )
-    ) {
-
-        throw new Error(
-            "Invalid JSON format."
-        );
-
-    }
-
-
-    const channel =
-        data.channels.find(
-            item =>
-                String(
-                    item.id || ""
-                )
-                    .trim()
-                    .toLowerCase() ===
-                CHANNEL_ID
-                    .toLowerCase()
-        );
-
-
-    if (!channel) {
-
-        throw new Error(
-            "Channel not found: " +
-            CHANNEL_ID
-        );
-
-    }
-
-
-    const cookie =
-        String(
-            channel.cookie || ""
-        ).trim();
-
-
-    if (!cookie) {
-
-        throw new Error(
-            "Cookie not found for " +
-            CHANNEL_ID
-        );
-
-    }
-
-
-    return cookie;
+function showError(msg){
+const h2=document.createElement('h2');
+h2.className='error-msg';
+h2.innerText=msg;
+document.body.appendChild(h2);
+iframe.style.display='none';
+const badge=document.querySelector('.telegram-btn');
+if(badge) badge.style.display='none';
 }
 
-
-function configureStreamRequests(
-    cookie
-) {
-
-    if (!cookie) {
-        return;
-    }
-
-
-    const networkingEngine =
-        player.getNetworkingEngine();
-
-
-    if (!networkingEngine) {
-        return;
-    }
-
-
-    networkingEngine.registerRequestFilter(
-        (type, request) => {
-
-            if (
-                !request.uris ||
-                !request.uris[0]
-            ) {
-
-                return;
-            }
-
-
-            request.headers =
-                request.headers || {};
-
-
-            request.headers["Cookie"] =
-                cookie;
-
-
-            const url =
-                request.uris[0];
-
-
-            if (
-                (type === 0 || type === 1) &&
-                !url.includes(
-                    "__hdnea="
-                ) &&
-                !url.includes(
-                    "__hdnea__"
-                ) &&
-                !url.includes(
-                    "hdnts="
-                )
-            ) {
-
-                request.uris[0] =
-                    url +
-                    (
-                        url.includes("?")
-                            ? "&"
-                            : "?"
-                    ) +
-                    cookie;
-
-            }
-
-        }
-    );
-}
-
-
-function configureDrm() {
-
-    const clearKeys =
-        parseDrmKeys(
-            DRM_KEYS
-        );
-
-
-    player.configure({
-
-        drm: {
-            clearKeys:
-                clearKeys
-        },
-
-        manifest: {
-            defaultPresentationDelay: 5
-        },
-
-        streaming: {
-            lowLatencyMode: true,
-            bufferingGoal: 10,
-            rebufferingGoal: 2,
-            safeSeekOffset: 5
-        }
-
-    });
-}
-
-
-async function initPlayer() {
-
-    try {
-
-        shaka.polyfill.installAll();
-
-
-        if (
-            !shaka.Player
-                .isBrowserSupported()
-        ) {
-
-            throw new Error(
-                "This browser does not support Shaka Player."
-            );
-
-        }
-
-
-        player =
-            new shaka.Player();
-
-
-        await player.attach(
-            videoElement
-        );
-
-
-        ui =
-            new shaka.ui.Overlay(
-                player,
-                videoContainer,
-                videoElement
-            );
-
-
-        ui.configure({
-
-            controlPanelElements: [
-                "play_pause",
-                "time_and_duration",
-                "mute",
-                "volume",
-                "spacer",
-                "quality",
-                "picture_in_picture",
-                "fullscreen"
-            ]
-
-        });
-
-
-        player.addEventListener(
-            "error",
-            event => {
-
-                console.error(
-                    "Shaka Player Error:",
-                    event.detail
-                );
-
-            }
-        );
-
-
-        const cookie =
-            await getCookie();
-
-
-        configureStreamRequests(
-            cookie
-        );
-
-
-        configureDrm();
-
-
-        await player.load(
-            STREAM_URL
-        );
-
-
-        try {
-
-            await videoElement.play();
-
-        } catch (error) {
-
-            console.log(
-                "Autoplay blocked."
-            );
-
-        }
-
-
-    } catch (error) {
-
-        console.error(
-            "Player initialization failed:",
-            error
-        );
-
-    }
-
-}
-
-initPlayer();
-
-
-window.addEventListener(
-    "beforeunload",
-    () => {
-
-        if (player) {
-
-            player.destroy()
-                .catch(
-                    () => {}
-                );
-
-        }
-
-    }
-);
-
+});
 </script>
 
-</body>
-</html>
+
+</body></html>
